@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://freephenix.github.io/</id>
     <title>半亩房顶</title>
-    <updated>2019-09-05T17:04:07.798Z</updated>
+    <updated>2019-09-05T17:08:49.720Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://freephenix.github.io/"/>
     <link rel="self" href="https://freephenix.github.io//atom.xml"/>
@@ -10,97 +10,6 @@
     <logo>https://freephenix.github.io//images/avatar.png</logo>
     <icon>https://freephenix.github.io//favicon.ico</icon>
     <rights>All rights reserved 2019, 半亩房顶</rights>
-    <entry>
-        <title type="html"><![CDATA[2.5.4技术重构方案]]></title>
-        <id>https://freephenix.github.io//post/254-ji-zhu-chong-gou-fang-an</id>
-        <link href="https://freephenix.github.io//post/254-ji-zhu-chong-gou-fang-an">
-        </link>
-        <updated>2019-09-05T17:01:19.000Z</updated>
-        <content type="html"><![CDATA[<h1 id="重构方案确定原因">重构方案确定原因：</h1>
-<h3 id="调研结果驾考宝典-猿题库-腰果公考-粉笔">调研结果（驾考宝典、猿题库、腰果公考、粉笔）</h3>
-<ul>
-<li>1、缺失 - 每次练习答题所用时长（尚未理解好处所在，但我认为是一个基础属性）</li>
-<li>2、缺失 - 分题型正确率（可以帮助定点推送和业务拓展）</li>
-<li>3、缺失 - 易错项（连带需要解析内容更加充实，可以提高用户满意度，增加用户粘度）</li>
-</ul>
-<h3 id="沟通结果赖勤勇-安奕霖">沟通结果（赖勤勇、安奕霖）</h3>
-<ul>
-<li>1、行为数据不准确比较紧急（后续版本，安奕霖推动）</li>
-<li>2、赖勤勇对于题库设计沟通并不积极，尚不能确定他的态度是否能够代表整个金囿业务团队。今后更多需要技术和产品这边驱动。后续可以请产品抽时间直接跟一线教研和一线销售以及用户沟通，收集不同的声音</li>
-</ul>
-<h1 id="重构方案细节">重构方案细节</h1>
-<h3 id="流程图详细流程改动点标记有必要则绘制新流程图">流程图（详细流程，改动点标记，有必要则绘制新流程图）</h3>
-<p><img src="https://upload-images.jianshu.io/upload_images/5350978-22c1d7e2ca7f4fea.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""></p>
-<h3 id="现存问题-修改方案">现存问题 &amp; 修改方案</h3>
-<ul>
-<li>1、联表查询。两个体积很大的表联查，效率受影响，topic &amp; answerlog<br>
-拆分查询，分步取数据（基本所有接口DB查询次数不超过3次，如果存在案例题，做特殊处理会多1次查询），把较繁重工作从DB移出，放到内存，如数据格式化、筛选、去重（及时unset释放无用重复资源）等</li>
-<li>2、为了复用而复用。示例：$answerLogRepository-&gt;getWrongSummary，例如这个方法，两个调用从功能和效率上考虑都应该拆分方法</li>
-<li>3、分层不够合理，错题涉及表较多，应该分出专门的service层，对controller屏蔽respository层。（直考通有wrongService，但准备另起一个新文件，专门服务金囿题库）</li>
-<li>4、deleteWrong 接口第一个参数answer_log_id已经无用，跟客户端沟通商定后处理（建议保留，并添加待去除标记）</li>
-<li>5、接口调用方法可能存在不一致，跟客户端确认，并确定请求方法、传入参数，输出接口文档（YAPI）</li>
-</ul>
-<h3 id="用到的sql每一条可能用到的sql及其分析可以在会后给出">用到的SQL（每一条可能用到的SQL，及其分析，可以在会后给出）</h3>
-<h5 id="topicwrongoption">topic/wrongOption</h5>
-<pre><code>explain select practice_id from jinyou.answer_log_84 where application_name='jinyou' and type=1 and user_id='10506284' and is_right=0 and deleted=0;
-explain select id,minor_category_id, date_format(create_time, '%Y') from jinyou.practice where id in (1,2);
-explain select * from jinyou.minor_category where id in (1,2);
-</code></pre>
-<h5 id="topicwronglist">topic/wrongList</h5>
-<pre><code>-- 一个章可能对应多个practice，内存做chapter（paper）去重
-explain select chapter_id, id from jinyou.practice where application_name='jinyou' and type=1 and user_id='10506284' and minor_category_id=4 and create_time &gt; '2019-01-01 00:00:00' and create_time &lt; '2020-01-01 00:00:00';
-explain select * from jinyou.chapter where id in (1,2);
--- 试卷
-explain select id,paper_id from jinyou.practice where application_name='jinyou' and user_id='10506284' and type=2 and minor_category_id=4;
-explain select * from jinyou.paper where id in (1,2) and activity_type=0;
--- 模拟试卷
-explain select id,paper_id from jinyou.practice where application_name='jinyou' and user_id='10506284' and type=2 and minor_category_id=4;
-explain select * from jinyou.paper where id in (1,2) and activity_type=1;
--- 公共部分
-explain select practice_id, count(*) from jinyou.answer_log_84 where practice_id in (6619, 6568) GROUP BY practice_id;
-</code></pre>
-<h5 id="topicwrongdetail">topic/wrongDetail</h5>
-<pre><code>-- application_name 不需要传入，章和试卷中已经包含此信息
-explain select id from jinyou.practice where user_id='10506284' and chapter_id=146;
--- application_name、`user_id 不需要传入,pratice中已经包含此信息`
-explain select id,topic_id from jinyou.answer_log_84 where `user_id='10506284'` and is_right=0 and practice_id in (6619, 6568);
-explain select * from jinyou.topic where id in (1,2,3) and status=2;
-</code></pre>
-<h5 id="topicdeletewrong">topic/deleteWrong</h5>
-<pre><code>explain UPDATE jinyou.answer_log_84 SET deleted=1 WHERE user_id='10506284' and topic_id in (1,2);
-</code></pre>
-<h1 id="今后重新设计的一些思考">今后重新设计的一些思考</h1>
-<ul>
-<li>章节练习和试卷是否可以合并（其实现在章节练习详情回传和试卷详情都需要拼出同样的汇总信息，比如试卷答题时间，分值，试卷是否开放、过期等等）</li>
-<li>章节练习添加题型分组</li>
-<li>practice结构保留，可以保留用户维度的一些简单统计数据，如答题时长，判分、正确率（据实时要求而定）。详细统计数据放入其他表，分题型答对数|总数，试卷（练习）答对数|总数，科目总体答对数|总数，简单设想可以设计分级增量计算正确率的算法，还可以随意组合计算更多维度，比如全站单选正确率，某些科目正确率等；防止异步数据统计造成资源争抢</li>
-<li>错题表单独拉出，预计现有错题逻辑链路均可以减少一次DB IO</li>
-</ul>
-<h1 id="附件">附件</h1>
-<h2 id="254技术反讲-重构方案docx"><a href="http://file.gsxservice.com/0ewiki/attachments/f74fad27ed9847cb2f941ffe33e9faa7.docx">2.5.4技术反讲-重构方案.docx</a></h2>
-<h2 id="错误集修改流程图eddx"><a href="http://file.gsxservice.com/0ewiki/attachments/4dc0b5167f5c53bfc1bac94008d38a0e.eddx">错误集修改流程图.eddx</a></h2>
-<h2 id="与产品运营沟通结果">与产品运营沟通结果：</h2>
-<h4 id="痛点">痛点</h4>
-<p>运营角度<br>
-1、行为数据不准确，主要表现在视频数据统计不准。（安奕霖-推动客户端完善埋点、大数据收集）</p>
-<p>产品角度<br>
-1、需求满足为第一要务。没有时间沉淀和延伸，做更多事情（后端-继续提供支持，助产品脱身）</p>
-<p>后端角度<br>
-1、历史包袱较重，现有架构存在问题，业务理解依然不够深刻（后端-按计划推进）</p>
-<h4 id="痒点">痒点</h4>
-<p>运营角度<br>
-1、准确判断用户是否活跃，记录用户操作习惯，使用行为，更精准的识别优质用户，目前连用户最近登录时间都是做题看视频时间做的替代（安奕霖-推动客户端完善埋点，大数据提供支持）</p>
-<p>后端角度<br>
-1、异步计算分数、统计数据（后端调研）</p>
-<h4 id="拓展点">拓展点</h4>
-<p>运营角度<br>
-1、自动生成试卷（后端-讨论后启动调研）<br>
-2、更多维度统计数据，如答题时长、分题型正确率等。目前运营关注度其实并不高，更多需要后端自主驱动，反推业务（后端-讨论后启动调研设计）</p>
-<h4 id="个人建议">个人建议</h4>
-<p>1、题目关联知识点，业务之前弄过，工作量太大，放弃了。（有必要再启动调研，可以学习下题库团队）<br>
-2、VIP客户群，内测用户群，收集第一线资料、反馈，更是培养忠实用户</p>
-]]></content>
-    </entry>
     <entry>
         <title type="html"><![CDATA[Hello Gridea]]></title>
         <id>https://freephenix.github.io//post/hello-gridea</id>
