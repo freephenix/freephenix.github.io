@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://freephenix.github.io/</id>
     <title>半亩房顶</title>
-    <updated>2019-09-05T17:08:49.720Z</updated>
+    <updated>2019-09-05T17:12:38.623Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://freephenix.github.io/"/>
     <link rel="self" href="https://freephenix.github.io//atom.xml"/>
@@ -10,6 +10,15 @@
     <logo>https://freephenix.github.io//images/avatar.png</logo>
     <icon>https://freephenix.github.io//favicon.ico</icon>
     <rights>All rights reserved 2019, 半亩房顶</rights>
+    <entry>
+        <title type="html"><![CDATA[test2]]></title>
+        <id>https://freephenix.github.io//post/test2</id>
+        <link href="https://freephenix.github.io//post/test2">
+        </link>
+        <updated>2019-09-05T17:12:15.000Z</updated>
+        <content type="html"><![CDATA[<p>not hide</p>
+]]></content>
+    </entry>
     <entry>
         <title type="html"><![CDATA[Hello Gridea]]></title>
         <id>https://freephenix.github.io//post/hello-gridea</id>
