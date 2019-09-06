@@ -7,7 +7,7 @@
 <title>
     Hello Gridea | 半亩房顶
 </title>
-<link rel="shortcut icon" href="https://freephenix.github.io//favicon.ico?v=1567734271923">
+<link rel="shortcut icon" href="https://freephenix.github.io//favicon.ico?v=1567734794742">
 <!-- <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous"> -->
 <link href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
@@ -20,6 +20,13 @@
 
 
         
+            
+                <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+                <script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+                
+
+                    
+                            
 </head>
 
 <body>
@@ -28,7 +35,7 @@
     <div class="nav">
         <div class="logo">
             <a href="https://freephenix.github.io/">
-                <img class="avatar" src="https://freephenix.github.io//images/avatar.png?v=1567734271923" alt="">
+                <img class="avatar" src="https://freephenix.github.io//images/avatar.png?v=1567734794742" alt="">
             </a>
             <div class="site-title">
                 <h1>
@@ -105,7 +112,7 @@
                             <time class="post-time">2018-12-12</time>
                             
                                 <a href="https://freephenix.github.io//tag/dsvrcRzmC" class="post-tag i-tag
-                            i-tag-">
+                            i-tag-banana">
                             #Gridea
                         </a>
                                 
@@ -215,6 +222,26 @@
         });
     </script>
     
+        
+            <script>
+    window.onload = function() {
+        var gitalk = new Gitalk({
+            clientID: '4babe1e834be236225a8',
+            clientSecret: 'ac2370b65d22db5b7b96398a5426655d61b792e0',
+            repo: 'freephenix.github.io',
+            owner: 'freephenix',
+            admin: ['freephenix'],
+            id: (location.pathname).substring(0, 49), // Ensure uniqueness and length less than 50
+            distractionFreeMode: false // Facebook-like distraction free mode
+        })
+
+        gitalk.render('gitalk-container')
+    }
+</script>
+                
+
+                    
+                                
 </body>
 
 </html>
