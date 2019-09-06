@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://freephenix.github.io/</id>
     <title>半亩房顶</title>
-    <updated>2019-09-06T09:27:24.086Z</updated>
+    <updated>2019-09-06T09:32:02.450Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://freephenix.github.io/"/>
     <link rel="self" href="https://freephenix.github.io//atom.xml"/>
@@ -10,6 +10,111 @@
     <logo>https://freephenix.github.io//images/avatar.png</logo>
     <icon>https://freephenix.github.io//favicon.ico</icon>
     <rights>All rights reserved 2019, 半亩房顶</rights>
+    <entry>
+        <title type="html"><![CDATA[Swoft初窥]]></title>
+        <id>https://freephenix.github.io//post/swoft-chu-kui</id>
+        <link href="https://freephenix.github.io//post/swoft-chu-kui">
+        </link>
+        <updated>2019-09-06T09:29:23.000Z</updated>
+        <content type="html"><![CDATA[<h1 id="前言">前言</h1>
+<p>swoole 大名耳闻已久，前段时间发现了基于swoole的高性能协程全栈框架swoft，所以准备初识一下，以备之后学习应用</p>
+<h1 id="流程">流程</h1>
+<p>其实在安装swoft之前经历了一段很长的路，下面简单罗列下</p>
+<ul>
+<li>1、安装brew</li>
+</ul>
+<pre><code>/usr/bin/ruby -e &quot;$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)&quot;
+</code></pre>
+<p>添加路径</p>
+<pre><code>export PATH=/usr/local/bin:$PATH
+</code></pre>
+<ul>
+<li>2、安装常用命令tree</li>
+</ul>
+<pre><code># 安装了brew之后就简单太多了
+brew install tree
+</code></pre>
+<ul>
+<li>3、安装composer</li>
+</ul>
+<pre><code>php -r &quot;copy('https://install.phpcomposer.com/installer', 'composer-setup.php');&quot; # 下载安装脚本 － composer-setup.php － 到当前目录
+php composer-setup.php # 执行安装过程
+php -r &quot;unlink('composer-setup.php');&quot; # 删除安装脚本
+sudo mv composer.phar /usr/local/bin/composer # 全局安装
+composer config -g repo.packagist composer https://packagist.phpcomposer.com # 更换国内镜像源
+</code></pre>
+<p>composer的使用就不在这里说了，可以自行百度，参考文献中也有对应的文章</p>
+<ul>
+<li>4、安装swoole<br>
+这一步频繁出问题，首先看下正常流程</li>
+</ul>
+<pre><code>#下载解压swoole
+cd /swoole-master
+phpize (或指定phpize路径 如:/Applications/XAMPP/xamppfiles/bin/phpize)
+
+./configure(或指定php-config路径如：./configure --with-php-config=/Applications/XAMPP/xamppfiles/bin/php- config)
+
+sudo make
+
+sudo make install
+
+# php.ini添加配置 extension=swoole.so 
+# 重启Apach服务
+</code></pre>
+<p>下面说下遇到的问题</p>
+<h4 id="1phpize-报错no-such-file-or-directory">（1）phpize 报错No such file or directory</h4>
+<p>解决方法：<br>
+第一步：确认安装了命令行工具</p>
+<pre><code>$ xcode-select --install
+xcode-select: note: install requested for command line developer tools
+</code></pre>
+<p>第二步：如果phpize还是无效、执行下列命令安装header头文件SDK：</p>
+<pre><code>$ cd /Library/Developer/CommandLineTools/Packages/
+$ open macOS_SDK_headers_for_macOS_10.14.pkg #注意版本号，可能因人而异
+</code></pre>
+<h4 id="2phpize报错cannot-find-autoconf-please-check-your-autoconf-installation">（2）phpize报错Cannot find autoconf. Please check your autoconf installation</h4>
+<p>解决方案：<br>
+<code>brew install autoconf</code></p>
+<h4 id="3即便使用sudo也提示权限不足">（3）即便使用sudo也提示权限不足</h4>
+<p>建议先去了解下mac的Rootless机制<br>
+解决方案：</p>
+<ul>
+<li>重启电脑</li>
+<li>开后按住 Command-R 进入恢复分区</li>
+<li>然后在 实用工具 栏找到 终端启动运行</li>
+<li>输入<code>csrutil disable; reboot</code></li>
+</ul>
+<h4 id="4使用集成环境造成的php版本混乱导致拓展安装不上">（4）使用集成环境造成的php版本混乱，导致拓展安装不上</h4>
+<p>phpize 等步骤时候均使用指定的路径操作，然后建议还是不使用集成环境，毕竟一共就是mysql、php、apache或者nginx三个环境，没什么复杂的，更新升级也简单，添加拓展也会避免很多麻烦</p>
+<p>终于终于是安装完swoole拓展了，开始正题<br>
+安装swoft</p>
+<pre><code>composer create-project swoft/swoft swoft
+</code></pre>
+<p>进入目录，查看版本</p>
+<pre><code>php bin/swoft -v
+</code></pre>
+<p>开始http服务体验一下吧</p>
+<pre><code>sudo php bin/swoft ws:start
+#可在.env文件中指定端口
+</code></pre>
+<p>打开127.0.0.1，终于看到了欢迎页面了<br>
+<img src="https://upload-images.jianshu.io/upload_images/5350978-89c0b520924b2cf8.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="不容易啊"></p>
+<h1 id="总结">总结</h1>
+<p>步步有坑啊，要有耐心，一步步解决问题，肯定能看到光芒！加油</p>
+<h1 id="参考文章">参考文章</h1>
+<p>https://blog.csdn.net/boog14/article/details/80331073<br>
+https://www.cnblogs.com/richard-youth/p/6297827.html<br>
+https://www.jianshu.com/p/adcae6213e9b<br>
+https://www.jianshu.com/p/bc4ec0d8ef12?utm_source=oschina-app<br>
+https://www.jianshu.com/p/7f3d4415e65b<br>
+https://www.jianshu.com/p/015339b565a1<br>
+https://blog.csdn.net/happyrabbit456/article/details/44680237<br>
+https://www.jianshu.com/p/653fac3d3b83</p>
+<hr>
+<p>欢迎大家关注我的公众号<br>
+<img src="http://upload-images.jianshu.io/upload_images/5350978-82819a7f4bc71151?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="半亩房顶"></p>
+]]></content>
+    </entry>
     <entry>
         <title type="html"><![CDATA[TCP/IP协议&HTTP和HTTPS的区别&Socket]]></title>
         <id>https://freephenix.github.io//post/tcp-ip-xie-yi-and-http-he-https-de-qu-bie-and-socket</id>

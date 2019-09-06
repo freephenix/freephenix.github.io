@@ -5,7 +5,7 @@
 <meta name="description" content="" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>
-    Yaf学习小记 | 半亩房顶
+    Swoft初窥 | 半亩房顶
 </title>
 <link rel="shortcut icon" href="https://freephenix.github.io//favicon.ico?v=1567762318479">
 <!-- <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous"> -->
@@ -106,93 +106,133 @@
                 <div id="content" class="main-container-left">
                     <article class="post i-card">
                         <h2 class="post-title">
-                            Yaf学习小记
+                            Swoft初窥
                         </h2>
                         <div class="post-info">
                             <time class="post-time">2019-09-06</time>
                             
+                                <a href="https://freephenix.github.io//tag/mKJdR76q2" class="post-tag i-tag
+                            i-tag-error">
+                            #并发
+                        </a>
+                                
                                 <a href="https://freephenix.github.io//tag/oUrcbPScV" class="post-tag i-tag
-                            i-tag-info">
+                            i-tag-warning">
                             #PHP
                         </a>
                                 
                                 <a href="https://freephenix.github.io//tag/uAlgP99Kyv" class="post-tag i-tag
-                            i-tag-other_4">
+                            i-tag-other_3">
                             #框架
                         </a>
                                 
                                 <a href="https://freephenix.github.io//tag/EZFEzEJC9" class="post-tag i-tag
-                            i-tag-banana">
+                            i-tag-primary">
                             #代码笔记
                         </a>
                                 
                         </div>
                         
-                            <div class="post-feature-image" style="background-image: url('https://freephenix.github.io//post-images/yaf-xue-xi-xiao-ji.jpeg')"></div>
+                            <div class="post-feature-image" style="background-image: url('https://freephenix.github.io//post-images/swoft-chu-kui.jpeg')"></div>
                             
                                 <div class="post-content">
-                                    <p>工作中需要用到，提前学习下。以此文记录下遇到的问题或者知识点<br>
-##安装 &amp;&amp; 配置</p>
-<h3 id="1-phpize-作用">1、phpize 作用</h3>
-<h3 id="2-m4作用">2、m4作用</h3>
-<p>m4 是 POSIX 标准中的一部分，所有版本的 UNIX 下都可用。虽然这种语言可以单独使用，但大多数人需要 m4 仅仅是因为 GNU autoconf 中的 “configure” <a href="https://baike.baidu.com/item/%E8%84%9A%E6%9C%AC">脚本</a>依赖它。宏处理器（或预处理器）一般用作文本替换工具。最终用户经常会用它来处理要反复使用的文本模板，典型的是用于编程工具，还会用于文本编辑和文字处理工具。</p>
-<p>m4 是一种宏处理器，它扫描用户输入的文本并将其输出，期间如果遇到宏就将其展开后输出。宏有两种，一种是内建的，另一种是用户定义的，它们能接受任意数量的参数。除了做展开宏的工作之外，m4 内建的宏能够加载文件，执行 Shell 命令，做整数运算，操纵文本，形成递归等等。m4 可用作编译器的前端，或者单纯作为宏处理器来用。</p>
-<p>参考文章：<br>
-<strong>作者：garfileo  <a href="https://segmentfault.com/u/garfileo">作者主页</a></strong><br>
-<strong>本文整理自：<a href="https://segmentfault.com/a/1190000004104696">https://segmentfault.com/a/1190000004104696</a></strong><br>
-<strong>整理者：Timekeeperl    <a href="http://blog.csdn.net/timekeeperl">csdn博客</a></strong></p>
-<h3 id="3-phpize-时-m4-报错-need-gnu-m4-14-or-later-usrlocalbinm4">3、phpize 时 m4 报错 need GNU m4 1.4 or later: /usr/local/bin/m4</h3>
-<p>检查问题时候发现查找到的m4已经无法正常使用<br>
-<img src="https://upload-images.jianshu.io/upload_images/5350978-71c1bc3d502ca0a8.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="m4报错"><br>
-网上找寻了一些方法，尝试了更新，无果</p>
-<blockquote>
-<p>brew upgrade m4</p>
-</blockquote>
-<p>然后发现系统内是存在一个1.4.8版本的m4的，位置如下：</p>
-<blockquote>
-<p>usr/local/Cellar/m4/1.4.18</p>
-</blockquote>
-<p>遂查了下改变这个配置文件的位置：</p>
-<blockquote>
-<p>/usr/local/bin/autom4te</p>
-</blockquote>
-<p>此文件的第90行处，是m4的路径配置，将m4的路径设置为</p>
-<blockquote>
-<p>/usr/local/Cellar/m4/1.4.18/bin/m4</p>
-</blockquote>
-<p>至此 done</p>
-<h3 id="4-make-时-pcreh-报错">4、make 时 pcre.h 报错</h3>
-<pre><code>/usr/include/php/ext/pcre/php_pcre.h:29:10: fatal error: 'pcre.h' file not found
-#include &quot;pcre.h&quot;
-         ^~~~~~~~
-1 error generated.
-make: *** [routes/yaf_route_regex.lo] Error 1
+                                    <h1 id="前言">前言</h1>
+<p>swoole 大名耳闻已久，前段时间发现了基于swoole的高性能协程全栈框架swoft，所以准备初识一下，以备之后学习应用</p>
+<h1 id="流程">流程</h1>
+<p>其实在安装swoft之前经历了一段很长的路，下面简单罗列下</p>
+<ul>
+<li>1、安装brew</li>
+</ul>
+<pre><code>/usr/bin/ruby -e &quot;$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)&quot;
 </code></pre>
-<p>查了下原因：<strong>没有安装pcre，或者安装pcre的目录不对</strong></p>
-<blockquote>
-<p>brew install pcre</p>
-</blockquote>
-<p>解决</p>
-<h3 id="5-make-install-报错">5、make install 报错</h3>
-<pre><code>cp: /usr/lib/php/extensions/no-debug-non-zts-20160303/#INST@62550#: Operation not permitted
+<p>添加路径</p>
+<pre><code>export PATH=/usr/local/bin:$PATH
 </code></pre>
-<p>Mac OS Sierra 安装PHP扩展，在make install 的时候，出现类似</p>
-<p>cp: /usr/lib/php/extensions/no-debug-non-zts-20131226/#INST@12567#: Operation not permitted<br>
-make: *** [install-modules] Error 1</p>
-<p>的错误，是因为是OSX 10.11 El Capitan开始，新添加了一个新的安全机制叫系统完整性保护System Integrity Protection (SIP)，所以对于目录<br>
-/System<br>
-/sbin<br>
-/usr<br>
-不包含(/usr/local/)<br>
-仅仅供系统使用，其它用户或者程序无法直接使用，而我们的/usr/lib/php/extensions/刚好在受保护范围内。</p>
-<p>解决办法是</p>
-<p>禁掉SIP保护机制:</p>
-<pre><code>重启系统
-按住Command + R   （重新亮屏之后就开始按，象征地按几秒再松开，出现苹果标志，ok）
-菜单“实用工具” ==&gt;&gt; “终端” ==&gt;&gt; 输入csrutil disable；执行后会输出：Successfully disabled System Integrity Protection. Please restart the machine for the changes to take effect.
-重启系统
+<ul>
+<li>2、安装常用命令tree</li>
+</ul>
+<pre><code># 安装了brew之后就简单太多了
+brew install tree
 </code></pre>
-<p>禁止掉SIP后，就可以顺利的安装了，当然装完了以后记得重新打开SIP，方法同上，只是命令是csrutil enable。当然，就算关掉了SIP保护机制，你依然需要root权限将yaf.so拷贝进去。</p>
+<ul>
+<li>3、安装composer</li>
+</ul>
+<pre><code>php -r &quot;copy('https://install.phpcomposer.com/installer', 'composer-setup.php');&quot; # 下载安装脚本 － composer-setup.php － 到当前目录
+php composer-setup.php # 执行安装过程
+php -r &quot;unlink('composer-setup.php');&quot; # 删除安装脚本
+sudo mv composer.phar /usr/local/bin/composer # 全局安装
+composer config -g repo.packagist composer https://packagist.phpcomposer.com # 更换国内镜像源
+</code></pre>
+<p>composer的使用就不在这里说了，可以自行百度，参考文献中也有对应的文章</p>
+<ul>
+<li>4、安装swoole<br>
+这一步频繁出问题，首先看下正常流程</li>
+</ul>
+<pre><code>#下载解压swoole
+cd /swoole-master
+phpize (或指定phpize路径 如:/Applications/XAMPP/xamppfiles/bin/phpize)
+
+./configure(或指定php-config路径如：./configure --with-php-config=/Applications/XAMPP/xamppfiles/bin/php- config)
+
+sudo make
+
+sudo make install
+
+# php.ini添加配置 extension=swoole.so 
+# 重启Apach服务
+</code></pre>
+<p>下面说下遇到的问题</p>
+<h4 id="1phpize-报错no-such-file-or-directory">（1）phpize 报错No such file or directory</h4>
+<p>解决方法：<br>
+第一步：确认安装了命令行工具</p>
+<pre><code>$ xcode-select --install
+xcode-select: note: install requested for command line developer tools
+</code></pre>
+<p>第二步：如果phpize还是无效、执行下列命令安装header头文件SDK：</p>
+<pre><code>$ cd /Library/Developer/CommandLineTools/Packages/
+$ open macOS_SDK_headers_for_macOS_10.14.pkg #注意版本号，可能因人而异
+</code></pre>
+<h4 id="2phpize报错cannot-find-autoconf-please-check-your-autoconf-installation">（2）phpize报错Cannot find autoconf. Please check your autoconf installation</h4>
+<p>解决方案：<br>
+<code>brew install autoconf</code></p>
+<h4 id="3即便使用sudo也提示权限不足">（3）即便使用sudo也提示权限不足</h4>
+<p>建议先去了解下mac的Rootless机制<br>
+解决方案：</p>
+<ul>
+<li>重启电脑</li>
+<li>开后按住 Command-R 进入恢复分区</li>
+<li>然后在 实用工具 栏找到 终端启动运行</li>
+<li>输入<code>csrutil disable; reboot</code></li>
+</ul>
+<h4 id="4使用集成环境造成的php版本混乱导致拓展安装不上">（4）使用集成环境造成的php版本混乱，导致拓展安装不上</h4>
+<p>phpize 等步骤时候均使用指定的路径操作，然后建议还是不使用集成环境，毕竟一共就是mysql、php、apache或者nginx三个环境，没什么复杂的，更新升级也简单，添加拓展也会避免很多麻烦</p>
+<p>终于终于是安装完swoole拓展了，开始正题<br>
+安装swoft</p>
+<pre><code>composer create-project swoft/swoft swoft
+</code></pre>
+<p>进入目录，查看版本</p>
+<pre><code>php bin/swoft -v
+</code></pre>
+<p>开始http服务体验一下吧</p>
+<pre><code>sudo php bin/swoft ws:start
+#可在.env文件中指定端口
+</code></pre>
+<p>打开127.0.0.1，终于看到了欢迎页面了<br>
+<img src="https://upload-images.jianshu.io/upload_images/5350978-89c0b520924b2cf8.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="不容易啊"></p>
+<h1 id="总结">总结</h1>
+<p>步步有坑啊，要有耐心，一步步解决问题，肯定能看到光芒！加油</p>
+<h1 id="参考文章">参考文章</h1>
+<p>https://blog.csdn.net/boog14/article/details/80331073<br>
+https://www.cnblogs.com/richard-youth/p/6297827.html<br>
+https://www.jianshu.com/p/adcae6213e9b<br>
+https://www.jianshu.com/p/bc4ec0d8ef12?utm_source=oschina-app<br>
+https://www.jianshu.com/p/7f3d4415e65b<br>
+https://www.jianshu.com/p/015339b565a1<br>
+https://blog.csdn.net/happyrabbit456/article/details/44680237<br>
+https://www.jianshu.com/p/653fac3d3b83</p>
+<hr>
+<p>欢迎大家关注我的公众号<br>
+<img src="http://upload-images.jianshu.io/upload_images/5350978-82819a7f4bc71151?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="半亩房顶"></p>
 
                                 </div>
                     </article>
@@ -200,9 +240,9 @@ make: *** [install-modules] Error 1</p>
                     
                         <div class="next-post">
                             <div class="next">下一篇</div>
-                            <a href="https://freephenix.github.io//post/hello-gridea">
+                            <a href="https://freephenix.github.io//post/tcp-ip-xie-yi-and-http-he-https-de-qu-bie-and-socket">
                                 <h3 class="post-title">
-                                    Hello Gridea
+                                    TCP/IP协议&amp;HTTP和HTTPS的区别&amp;Socket
                                 </h3>
                             </a>
                         </div>
@@ -221,19 +261,16 @@ make: *** [install-modules] Error 1</p>
         <div class="toc-title i-card-title">目录</div>
         <div class="toc-content">
             <ul class="markdownIt-TOC">
-<li>
-<ul>
-<li>
-<ul>
-<li><a href="#1-phpize-%E4%BD%9C%E7%94%A8">1、phpize 作用</a></li>
-<li><a href="#2-m4%E4%BD%9C%E7%94%A8">2、m4作用</a></li>
-<li><a href="#3-phpize-%E6%97%B6-m4-%E6%8A%A5%E9%94%99-need-gnu-m4-14-or-later-usrlocalbinm4">3、phpize 时 m4 报错 need GNU m4 1.4 or later: /usr/local/bin/m4</a></li>
-<li><a href="#4-make-%E6%97%B6-pcreh-%E6%8A%A5%E9%94%99">4、make 时 pcre.h 报错</a></li>
-<li><a href="#5-make-install-%E6%8A%A5%E9%94%99">5、make install 报错</a></li>
-</ul>
-</li>
-</ul>
-</li>
+<li><a href="#%E5%89%8D%E8%A8%80">前言</a></li>
+<li><a href="#%E6%B5%81%E7%A8%8B">流程</a><br>
+*<br>
+*<br>
+* <a href="#1phpize-%E6%8A%A5%E9%94%99no-such-file-or-directory">（1）phpize 报错No such file or directory</a><br>
+* <a href="#2phpize%E6%8A%A5%E9%94%99cannot-find-autoconf-please-check-your-autoconf-installation">（2）phpize报错Cannot find autoconf. Please check your autoconf installation</a><br>
+* <a href="#3%E5%8D%B3%E4%BE%BF%E4%BD%BF%E7%94%A8sudo%E4%B9%9F%E6%8F%90%E7%A4%BA%E6%9D%83%E9%99%90%E4%B8%8D%E8%B6%B3">（3）即便使用sudo也提示权限不足</a><br>
+* <a href="#4%E4%BD%BF%E7%94%A8%E9%9B%86%E6%88%90%E7%8E%AF%E5%A2%83%E9%80%A0%E6%88%90%E7%9A%84php%E7%89%88%E6%9C%AC%E6%B7%B7%E4%B9%B1%E5%AF%BC%E8%87%B4%E6%8B%93%E5%B1%95%E5%AE%89%E8%A3%85%E4%B8%8D%E4%B8%8A">（4）使用集成环境造成的php版本混乱，导致拓展安装不上</a></li>
+<li><a href="#%E6%80%BB%E7%BB%93">总结</a></li>
+<li><a href="#%E5%8F%82%E8%80%83%E6%96%87%E7%AB%A0">参考文章</a></li>
 </ul>
 
         </div>

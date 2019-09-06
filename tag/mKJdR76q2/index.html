@@ -5,7 +5,7 @@
 <meta name="description" content="" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>
-    Java | 半亩房顶
+    并发 | 半亩房顶
 </title>
 <link rel="shortcut icon" href="https://freephenix.github.io//favicon.ico?v=1567762318479">
 <!-- <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous"> -->
@@ -98,68 +98,149 @@
                     
     <div class="i-card">
         <b>标签：#
-        Java</b>
+        并发</b>
     </div>
     
         
             <article class="post i-card">
                 <h2 class="post-title">
-                    <a href="https://freephenix.github.io//post/think-in-java-du-shu-bi-ji">
-                        THINK-IN-JAVA读书笔记
+                    <a href="https://freephenix.github.io//post/swoft-chu-kui">
+                        Swoft初窥
                     </a>
                 </h2>
                 <div class="post-info">
                     <time class="post-time">2019-09-06</time>
                     
-                        <a href="https://freephenix.github.io//tag/dbo9IOX31" class="post-tag i-tag
-                            i-tag-other_4">
-            #Java
+                        <a href="https://freephenix.github.io//tag/mKJdR76q2" class="post-tag i-tag
+                            i-tag-other_3">
+            #并发
+        </a>
+                        
+                        <a href="https://freephenix.github.io//tag/oUrcbPScV" class="post-tag i-tag
+                            i-tag-other_2">
+            #PHP
+        </a>
+                        
+                        <a href="https://freephenix.github.io//tag/uAlgP99Kyv" class="post-tag i-tag
+                            i-tag-">
+            #框架
         </a>
                         
                         <a href="https://freephenix.github.io//tag/EZFEzEJC9" class="post-tag i-tag
-                            i-tag-other_2">
+                            i-tag-other_1">
             #代码笔记
         </a>
                         
                 </div>
                 <div class="post-article">
                     
-                        <a href="https://freephenix.github.io//post/think-in-java-du-shu-bi-ji" class="post-feature-image" style="background-image:url(https://freephenix.github.io//post-images/think-in-java-du-shu-bi-ji.jpg) ">
+                        <a href="https://freephenix.github.io//post/swoft-chu-kui" class="post-feature-image" style="background-image:url(https://freephenix.github.io//post-images/swoft-chu-kui.jpeg) ">
                         </a>
                         
                             <div class="post-content">
                                 
                                         <div class="post-content-content">
-                                            第一本英文版专业书籍，还是相当刺激的。望持之以恒，坚持不懈。
-2017-04-12  page：00-17
-1、面向对象编程 和 面向过程编程的区别
-面向过程关注点在于解决的问题，比如一个状态机，只能处理固定输入的字符串
-但是面向对象关注的是问题的主体，将问题的主体抽象化，如此便可以很方便的解决围绕此主体的所有问题
-两者区别主要在于关注的对象不同，聚焦点不同，也就意味着解决问题的能力不同。
+                                            前言
+swoole 大名耳闻已久，前段时间发现了基于swoole的高性能协程全栈框架swoft，所以准备初识一下，以备之后学习应用
+流程
+其实在安装swoft之前经历了一段很长的路，下面简单罗列下
 
-面向过程可以更高效解决某一特定问题
-	直观简洁，高效解决特定问题
-面向对象便于解决围绕某一主体的一系列问题，方便拓展，更加灵活
-	重用性、灵活性和扩展性。
+1、安装brew
 
-2、面向对象的五个特点
-（1）Everything is an object.
-任何事物都可以抽象为对象
-（2）A program is a bunch of objects telling each other what to do by sending messages.
-程序是对象的集合，相互之间通过发送消息告诉他们该做什么
-（3）Each object has its own memory made up of other objects.
-每个对象都有自己的空间，去容纳其他的对象
-（4）Every object has a type.
-每个对象都有一个类型
-（5）All objects of a particular type can receive the same messages.
-所有同一特定类型的对象能够接受相同的信息
-2017-04-13  page：17-20
-3、面向对象编程设计中，每一个类做一定的事情，即提供服务，但不要做得太多
-有其他事情要做，暂时搁置
+/usr/bin/ruby -e &amp;quot;$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)&amp;quot;
+
+添加路径
+export PATH=/usr/local/bin:$PATH
+
+
+2、安装常用命令tree
+
+# 安装了brew之后就简单太多了
+brew install tree
+
+
+3、安装composer
+
+php -r &amp;quot;copy(&#39;https://install.phpcomposer.com/installer&#39;, &#39;composer-setup.php&#39;);&amp;quot; # 下载安装脚本 － composer-setup.php － 到当前目录
+php composer-setup.php # 执行安装过程
+php -r &amp;quot;unlink(&#39;composer-setup.php&#39;);&amp;quot; # 删除安装脚本
+sudo mv composer.phar /usr/local/bin/composer # 全局安装
+composer config -g repo.packagist composer https://packagist.phpcomposer.com # 更换国内镜像源
+
+composer的使用就不在这里说了，可以自行百度，参考文献中也有对应的文章
+
+4、安装swoole
+这一步频繁出问题，首先看下正常流程
+
+#下载解压swoole
+cd /swoole-master
+phpize (或指定phpize路径 如:/Applications/XAMPP/xamppfiles/bin/phpize)
+
+./configure(或指定php-config路径如：./configure --with-php-config=/Applications/XAMPP/xamppfiles/bin/php- config)
+
+sudo make
+
+sudo make install
+
+# php.ini添加配置 extension=swoole.so 
+# 重启Apach服务
+
+下面说下遇到的问题
+（1）phpize 报错No such file or directory
+解决方法：
+第一步：确认安装了命令行工具
+$ xcode-select --install
+xcode-select: note: install requested for command line developer tools
+
+第二步：如果phpize还是无效、执行下列命令安装header头文件SDK：
+$ cd /Library/Developer/CommandLineTools/Packages/
+$ open macOS_SDK_headers_for_macOS_10.14.pkg #注意版本号，可能因人而异
+
+（2）phpize报错Cannot find autoconf. Please check your autoconf installation
+解决方案：
+brew install autoconf
+（3）即便使用sudo也提示权限不足
+建议先去了解下mac的Rootless机制
+解决方案：
+
+重启电脑
+开后按住 Command-R 进入恢复分区
+然后在 实用工具 栏找到 终端启动运行
+输入csrutil disable; reboot
+
+（4）使用集成环境造成的php版本混乱，导致拓展安装不上
+phpize 等步骤时候均使用指定的路径操作，然后建议还是不使用集成环境，毕竟一共就是mysql、php、apache或者nginx三个环境，没什么复杂的，更新升级也简单，添加拓展也会避免很多麻烦
+终于终于是安装完swoole拓展了，开始正题
+安装swoft
+composer create-project swoft/swoft swoft
+
+进入目录，查看版本
+php bin/swoft -v
+
+开始http服务体验一下吧
+sudo php bin/swoft ws:start
+#可在.env文件中指定端口
+
+打开127.0.0.1，终于看到了欢迎页面了
+
+总结
+步步有坑啊，要有耐心，一步步解决问题，肯定能看到光芒！加油
+参考文章
+https://blog.csdn.net/boog14/article/details/80331073
+https://www.cnblogs.com/richard-youth/p/6297827.html
+https://www.jianshu.com/p/adcae6213e9b
+https://www.jianshu.com/p/bc4ec0d8ef12?utm_source=oschina-app
+https://www.jianshu.com/p/7f3d4415e65b
+https://www.jianshu.com/p/015339b565a1
+https://blog.csdn.net/happyrabbit456/article/details/44680237
+https://www.jianshu.com/p/653fac3d3b83
+
+欢迎大家关注我的公众号
+
 
                                         </div>
                                         
-                                            <a class="btn btn-text" href="https://freephenix.github.io//post/think-in-java-du-shu-bi-ji">Read More ~</a>
+                                            <a class="btn btn-text" href="https://freephenix.github.io//post/swoft-chu-kui">Read More ~</a>
                             </div>
                 </div>
             </article>
