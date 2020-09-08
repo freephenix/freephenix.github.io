@@ -7,7 +7,7 @@
 <title>
     DDD | 半亩房顶
 </title>
-<link rel="shortcut icon" href="https://freephenix.github.io//favicon.ico?v=1599569079198">
+<link rel="shortcut icon" href="https://freephenix.github.io//favicon.ico?v=1599569408954">
 <!-- <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous"> -->
 <link href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
@@ -39,7 +39,7 @@
     <div class="nav">
         <div class="logo">
             <a href="https://freephenix.github.io/">
-                <img class="avatar" src="https://freephenix.github.io//images/avatar.png?v=1599569079198" alt="">
+                <img class="avatar" src="https://freephenix.github.io//images/avatar.png?v=1599569408954" alt="">
             </a>
             <div class="site-title">
                 <h1>
@@ -116,6 +116,78 @@
         
             <article class="post i-card">
                 <h2 class="post-title">
+                    <a href="https://freephenix.github.io/post/ddd-xue-xi-bi-ji-yi/">
+                        DDD 学习笔记（一）
+                    </a>
+                </h2>
+                <div class="post-info">
+                    <time class="post-time">2020-09-08</time>
+                    
+                        <a href="https://freephenix.github.io/tag/DOSTPMjk_/" class="post-tag i-tag
+                            i-tag-other_1">
+            #DDD
+        </a>
+                        
+                </div>
+                <div class="post-article">
+                    
+                        <a href="https://freephenix.github.io/post/ddd-xue-xi-bi-ji-yi/" class="post-feature-image" style="background-image:url(https://freephenix.github.io//post-images/ddd-xue-xi-bi-ji-yi.jpeg) ">
+                        </a>
+                        
+                            <div class="post-content">
+                                
+                                        <div class="post-content-content">
+                                            前言
+笔记内容中，图片以及定义等描述性内容主要来自于极客时间《DDD实战课程》，思考和QA多为结合网络资料自己思考后总结的。如有侵权，请联系删除。谢谢
+软件架构模式的演进
+
+
+
+第一阶段是单机架构
+采用面向过程的设计方法，系统包括客户端 UI 层和数据库两层，采用 C/S 架构模式，整个系统围绕数据库驱动设计和开发，并且总是从设计数据库和字段开始。
+
+
+第二阶段是集中式架构
+采用面向对象的设计方法，系统包括业务接入层、业务逻辑层和数据库层，采用经典的三层架构，也有部分应用采用传统的 SOA 架构。这种架构容易使系统变得臃肿，可扩展性和弹性伸缩性差。
+
+
+第三阶段是分布式微服务架构
+随着微服务架构理念的提出，集中式架构正向分布式微服务架构演进。微服务架构可以很好地实现应用之间的解耦，解决单体应用扩展性和弹性伸缩能力不足的问题。
+
+
+微服务架构
+微服务架构旨在解决什么问题？
+在单机和集中式架构这两种模式下，软件无法快速响应需求和业务的迅速变化，再究其原因，有系统依赖复杂，越来越笨重等多种因素，而微服务，旨在应用解耦，提高系统的扩展性和弹性伸缩能力，加速技术对于业务的响应和支持
+微服务架构实现面临什么问题？
+微服务将复杂系统拆分为多个子系统，而此时，如何拆分、粒度如何把握便成了最大的问题
+DDD 和微服务的关系？
+DDD 是一种架构设计方法，从业务领域视角划分领域边界，对于微服务的边界提供了一种解决方案
+微服务是一种架构风格，关注的点偏技术，旨在更好的为业务提供支持
+两者从本质上都是为了追求高响应力，而从业务视角去分离应用系统建设复杂度的手段。两者都强调根据业务发展，合理划分领域边界，持续调整现有架构，优化代码，即演进式架构。
+DDD 如何解决微服务实现面临的问题？
+DDD分战略设计和战术设计
+DDD 战略设计会建立领域模型，用于指导微服务的设计和拆分。
+通过事件风暴的方法，在业务专家的带领下，全员参与，梳理业务中出现的实体、命令、事件等领域对象，并将这些对象根据其关联性组合、划分，最终形成 聚合、限界上下文等边界，建立领域模型。
+
+我们可以用三步来划定领域模型和微服务的边界
+
+第一步：在事件风暴中梳理业务过程中的用户操作、事件以及外部依赖关系等，根据这些要素梳理出领域实体等领域对象。
+第二步：根据领域实体之间的业务关联性，将业务紧密相关的实体进行组合形成聚合，同时确定聚合中的聚合根、值对象和实体。在这个图里，聚合之间的边界是第一层边界，它们在同一个微服务实例中运行，这个边界是逻辑边界，所以用虚线表示。
+第三步：根据业务及语义边界等因素，将一个或者多个聚合划定在一个限界上下文内，形成领域模型。在这个图里，限界上下文之间的边界是第二层边界，这一层边界可能就是未来微服务的边界，不同限界上下文内的领域逻辑被隔离在不同的微服务实例中运行，物理上相互隔离，所以是物理边界，边界之间用实线来表示。
+
+
+欢迎大家关注公众号一起交流
+
+
+                                        </div>
+                                        
+                                            <a class="btn btn-text" href="https://freephenix.github.io/post/ddd-xue-xi-bi-ji-yi/">Read More ~</a>
+                            </div>
+                </div>
+            </article>
+            
+            <article class="post i-card">
+                <h2 class="post-title">
                     <a href="https://freephenix.github.io/post/ddd-xue-xi-bi-ji-san/">
                         DDD 学习笔记（三）
                     </a>
@@ -124,13 +196,8 @@
                     <time class="post-time">2020-09-08</time>
                     
                         <a href="https://freephenix.github.io/tag/DOSTPMjk_/" class="post-tag i-tag
-                            i-tag-banana">
-            #DDD
-        </a>
-                        
-                        <a href="https://freephenix.github.io/tag/-VL7wlnP91/" class="post-tag i-tag
                             i-tag-other_2">
-            #架构
+            #DDD
         </a>
                         
                 </div>
@@ -163,7 +230,7 @@
                     <!-- 个人信息 -->
                     
     <div class="id_card i-card">
-        <div class="id_card-avatar" style="background-image: url(https://freephenix.github.io//images/avatar.png?v=1599569079198)">
+        <div class="id_card-avatar" style="background-image: url(https://freephenix.github.io//images/avatar.png?v=1599569408954)">
         </div>
         <h1 class="id_card-title">
             半亩房顶
