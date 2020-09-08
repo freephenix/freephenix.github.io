@@ -5,7 +5,7 @@
 <meta name="description" content="" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>
-    THINK-IN-JAVA读书笔记 | 半亩房顶
+    DDD 学习笔记（三） | 半亩房顶
 </title>
 <link rel="shortcut icon" href="https://freephenix.github.io//favicon.ico?v=1599569079198">
 <!-- <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous"> -->
@@ -118,52 +118,63 @@
                 <div id="content" class="main-container-left">
                     <article class="post i-card">
                         <h2 class="post-title">
-                            THINK-IN-JAVA读书笔记
+                            DDD 学习笔记（三）
                         </h2>
                         <div class="post-info">
-                            <time class="post-time">2019-09-06</time>
+                            <time class="post-time">2020-09-08</time>
                             
-                                <a href="https://freephenix.github.io/tag/dbo9IOX31/" class="post-tag i-tag
-                            i-tag-info">
-                            #Java
+                                <a href="https://freephenix.github.io/tag/DOSTPMjk_/" class="post-tag i-tag
+                            i-tag-">
+                            #DDD
                         </a>
                                 
-                                <a href="https://freephenix.github.io/tag/EZFEzEJC9/" class="post-tag i-tag
-                            i-tag-info">
-                            #代码笔记
+                                <a href="https://freephenix.github.io/tag/-VL7wlnP91/" class="post-tag i-tag
+                            i-tag-other_1">
+                            #架构
                         </a>
                                 
                         </div>
                         
-                            <div class="post-feature-image" style="background-image: url('https://freephenix.github.io//post-images/think-in-java-du-shu-bi-ji.jpg')"></div>
+                            <div class="post-feature-image" style="background-image: url('http://ww1.sinaimg.cn/large/b2488845ly1gijj2mogimj209i043744.jpg')"></div>
                             
                                 <div class="post-content">
-                                    <p>第一本英文版专业书籍，还是相当刺激的。望持之以恒，坚持不懈。</p>
-<p>2017-04-12  page：00-17<br>
-1、面向对象编程 和 面向过程编程的区别<br>
-面向过程关注点在于解决的问题，比如一个状态机，只能处理固定输入的字符串<br>
-但是面向对象关注的是问题的主体，将问题的主体抽象化，如此便可以很方便的解决围绕此主体的所有问题</p>
-<pre><code>两者区别主要在于关注的对象不同，聚焦点不同，也就意味着解决问题的能力不同。
-
-面向过程可以更高效解决某一特定问题
-	直观简洁，高效解决特定问题
-面向对象便于解决围绕某一主体的一系列问题，方便拓展，更加灵活
-	重用性、灵活性和扩展性。
-</code></pre>
-<p>2、面向对象的五个特点<br>
-（1）Everything is an object.<br>
-任何事物都可以抽象为对象<br>
-（2）A program is a bunch of objects telling each other what to do by sending messages.<br>
-程序是对象的集合，相互之间通过发送消息告诉他们该做什么<br>
-（3）Each object has its own memory made up of other objects.<br>
-每个对象都有自己的空间，去容纳其他的对象<br>
-（4）Every object has a type.<br>
-每个对象都有一个类型<br>
-（5）All objects of a particular type can receive the same messages.<br>
-所有同一特定类型的对象能够接受相同的信息</p>
-<p>2017-04-13  page：17-20<br>
-3、面向对象编程设计中，每一个类做一定的事情，即提供服务，但不要做得太多</p>
-<p>有其他事情要做，暂时搁置</p>
+                                    <p>DDD 分层架构包含用户接口层、应用层、领域层和基础层。<br>
+通过这些层次划分，我们可以明确微服务各层的职能，划定各领域对象的边界，确定各领域对象的协作方式。这种架构既体现了微服务设计和架构演进的需求，又很好地融入了领域模型的概念</p>
+<!-- more -->
+<h1 id="概念">概念</h1>
+<h3 id="领域事件总体架构">领域事件总体架构</h3>
+<p><img src="http://ww1.sinaimg.cn/large/b2488845ly1giji0gy4gyj21d40r444h.jpg" alt="微服务架构" loading="lazy"><br>
+领域事件：发生后通常会导致进一步的业务操作，这种事件被称为领域事件</p>
+<ul>
+<li>发布后，发布方不需要关心后续处理，实现领域解耦</li>
+<li>只能保证最终一致性</li>
+<li>需要引入分布式事务</li>
+<li>领域事件应该是概括性的，生产者和消费者无直接关联的</li>
+</ul>
+<h3 id="ddd分层架构">DDD分层架构</h3>
+<figure data-type="image" tabindex="1"><img src="http://ww1.sinaimg.cn/large/b2488845ly1gijiif3rhdj21040hp7cy.jpg" alt="DDD架构演进" loading="lazy"></figure>
+<figure data-type="image" tabindex="2"><img src="http://ww1.sinaimg.cn/large/b2488845ly1gijikaotv1j20i70gdn05.jpg" alt="目前的四层架构" loading="lazy"></figure>
+<ul>
+<li>用户接口层<br>
+接口用户的指令 &amp; 向用户展示信息</li>
+<li>应用层<br>
+应用层并不是业务层，而是流程相关动作，协调服务编排和组合，类似controller</li>
+<li>领域层<br>
+领域层的作用是实现企业核心业务逻辑，包含聚合根、实体、值对象、领域服务等领域模型中的领域对象。</li>
+<li>基础层<br>
+基础层是贯穿所有层的，它的作用就是为其它各层提供通用的技术和基础服务，包括第三方 工具、驱动、消息中间件、网关、文件、缓存以及数据库等</li>
+</ul>
+<h4 id="分层原则">分层原则</h4>
+<ul>
+<li>每层只能与位于其下方的层发生耦合。</li>
+</ul>
+<h3 id="微服务架构的演进">微服务架构的演进</h3>
+<figure data-type="image" tabindex="3"><img src="http://ww1.sinaimg.cn/large/b2488845ly1gijit9wzzrj20i30b5wh6.jpg" alt="以聚合为单位重组拆分" loading="lazy"></figure>
+<h3 id="微服务内服务的演进">微服务内服务的演进</h3>
+<figure data-type="image" tabindex="4"><img src="http://ww1.sinaimg.cn/large/b2488845ly1gijixhwy0sj20pp0cgdis.jpg" alt="共同的服务抽象下沉" loading="lazy"></figure>
+<h1 id="总结">总结</h1>
+<p>DDD 分层架构包含用户接口层、应用层、领域层和基础层。<br>
+通过这些层次划分，我们可以明确微服务各层的职能，划定各领域对象的边界，确定各领域对象的协作方式。这种架构既体现了微服务设计和架构演进的需求，又很好地融入了领域模型的概念</p>
 
                                 </div>
                     </article>
@@ -171,9 +182,9 @@
                     
                         <div class="next-post">
                             <div class="next">下一篇</div>
-                            <a href="https://freephenix.github.io/post/yaf-xue-xi-xiao-ji/">
+                            <a href="https://freephenix.github.io/post/swoft-chu-kui/">
                                 <h3 class="post-title">
-                                    Yaf学习小记
+                                    Swoft初窥
                                 </h3>
                             </a>
                         </div>
@@ -186,32 +197,55 @@
                 <!-- right -->
                 <div id="sidebar" class="main-container-right">
                     
-                                <!-- id-card -->
-                                
-    <div class="id_card i-card">
-        <div class="id_card-avatar" style="background-image: url(https://freephenix.github.io//images/avatar.png?v=1599569079198)">
-        </div>
-        <h1 class="id_card-title">
-            半亩房顶
-        </h1>
-        <h2 class="id_card-description">
-            假如我手中有一块小石头
-        </h2>
-        <!--  -->
-        <div class="id_card-sns">
-            <!-- github -->
-            
-                    <!-- twitter -->
-                    
-                            <!-- weibo -->
-                            
-                                    <!-- facebook -->
-                                    
+                        <!-- toc -->
+                        
+    <div class="toc-card i-card ">
+        <div class="toc-title i-card-title">目录</div>
+        <div class="toc-content">
+            <ul class="markdownIt-TOC">
+<li><a href="#%E6%A6%82%E5%BF%B5">概念</a><br>
+*
+<ul>
+<li><a href="#%E9%A2%86%E5%9F%9F%E4%BA%8B%E4%BB%B6%E6%80%BB%E4%BD%93%E6%9E%B6%E6%9E%84">领域事件总体架构</a></li>
+<li><a href="#ddd%E5%88%86%E5%B1%82%E6%9E%B6%E6%9E%84">DDD分层架构</a>
+<ul>
+<li><a href="#%E5%88%86%E5%B1%82%E5%8E%9F%E5%88%99">分层原则</a></li>
+</ul>
+</li>
+<li><a href="#%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%9E%B6%E6%9E%84%E7%9A%84%E6%BC%94%E8%BF%9B">微服务架构的演进</a></li>
+<li><a href="#%E5%BE%AE%E6%9C%8D%E5%8A%A1%E5%86%85%E6%9C%8D%E5%8A%A1%E7%9A%84%E6%BC%94%E8%BF%9B">微服务内服务的演进</a></li>
+</ul>
+</li>
+<li><a href="#%E6%80%BB%E7%BB%93">总结</a></li>
+</ul>
 
         </div>
+        <script>
+            function locateCatelogList() {
+                /*获取文章目录集合,可通过:header过滤器*/
+                var alis = $('.post-content :header');
+                /*获取侧边栏目录列表集合**/
+                var sidebar_alis = $('.markdownIt-TOC a');
+                /*获取滚动条到顶部的距离*/
+                var scroll_height = $(window).scrollTop();
+                for (var i = 0; i < alis.length; i++) {
+                    /*获取锚点集合中的元素分别到顶点的距离*/
+                    var a_height = $(alis[i]).offset().top;
+                    if (a_height < scroll_height) {
+                        /*高亮显示*/
+                        sidebar_alis.removeClass('on');
+                        $(sidebar_alis[i]).addClass('on');
+                    }
+                }
+            }
+            $(function() {
+                /*绑定滚动事件 */
+                $(window).bind('scroll', locateCatelogList);
+            });
+        </script>
     </div>
     
-                                    
+                            
 
                 </div>
 
