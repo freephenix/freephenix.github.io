@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://freephenix.github.io/</id>
     <title>半亩房顶</title>
-    <updated>2020-09-11T02:21:54.921Z</updated>
+    <updated>2020-09-11T06:54:35.357Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://freephenix.github.io/"/>
     <link rel="self" href="https://freephenix.github.io/atom.xml"/>
@@ -10,6 +10,39 @@
     <logo>https://freephenix.github.io/images/avatar.png</logo>
     <icon>https://freephenix.github.io/favicon.ico</icon>
     <rights>All rights reserved 2020, 半亩房顶</rights>
+    <entry>
+        <title type="html"><![CDATA[DDD 学习笔记（四）]]></title>
+        <id>https://freephenix.github.io/post/ddd-xue-xi-bi-ji-si/</id>
+        <link href="https://freephenix.github.io/post/ddd-xue-xi-bi-ji-si/">
+        </link>
+        <updated>2020-09-11T05:14:26.000Z</updated>
+        <summary type="html"><![CDATA[<p>DDD 分层架构、整洁架构、六边形架构都是以领域模型 为核心，实行分层架构，内部核心业务逻辑与外部应用、资源隔离并解耦。</p>
+]]></summary>
+        <content type="html"><![CDATA[<p>DDD 分层架构、整洁架构、六边形架构都是以领域模型 为核心，实行分层架构，内部核心业务逻辑与外部应用、资源隔离并解耦。</p>
+<!-- more -->
+<h1 id="架构种类">架构种类</h1>
+<h3 id="整洁架构">整洁架构</h3>
+<p>又名“洋葱架构”，越往里，越核心，越少依赖<br>
+<img src="https://freephenix.github.io//post-images/1599801911257.png" alt="" loading="lazy"><br>
+领域模型实现领域内核心业务逻辑<br>
+领域服务实现涉及多个实体的复杂业务逻辑<br>
+应用服务实现与用户操作相关的服务组合与编排<br>
+用户界面主要提供适配的能力</p>
+<h3 id="六边形架构">六边形架构</h3>
+<p>又名“端口适配器架构”，应用通过端口与外部进行交互<br>
+<img src="https://freephenix.github.io//post-images/1599806278259.png" alt="" loading="lazy"><br>
+红圈内的六边形完成核心业务逻辑<br>
+外部的六边形完成外部依赖、驱动和基础资源等的交互</p>
+<h3 id="总结">总结</h3>
+<p>结合上讲中提到的DDD 分层架构，对于这三种进行一个对比<br>
+<img src="https://freephenix.github.io//post-images/1599806564666.png" alt="" loading="lazy"><br>
+红圈中均为最核心的逻辑，而三者都考虑到了前端需求会经常改变，但是领域模型并不会经常改变</p>
+<p>DDD 分层架构、整洁架构、六边形架构都是以领域模型 为核心，实行分层架构，内部核心业务逻辑与外部应用、资源隔离并解耦。</p>
+<hr>
+<p>欢迎大家关注我的公众号<br>
+<img src="https://freephenix.github.io//post-images/1599807261669.jpeg" alt="" loading="lazy"></p>
+]]></content>
+    </entry>
     <entry>
         <title type="html"><![CDATA[DDD 学习笔记（二）基础概念]]></title>
         <id>https://freephenix.github.io/post/ddd-xue-xi-bi-ji-er-ji-chu-gai-nian/</id>
