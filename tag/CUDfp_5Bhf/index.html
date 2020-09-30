@@ -7,7 +7,7 @@
 <title>
     GORM | 半亩房顶
 </title>
-<link rel="shortcut icon" href="https://freephenix.github.io//favicon.ico?v=1601455529009">
+<link rel="shortcut icon" href="https://freephenix.github.io//favicon.ico?v=1601456403769">
 <!-- <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous"> -->
 <link href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
@@ -39,7 +39,7 @@
     <div class="nav">
         <div class="logo">
             <a href="https://freephenix.github.io/">
-                <img class="avatar" src="https://freephenix.github.io//images/avatar.png?v=1601455529009" alt="">
+                <img class="avatar" src="https://freephenix.github.io//images/avatar.png?v=1601456403769" alt="">
             </a>
             <div class="site-title">
                 <h1>
@@ -124,17 +124,17 @@
                     <time class="post-time">2020-09-17</time>
                     
                         <a href="https://freephenix.github.io/tag/_8npzAvVN/" class="post-tag i-tag
-                            i-tag-other_4">
+                            i-tag-banana">
             #Golang
         </a>
                         
                         <a href="https://freephenix.github.io/tag/xlAA18dwW/" class="post-tag i-tag
-                            i-tag-primary">
+                            i-tag-error">
             #ORM
         </a>
                         
                         <a href="https://freephenix.github.io/tag/CUDfp_5Bhf/" class="post-tag i-tag
-                            i-tag-primary">
+                            i-tag-success">
             #GORM
         </a>
                         
@@ -174,7 +174,7 @@ type User struct {
 基于这个观点，我认为这个逆向的过程确实是一个值得思考的点，当然这里也会有很多问题：比如增加信息同步成本、增加高效协作难度等等
 好，回归正题，我们先来看下部分常用的标签们：
 type User struct {
-    ID         int64        `gorm:&amp;quot;primary_key;autoIncrement&amp;quot;`
+    ID         int64        `gorm:&amp;quot;type:bigint(20);primary_key;autoIncrement&amp;quot;`
     Number     int64        `gorm:&amp;quot;&amp;lt;-:create;index:idx_number&amp;quot;`
     Name       string       
     ImgURL     string       `gorm:&amp;quot;column:name&amp;quot;`
@@ -184,6 +184,7 @@ type User struct {
 
 
 primary_key 指定主键，可以不指定在id字段上
+type 指定字段类型
 autoIncrement 自增
 &amp;lt;-:false，跟 chan 相似左箭头为写，右箭头为读， create代表只能创建时写
 index 创建索引，冒号后跟索引名称，可为空，相同非空名称的索引会创建联合索引
@@ -261,7 +262,7 @@ gorm 迁移
                     <!-- 个人信息 -->
                     
     <div class="id_card i-card">
-        <div class="id_card-avatar" style="background-image: url(https://freephenix.github.io//images/avatar.png?v=1601455529009)">
+        <div class="id_card-avatar" style="background-image: url(https://freephenix.github.io//images/avatar.png?v=1601456403769)">
         </div>
         <h1 class="id_card-title">
             半亩房顶

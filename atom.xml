@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://freephenix.github.io/</id>
     <title>半亩房顶</title>
-    <updated>2020-09-30T08:45:39.648Z</updated>
+    <updated>2020-09-30T09:00:05.677Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://freephenix.github.io/"/>
     <link rel="self" href="https://freephenix.github.io/atom.xml"/>
@@ -43,7 +43,7 @@ v2版本github地址：https://github.com/go-gorm/gorm<br>
 <p>基于这个观点，我认为这个逆向的过程确实是一个值得思考的点，当然这里也会有很多问题：比如增加信息同步成本、增加高效协作难度等等</p>
 <p>好，回归正题，我们先来看下部分常用的标签们：</p>
 <pre><code>type User struct {
-    ID         int64        `gorm:&quot;primary_key;autoIncrement&quot;`
+    ID         int64        `gorm:&quot;type:bigint(20);primary_key;autoIncrement&quot;`
     Number     int64        `gorm:&quot;&lt;-:create;index:idx_number&quot;`
     Name       string       
     ImgURL     string       `gorm:&quot;column:name&quot;`
@@ -53,6 +53,7 @@ v2版本github地址：https://github.com/go-gorm/gorm<br>
 </code></pre>
 <ul>
 <li>primary_key 指定主键，可以不指定在id字段上</li>
+<li>type 指定字段类型</li>
 <li>autoIncrement 自增</li>
 <li>&lt;-:false，跟 chan 相似左箭头为写，右箭头为读， create代表只能创建时写</li>
 <li>index 创建索引，冒号后跟索引名称，可为空，相同非空名称的索引会创建联合索引</li>
