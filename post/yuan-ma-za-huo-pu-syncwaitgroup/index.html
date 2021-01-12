@@ -7,7 +7,7 @@
 <title>
     源码杂货铺：sync.WaitGroup | 半亩房顶
 </title>
-<link rel="shortcut icon" href="https://freephenix.github.io//favicon.ico?v=1610490875563">
+<link rel="shortcut icon" href="https://freephenix.github.io//favicon.ico?v=1610491025541">
 <!-- <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous"> -->
 <link href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
@@ -47,7 +47,7 @@
     <div class="nav">
         <div class="logo">
             <a href="https://freephenix.github.io/">
-                <img class="avatar" src="https://freephenix.github.io//images/avatar.png?v=1610490875563" alt="">
+                <img class="avatar" src="https://freephenix.github.io//images/avatar.png?v=1610491025541" alt="">
             </a>
             <div class="site-title">
                 <h1>
@@ -124,12 +124,12 @@
                             <time class="post-time">2021-01-11</time>
                             
                                 <a href="https://freephenix.github.io/tag/k_l-BPxc0/" class="post-tag i-tag
-                            i-tag-other_2">
+                            i-tag-other_1">
                             #源码
                         </a>
                                 
                                 <a href="https://freephenix.github.io/tag/_8npzAvVN/" class="post-tag i-tag
-                            i-tag-error">
+                            i-tag-other_4">
                             #Golang
                         </a>
                                 
@@ -138,16 +138,7 @@
                             <div class="post-feature-image" style="background-image: url('https://freephenix.github.io//post-images/yuan-ma-za-huo-pu-syncwaitgroup.jpg')"></div>
                             
                                 <div class="post-content">
-                                    <p>了解一个包的使用，首先从阅读它的注释开始<br>
-sync.WaitGroup包注释如下：</p>
-<pre><code>// A WaitGroup waits for a collection of goroutines to finish.
-// The main goroutine calls Add to set the number of
-// goroutines to wait for. Then each of the goroutines
-// runs and calls Done when finished. At the same time,
-// Wait can be used to block until all goroutines have finished.
-//
-// A WaitGroup must not be copied after first use.
-</code></pre>
+                                    <p>了解一个包的使用，首先从阅读它的注释开始</p>
 <!-- more -->
 <h1 id="简介">简介</h1>
 <p>sync.WaitGroup相信大家都不陌生，当我们起了多个goroutinue，但是有希望他们同时ready之后再做一些事情的时候，WaitGroup就可以闪亮登场了，举个栗子：</p>
@@ -169,7 +160,17 @@ go func() {
 // 此时的主goroutinue就会等待 func1 func2完成后再继续往下进行
 g.Wait()
 </code></pre>
-<p>可以说是使用相当方便了，其源码也是非常少的，可以先看下包中大体的结构：</p>
+<p>可以说是使用相当方便了，其源码也是非常少的<br>
+sync.WaitGroup包注释如下：</p>
+<pre><code>// A WaitGroup waits for a collection of goroutines to finish.
+// The main goroutine calls Add to set the number of
+// goroutines to wait for. Then each of the goroutines
+// runs and calls Done when finished. At the same time,
+// Wait can be used to block until all goroutines have finished.
+//
+// A WaitGroup must not be copied after first use.
+</code></pre>
+<p>包中大体的结构：</p>
 <pre><code>type WaitGroup struct {}
 func (wg *WaitGroup) state() (statep *uint64, semap *uint32) {}
 func (wg *WaitGroup) Add(delta int) {}
