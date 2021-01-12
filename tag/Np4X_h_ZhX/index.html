@@ -5,7 +5,7 @@
 <meta name="description" content="" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>
-    ORM | 半亩房顶
+    Docker | 半亩房顶
 </title>
 <link rel="shortcut icon" href="https://freephenix.github.io//favicon.ico?v=1610490875563">
 <!-- <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous"> -->
@@ -110,143 +110,43 @@
                     
     <div class="i-card">
         <b>标签：#
-        ORM</b>
+        Docker</b>
     </div>
     
         
             <article class="post i-card">
                 <h2 class="post-title">
-                    <a href="https://freephenix.github.io/post/gorm-xue-xi-yi-curd/">
-                        GORM学习(一) 初识
+                    <a href="https://freephenix.github.io/post/k8s-xue-xi-bi-ji-yi-jia-gou-jie-shao/">
+                        K8s学习笔记（一）架构介绍
                     </a>
                 </h2>
                 <div class="post-info">
-                    <time class="post-time">2020-09-17</time>
+                    <time class="post-time">2020-10-16</time>
                     
-                        <a href="https://freephenix.github.io/tag/_8npzAvVN/" class="post-tag i-tag
-                            i-tag-error">
-            #Golang
+                        <a href="https://freephenix.github.io/tag/hyhBukwEv/" class="post-tag i-tag
+                            i-tag-other_1">
+            #K8S
         </a>
                         
-                        <a href="https://freephenix.github.io/tag/xlAA18dwW/" class="post-tag i-tag
-                            i-tag-info">
-            #ORM
-        </a>
-                        
-                        <a href="https://freephenix.github.io/tag/CUDfp_5Bhf/" class="post-tag i-tag
-                            i-tag-other_2">
-            #GORM
+                        <a href="https://freephenix.github.io/tag/Np4X_h_ZhX/" class="post-tag i-tag
+                            i-tag-banana">
+            #Docker
         </a>
                         
                 </div>
                 <div class="post-article">
                     
-                        <a href="https://freephenix.github.io/post/gorm-xue-xi-yi-curd/" class="post-feature-image" style="background-image:url(https://freephenix.github.io//post-images/gorm-xue-xi-yi-curd.png) ">
+                        <a href="https://freephenix.github.io/post/k8s-xue-xi-bi-ji-yi-jia-gou-jie-shao/" class="post-feature-image" style="background-image:url(https://freephenix.github.io//post-images/k8s-xue-xi-bi-ji-yi-jia-gou-jie-shao.png) ">
                         </a>
                         
                             <div class="post-content">
                                 
-                                        <div class="post-content-content">
-                                            什么是ORM
-Object-Relationl Mapping， 它的作用是映射数据库和对象之间的关系，方便我们在实现数据库操作的时候不用去写复杂的sql语句，把对数据库的操作上升到对于对象的操作。
-什么是GORM
-顾名思义，gorm = go + orm，即基于go语言实现的orm库
-v1版本github地址：https://github.com/jinzhu/gorm
-v2版本github地址：https://github.com/go-gorm/gorm
-官网地址：https://gorm.io/zh_CN/
-官方文档地址：https://gorm.io/zh_CN/docs/index.html
-GORM 结构标记
+                                    <div class="post-content-abstract">
+                                        <p>在不久的将来，你不懂如何操作 Kubernetes 接口，就等于现在的你不懂最普通的 Linux 命令</p>
 
-安装过程以及简单的curd，大家看下官方文档即可，使用起来还是比较方便的，也与其他的orm没有大的区别，这里想先提下gorm中的结构标记
-
-大家都知道，orm是完成了数据表和对象之间的映射，而这个对象的结构、字段等等，都是需要我们在程序中定义出来的，但是gorm中有一点与以往不同，gorm中提供了功能强大丰富的结构标记
-type User struct {
-    ID         int64
-    Number     int64
-    Name       string
-    ImgURL    string
-    CreatedAt  time.Time
-    UpdatedAt  time.Time
-}
-
-再辅以AutoMigrate方法，就可以让我们直接通过代码生成对应的数据表，这一逆向操作起初应该是不甚习惯的，毕竟大多数情况下来说，我们的习惯还是先设计出数据表，然后给映射出对象，再给这个对象添加功能、使用对象完成逻辑实现等
-但其实我们自己也经常会遇到这样的情况，设计出数据表后，往往在实际开发业务时候，或者在之后的迭代中，会发现我们的数据表需要一点点的打补丁，添加或者修改字段等等，其实道理也很明白，一时的设计，很难满足未出现的需求，而需求是不断更新迭代的，设计自然需要迎合和适应。
-基于这个观点，我认为这个逆向的过程确实是一个值得思考的点，当然这里也会有很多问题：比如增加信息同步成本、增加高效协作难度等等
-好，回归正题，我们先来看下部分常用的标签们：
-type User struct {
-    ID         int64        `gorm:&amp;quot;type:bigint(20);primary_key;autoIncrement&amp;quot;`
-    Number     int64        `gorm:&amp;quot;&amp;lt;-:create;index:idx_number&amp;quot;`
-    Name       string       
-    ImgURL     string       `gorm:&amp;quot;column:name&amp;quot;`
-    CreatedAt  time.Time    `gorm:&amp;quot;autoCreateTime&amp;quot;`
-    UpdatedAt  time.Time    `gorm:&amp;quot;autoUpdateTime&amp;quot;`
-}
-
-
-primary_key 指定主键，可以不指定在id字段上
-type 指定字段类型
-autoIncrement 自增
-&amp;lt;-:false，跟 chan 相似左箭头为写，右箭头为读， create代表只能创建时写
-index 创建索引，冒号后跟索引名称，可为空，相同非空名称的索引会创建联合索引
-autoCreateTime 自动s为单位填充创建时间
-autoUpdateTime 自动s为单位填充更新时间
-column 这个类似json标签，用于字段映射时，无法直接通过首字母大小写的转化和驼峰和下划线互转等操作，完成字段和数据库列名直接映射上的情况，直接指定列名
-
-对于其他标签，以及一些比较高级的索引、约束、复合主键标签，大家可以参看官方文档
-GORM v2 更新内容摘要
-Context 支持
-增加原生支持ctx
-create 支持批量创建
-
-生成一条语句来进行插入（难不成还遍历？）
-数据有关联的将会调用upsert
-批量插入依然会调用钩子方法
-
-upsert
-clause.OnConflict 将会提供upsert支持
-import &amp;quot;gorm.io/gorm/clause&amp;quot;
-
-DB.Clauses(clause.OnConflict{DoNothing: true}).Create(&amp;amp;users)
-
-支持嵌套事务
-SavePoint，RollbackTo
-事务操作将会更加丰富
-字段权限 和 更新、创建时间追踪
-还记得上面标签提高的&amp;lt;-:create和gorm:&amp;quot;autoCreateTime等吗，对的，v2.0开始支持
-Prometheus
-增加Prometheus插件支持来收集 DBStats 和用户自定义指标
-Prometheus插件简介
-tableName 不再允许动态表名
-func (User) TableName() string {
-  return &amp;quot;t_user&amp;quot;
-}
-
-当然，以后使用动态表名可以使用scope实现
-func UserTable(u *User) func(*gorm.DB) *gorm.DB {
-  return func(db *gorm.DB) *gorm.DB {
-    return db.Table(&amp;quot;user_&amp;quot; + u.Role)
-  }
-}
-
-DB.Scopes(UserTable(&amp;amp;user)).Create(&amp;amp;user)
-
-Migrator（迁移）将会更加强大
-gorm 迁移
-总结
-总的来说，gorm是一个很遍历，足够强大，值得深挖源码，深入学习的orm，燥起来！
-引用
-gorm 声明模型
-gorm 索引标签
-gorm 约束标签
-gorm 复合主键标签
-gorm 迁移
-
-欢迎大家关注我的公众号，一起交流
-
-
-                                        </div>
-                                        
-                                            <a class="btn btn-text" href="https://freephenix.github.io/post/gorm-xue-xi-yi-curd/">Read More ~</a>
+                                    </div>
+                                    
+                                            <a class="btn btn-text" href="https://freephenix.github.io/post/k8s-xue-xi-bi-ji-yi-jia-gou-jie-shao/">Read More ~</a>
                             </div>
                 </div>
             </article>
