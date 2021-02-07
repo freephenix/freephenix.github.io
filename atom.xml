@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://freephenix.github.io/</id>
     <title>半亩房顶</title>
-    <updated>2021-02-07T18:05:51.561Z</updated>
+    <updated>2021-02-07T18:07:03.099Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://freephenix.github.io/"/>
     <link rel="self" href="https://freephenix.github.io/atom.xml"/>
@@ -296,9 +296,9 @@ func (v *Value) Store(x interface{}) {
         <link href="https://freephenix.github.io/post/golang-la-ji-hui-shou-suan-fa-de-qian-shi-jin-sheng/">
         </link>
         <updated>2021-01-28T22:56:47.000Z</updated>
-        <summary type="html"><![CDATA[<p>一提到Golang垃圾回收，三色原理，我们都能脱口而出，那么，它的历程是什么，v1.4做了什么里程碑式的变革？</p>
+        <summary type="html"><![CDATA[<p>一提到Golang垃圾回收，三色原理，我们都能脱口而出，那么，它的历程是什么，v1.3、v1.5、v1.8做了什么里程碑式的变革？</p>
 ]]></summary>
-        <content type="html"><![CDATA[<p>一提到Golang垃圾回收，三色原理，我们都能脱口而出，那么，它的历程是什么，v1.4做了什么里程碑式的变革？</p>
+        <content type="html"><![CDATA[<p>一提到Golang垃圾回收，三色原理，我们都能脱口而出，那么，它的历程是什么，v1.3、v1.5、v1.8做了什么里程碑式的变革？</p>
 <!-- more -->
 <h1 id="golang-垃圾回收里程碑">Golang 垃圾回收里程碑</h1>
 <ul>
