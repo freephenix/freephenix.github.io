@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://freephenix.github.io/</id>
     <title>半亩房顶</title>
-    <updated>2021-02-07T18:07:03.099Z</updated>
+    <updated>2021-02-19T09:26:25.312Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://freephenix.github.io/"/>
     <link rel="self" href="https://freephenix.github.io/atom.xml"/>
@@ -390,18 +390,18 @@ func (v *Value) Store(x interface{}) {
 二是，不要最优，要最简单，这跟go的设计理念相符。我们做项目也是如此，很多时候并不是没有更好的解法，只是，有很多利弊需要权衡，我们要选的，从来都是最适合的。</p>
 <p>谢谢大家</p>
 <h1 id="引用">引用</h1>
-<p><img src="https://www.cnblogs.com/Delo/articles/12553593.html" alt="【转载】图解Go语言的gc算法——三色标记" loading="lazy"><br>
-<img src="https://studygolang.com/articles/27243?fr=sidebar" alt="Golang三色标记、混合写屏障GC模式图文全分析" loading="lazy"><br>
-<img src="https://mp.weixin.qq.com/s/gkBg742lpBVRBhTPhOQ7hg" alt="每位 Gopher 都应该了解的 Golang 语言的垃圾回收算法" loading="lazy"><br>
-<img src="https://my.oschina.net/u/4579381/blog/4347801" alt="内存管理篇(三)：Go垃圾回收之三色标记算法" loading="lazy"><br>
-<img src="https://blog.csdn.net/erlib/article/details/51850912" alt="为Go语言GC正名－20秒到100微妙的演变史" loading="lazy"><br>
-<img src="https://blog.csdn.net/bairongdong1/article/details/52216360" alt="02.2跟雨痕看go源码- 并发清理与三色标记" loading="lazy"><br>
-<img src="https://blog.csdn.net/waltonhuang/article/details/105550331" alt="三色标记算法 SATB" loading="lazy"><br>
-<img src="https://www.ardanlabs.com/blog/2018/12/garbage-collection-in-go-part1-semantics.html" alt="Garbage Collection In Go : Part I - Semantics" loading="lazy"><br>
-<img src="https://www.ardanlabs.com/blog/2019/05/garbage-collection-in-go-part2-gctraces.html" alt="Garbage Collection In Go : Part II - GC Traces" loading="lazy"><br>
-<img src="https://www.ardanlabs.com/blog/2019/07/garbage-collection-in-go-part3-gcpacing.html" alt="Garbage Collection In Go : Part III - GC Pacing" loading="lazy"><br>
-<img src="https://www.jianshu.com/p/310257582232" alt="golang 1.8 gc的演进" loading="lazy"><br>
-<img src="https://mp.weixin.qq.com/s/gkBg742lpBVRBhTPhOQ7hg" alt="每位 Gopher 都应该了解的 Golang 语言的垃圾回收算法" loading="lazy"></p>
+<p><a href="https://www.cnblogs.com/Delo/articles/12553593.html">【转载】图解Go语言的gc算法——三色标记</a><br>
+<a href="https://studygolang.com/articles/27243?fr=sidebar">Golang三色标记、混合写屏障GC模式图文全分析</a><br>
+<a href="https://mp.weixin.qq.com/s/gkBg742lpBVRBhTPhOQ7hg">每位 Gopher 都应该了解的 Golang 语言的垃圾回收算法</a><br>
+<a href="https://my.oschina.net/u/4579381/blog/4347801">内存管理篇(三)：Go垃圾回收之三色标记算法</a><br>
+<a href="https://blog.csdn.net/erlib/article/details/51850912">为Go语言GC正名－20秒到100微妙的演变史</a><br>
+<a href="https://blog.csdn.net/bairongdong1/article/details/52216360">02.2跟雨痕看go源码- 并发清理与三色标记</a><br>
+<a href="https://blog.csdn.net/waltonhuang/article/details/105550331">三色标记算法 SATB</a><br>
+<a href="https://www.ardanlabs.com/blog/2018/12/garbage-collection-in-go-part1-semantics.html">Garbage Collection In Go : Part I - Semantics</a><br>
+<a href="https://www.ardanlabs.com/blog/2019/05/garbage-collection-in-go-part2-gctraces.html">Garbage Collection In Go : Part II - GC Traces</a><br>
+<a href="https://www.ardanlabs.com/blog/2019/07/garbage-collection-in-go-part3-gcpacing.html">Garbage Collection In Go : Part III - GC Pacing</a><br>
+<a href="https://www.jianshu.com/p/310257582232">golang 1.8 gc的演进</a><br>
+<a href="https://mp.weixin.qq.com/s/gkBg742lpBVRBhTPhOQ7hg">每位 Gopher 都应该了解的 Golang 语言的垃圾回收算法</a></p>
 ]]></content>
     </entry>
     <entry>
