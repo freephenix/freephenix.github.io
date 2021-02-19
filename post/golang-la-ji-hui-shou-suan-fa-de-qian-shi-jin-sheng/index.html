@@ -7,7 +7,7 @@
 <title>
     Golang 垃圾回收算法 | 半亩房顶
 </title>
-<link rel="shortcut icon" href="https://freephenix.github.io//favicon.ico?v=1613726782667">
+<link rel="shortcut icon" href="https://freephenix.github.io//favicon.ico?v=1613727034219">
 <!-- <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous"> -->
 <link href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
@@ -47,7 +47,7 @@
     <div class="nav">
         <div class="logo">
             <a href="https://freephenix.github.io/">
-                <img class="avatar" src="https://freephenix.github.io//images/avatar.png?v=1613726782667" alt="">
+                <img class="avatar" src="https://freephenix.github.io//images/avatar.png?v=1613727034219" alt="">
             </a>
             <div class="site-title">
                 <h1>
@@ -124,12 +124,12 @@
                             <time class="post-time">2021-01-29</time>
                             
                                 <a href="https://freephenix.github.io/tag/WucazjDbn/" class="post-tag i-tag
-                            i-tag-">
+                            i-tag-other_3">
                             #算法
                         </a>
                                 
                                 <a href="https://freephenix.github.io/tag/HgE3rCkXf/" class="post-tag i-tag
-                            i-tag-warning">
+                            i-tag-error">
                             #垃圾回收
                         </a>
                                 
@@ -216,22 +216,20 @@
     *slot = ptr
 </code></pre>
 <p>如果新建对象为黑色，而栈又没有写屏障保护，会打破黑色对象引用白色对象的约束，因此混合写保障了弱的三原色约束，这里有个前提就是新建对象都是标为黑色，这样如果栈中指针指向新创建的对象的话也不需要重新扫描栈，因为已经标记为黑色。<br>
-用弱三色原理的目的也很简单，这个方式节约了扫描栈空间的成本，不再需要额外的STW</p>
-<p>至于弱三色原理的正确性证明，感兴趣的可以自行google</p>
+用弱三色原理的目的也很简单，这个方式节约了扫描栈空间的成本，极大缩减了STW的时间<br>
+至于弱三色原理的正确性证明，感兴趣的可以自行google</p>
 <p>v1.8之后，混合写屏障情况如下：<br>
-1、后续无需 STW，GC 在首次执行时，先将栈上的所有对象都标记为黑色。<br>
+1、GC 在首次执行时，先将栈上的所有对象都标记为黑色。<br>
 2、GC 在执行过程中，在栈上新创建的对象，默认被标记为黑色。<br>
 3、将被删除的对象标记为灰色。<br>
 4、将被添加的对象标记为灰色。</p>
-<p>没有了STW简直是大快人心，终于的终于，没有了<br>
-但是，弱三色是否会有漏洞，是否有更好的方案，这些都是以后需要慢慢探索的问题，我们这个文章，就要结束了</p>
 <h1 id="gc的触发方式">GC的触发方式</h1>
 <p>1、内存分配阈值，阈值=上次 GC 内存分配值 * 内存增长率，其中内存增长率由环境变量 GOGC 设定（GC Percentage），默认值为 100。每次内存分配时，都会先检查当前内存分配是否已经达到阈值，如果已达到阈值，就会触发 GC，即每当内存分配量将要增长一倍时则触发 GC。<br>
 2、定时触发，src/runtime/proc.go 文件中的 forcegcperiod 设定触发 GC 的时间间隔，默认值为 2 分钟。<br>
 3、手动触发，通过调用 runtime.GC() 方法，触发 GC。</p>
 <h1 id="演化历程的启发">演化历程的启发</h1>
 <p>通观GC的进化历程，我比较关注的有两个重要的点，<br>
-一是，STW这一个看似不会或很难被干掉的事物，通过一步步的不断改进，最终还是干掉了，这个过程，缺失了每一环，都是有可能无法达到这个局面的。我想说的是，罗马不是一天建成的，我们应该不断积累自己的系统能力，不断完善和强大，为的是有一天，完成那些难以想象的事情。<br>
+一是，通过一步步的不断改进，极大的缩减了STW，这个过程，缺失了每一环，都是有可能无法达到这个局面的。我想说的是，罗马不是一天建成的，我们应该不断积累自己的系统能力，不断完善和强大，为的是有一天，完成那些难以想象的事情。<br>
 二是，不要最优，要最简单，这跟go的设计理念相符。我们做项目也是如此，很多时候并不是没有更好的解法，只是，有很多利弊需要权衡，我们要选的，从来都是最适合的。</p>
 <p>谢谢大家</p>
 <h1 id="引用">引用</h1>
