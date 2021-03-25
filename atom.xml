@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://freephenix.github.io/</id>
     <title>半亩房顶</title>
-    <updated>2021-02-19T09:30:36.157Z</updated>
+    <updated>2021-03-25T08:53:42.265Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://freephenix.github.io/"/>
     <link rel="self" href="https://freephenix.github.io/atom.xml"/>
@@ -285,9 +285,9 @@ func (v *Value) Store(x interface{}) {
 <h1 id="小结">小结</h1>
 <p>到这里基本就结束啦，这里是简单的认识了下atomic包，希望在以后的工作学习中，多多打交道，真的有钻研汇编的那一天。</p>
 <h1 id="引用">引用</h1>
-<p><img src="https://github.com/cch123/golang-notes/blob/master/atomic.md" alt="曹大golang笔记，atomic 详解" loading="lazy"><br>
-<img src="https://mp.weixin.qq.com/s/PQ06eL8kMWoGXodpnyjNcA" alt="详解并发编程基础之原子操作(atomic包)" loading="lazy"><br>
-<img src="https://blog.betacat.io/post/golang-atomic-value-exploration/" alt="Go 语言标准库中 atomic.Value 的前世今生" loading="lazy"></p>
+<p><a href="https://github.com/cch123/golang-notes/blob/master/atomic.md">曹大golang笔记，atomic 详解</a><br>
+<a href="https://mp.weixin.qq.com/s/PQ06eL8kMWoGXodpnyjNcA">详解并发编程基础之原子操作(atomic包)</a><br>
+<a href="https://blog.betacat.io/post/golang-atomic-value-exploration/">Go 语言标准库中 atomic.Value 的前世今生</a></p>
 ]]></content>
     </entry>
     <entry>
@@ -558,11 +558,11 @@ func (g *Group) Forget(key string) {
 <p>并发是一个双刃剑，节约了时间，但是也带来了很多的问题，不断学习，不断进步，自己要学习的还有很多，共勉！💪💪<br>
 希望能用好并发这个工具，解决更多的问题。</p>
 <h1 id="引用">引用</h1>
-<p><img src="https://blog.csdn.net/yang198907/article/details/108690876" alt="深入理解singleflight" loading="lazy"><br>
-<img src="https://www.codeleading.com/article/591682326/" alt="源码分析-singleflight" loading="lazy"><br>
-<img src="https://www.jianshu.com/p/ddaec84de653" alt="singleflight源码注释" loading="lazy"><br>
-<img src="https://github.com/cch123/golang-notes/blob/master/sync.md" alt="曹大golang笔记 - sync包" loading="lazy"><br>
-<img src="https://blog.csdn.net/weixin_43183475/article/details/105093355" alt="singleflight 防缓存击穿 使用及原理" loading="lazy"></p>
+<p><a href="https://blog.csdn.net/yang198907/article/details/108690876">深入理解singleflight</a><br>
+<a href="https://www.codeleading.com/article/591682326/">源码分析-singleflight</a><br>
+<a href="https://www.jianshu.com/p/ddaec84de653">singleflight源码注释</a><br>
+<a href="https://github.com/cch123/golang-notes/blob/master/sync.md">曹大golang笔记 - sync包</a><br>
+<a href="https://blog.csdn.net/weixin_43183475/article/details/105093355">singleflight 防缓存击穿 使用及原理</a></p>
 ]]></content>
     </entry>
     <entry>
