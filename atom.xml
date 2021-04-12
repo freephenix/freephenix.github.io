@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://freephenix.github.io/</id>
     <title>半亩房顶</title>
-    <updated>2021-03-25T08:53:42.265Z</updated>
+    <updated>2021-04-12T08:42:34.419Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://freephenix.github.io/"/>
     <link rel="self" href="https://freephenix.github.io/atom.xml"/>
@@ -327,7 +327,44 @@ func (v *Value) Store(x interface{}) {
 答案是在函数调用时，程序调用的时间点是每个goroutinue可以安全暂停的点，当然在并发场景下，即使如此也会有问题，毕竟我们多个goroutinue不可能在同一时间都执行函数调用，这个的解决方案在go 1.14中解决掉了，具体可以参照这个issues: <a href="https://github.com/golang/go/issues/24543">runtime: non-cooperative goroutine preemption</a>，大体方法是向调度器添加非合作抢占来支持安全切换未执行函数调用的goroutinue。</p>
 <h2 id="标记过程marking-concurrent">标记过程（Marking - Concurrent）</h2>
 <p>一旦开启了写屏障，就进入了标记阶段，收集器先要做的就是占用25%的CPU能力，使用goroutinue工作的收集器需要和现有goroutinue一起使用P和M。简单计算下，就是4个P的程序，其中一个完整的P将分配给收集器（<a href="https://blog.csdn.net/huigan/article/details/106134937">G-P-M</a>）</p>
-<p>开始标记时，收集器会从现有goroutinue的栈为root出发，逐步遍历堆中的内存，完成标记工作，此时，剩余75%的P上依然可以正常运行goroutinue，并发(concurrent)执行。当然事实中不会一直如此顺利，如果有其中一个goroutinue迟迟不能完成收集，怎么办？这个时候，新的内存释放会被放缓，并且收集器会招募应用程序 Goroutines 来协助标记工作，这个叫做标记辅助（Mark Assist）。被抓壮丁的goroutinue占用时间直接取决于堆内存使用的量，当然，对于收集器来说，越少使用标记辅助，就会越好。</p>
+<p>开始标记时，收集器会从<code>root</code>出发，逐步遍历堆中的内存，完成标记工作，此时，剩余75%的P上依然可以正常运行goroutinue，并发(concurrent)执行。当然事实中不会一直如此顺利，如果有其中一个goroutinue迟迟不能完成收集，怎么办？这个时候，新的内存释放会被放缓，并且收集器会招募应用程序 Goroutines 来协助标记工作，这个叫做标记辅助（Mark Assist）。被抓壮丁的goroutinue占用时间直接取决于堆内存使用的量，当然，对于收集器来说，越少使用标记辅助，就会越好。</p>
+<h4 id="引申问题1扫描伊始的root都有哪些">引申问题1：扫描伊始的root都有哪些？</h4>
+<ul>
+<li>全局变量：程序在编译期就能确定的那些存在于程序整个生命周期的变量。</li>
+<li>执行栈：每个 goroutine 都包含自己的执行栈，这些执行栈上包含栈上的变量及指向分配的堆内存区块的指针。这里重点说下栈，golang中每个类型结构里都有一个<code>_type</code>:</li>
+</ul>
+<pre><code>type _type struct {
+    size       uintptr
+    ptrdata    uintptr // size of memory prefix holding all pointers
+    hash       uint32
+    tflag      tflag
+    align      uint8
+    fieldalign uint8
+    kind       uint8
+    alg        *typeAlg
+    // gcdata stores the GC type data for the garbage collector.
+    // If the KindGCProg bit is set in kind, gcdata is a GC program.
+    // Otherwise it is a ptrmask bitmap. See mbitmap.go for details.
+    gcdata    *byte
+    str       nameOff
+    ptrToThis typeOff
+}
+</code></pre>
+<p>其中的 gcData 就是为gc做准备的，存储着一个标记指针地址的bitmap，方便gc程序寻找对象。而在运行时，还会有另外一个机制，进一步扫描对象，挖掘引用关系，争取做到可达对象全覆盖： <code>scanobject</code>，它会利用新分配对象时调用的<code>mallocgc</code>函数准备好的<code>heapBitsSetType</code>，方便获取每个内存块中的指针，并扫描出对象。</p>
+<ul>
+<li>寄存器：寄存器的值可能表示一个指针，参与计算的这些指针可能指向某些赋值器分配的堆内存区块。</li>
+</ul>
+<h4 id="引申问题2如果内存分配速度超过了标记清除的速度怎么办">引申问题2：如果内存分配速度超过了标记清除的速度怎么办？</h4>
+<p>当 GC 触发后，会首先进入并发标记的阶段。并发标记会设置一个标志，并在 mallocgc 调用时进行检查。当存在新的内存分配时，会暂停分配内存过快的那些 goroutine，并将其转去执行一些辅助标记（Mark Assist）的工作，从而达到放缓继续分配、辅助 GC 的标记工作的目的。</p>
+<pre><code>func mallocgc(t typ.Type, size uint64){
+if enableMarkAssist {
+// 进行标记辅助，此时用户代码没有得到执行
+(...)
+}
+// 执行内存分配
+(...)
+}
+</code></pre>
 <h2 id="标记终止mark-termination-stw">标记终止（Mark Termination - STW）</h2>
 <p>当所有标记完成时，进入终止阶段，在这里阶段，会停止写屏障，清扫垃圾，并准备下一次的垃圾收集。停止标记工作一共历时60-90微秒，其实可以不用STW，但是这个时间延迟，最终决定了还是采用更为简便的STW来完成这个工作。<br>
 此时的清扫工作是并发执行的，这个工作本身是不需要受垃圾收集工作制约的。</p>
@@ -378,15 +415,84 @@ func (v *Value) Store(x interface{}) {
 2、GC 在执行过程中，在栈上新创建的对象，默认被标记为黑色。<br>
 3、将被删除的对象标记为灰色。<br>
 4、将被添加的对象标记为灰色。</p>
+<h4 id="引申问题3什么是写屏障-混合写屏障如何实现">引申问题3：什么是写屏障、混合写屏障，如何实现？</h4>
+<p>要讲清楚写屏障，就需要理解三色标记清除算法中的强弱不变性以及赋值器的颜色，理解他们需要一定的抽象思维。写屏障是一个在并发垃圾回收器中才会出现的概念，垃圾回收器的正确性体现在：不应出现对象的丢失，也不应错误的回收还不需要回收的对象。</p>
+<p>可以证明，当以下两个条件同时满足时会破坏垃圾回收器的正确性：</p>
+<p>条件 1: 赋值器修改对象图，导致某一黑色对象引用白色对象；<br>
+条件 2: 从灰色对象出发，到达白色对象的、未经访问过的路径被赋值器破坏。<br>
+只要能够避免其中任何一个条件，则不会出现对象丢失的情况，因为：</p>
+<p>如果条件 1 被避免，则所有白色对象均被灰色对象引用，没有白色对象会被遗漏；<br>
+如果条件 2 被避免，即便白色对象的指针被写入到黑色对象中，但从灰色对象出发，总存在一条没有访问过的路径，从而找到到达白色对象的路径，白色对象最终不会被遗漏。<br>
+我们不妨将三色不变性所定义的波面根据这两个条件进行削弱：</p>
+<p>当满足原有的三色不变性定义（或上面的两个条件都不满足时）的情况称为<code>强三色不变性</code>（strong tricolor invariant），即<code>强三色原理</code><br>
+当赋值器令黑色对象引用白色对象时（满足条件 1 时）的情况称为<code>弱三色不变性</code>（weak tricolor invariant），即<code>弱三色原理</code><br>
+当赋值器进一步破坏灰色对象到达白色对象的路径时（进一步满足条件 2 时），即打破弱三色不变性， 也就破坏了回收器的正确性；或者说，在破坏强弱三色不变性时必须引入额外的辅助操作。 弱三色不变形的好处在于：只要存在未访问的能够到达白色对象的路径，就可以将黑色对象指向白色对象。</p>
+<p>灰色赋值器的 Dijkstra 插入屏障的基本思想是避免满足条件 1：</p>
+<pre><code>// 灰色赋值器 Dijkstra 插入屏障
+func DijkstraWritePointer(slot *unsafe.Pointer, ptr unsafe.Pointer){
+    shade(ptr)
+*slot = ptr
+}
+</code></pre>
+<p><img src="https://freephenix.github.io//post-images/1618216785437.png" alt="" loading="lazy"><br>
+Dijkstra 插入屏障的好处在于可以立刻开始并发标记。但存在两个缺点：</p>
+<ul>
+<li>由于 Dijkstra 插入屏障的“保守”，在一次回收过程中可能会残留一部分对象没有回收成功，只有在下一个回收过程中才会被回收；</li>
+<li>在标记阶段中，每次进行指针赋值操作时，都需要引入写屏障，这无疑会增加大量性能开销；为了避免造成性能问题，Go 团队在最终实现时，没有为所有栈上的指针写操作，启用写屏障，而是当发生栈上的写操作时，将栈标记为灰色，但此举产生了灰色赋值器，将会需要标记终止阶段 STW 时对这些栈进行重新扫描。</li>
+</ul>
+<p>另一种比较经典的写屏障是黑色赋值器的 Yuasa 删除屏障。其基本思想是避免满足条件 2：</p>
+<pre><code>// 黑色赋值器 Yuasa 屏障
+func YuasaWritePointer(slot *unsafe.Pointer, ptr unsafe.Pointer){
+    shade(*slot)
+*slot = ptr
+}
+</code></pre>
+<p><img src="https://freephenix.github.io//post-images/1618216815589.png" alt="" loading="lazy"><br>
+Yuasa 删除屏障的优势则在于不需要标记结束阶段的重新扫描，结束时候能够准确的回收所有需要回收的白色对象。缺陷是 Yuasa 删除屏障会拦截写操作，进而导致波面的退后，产生“冗余”的扫描：</p>
+<p>Go 在 1.8 的时候为了简化 GC 的流程，同时减少标记终止阶段的重扫成本，将 Dijkstra 插入屏障和 Yuasa 删除屏障进行混合，形成混合写屏障。该屏障提出时的基本思想是：对正在被覆盖的对象进行着色，且如果当前栈未扫描完成，则同样对指针进行着色。</p>
+<pre><code>// 混合写屏障
+func HybridWritePointerSimple(slot *unsafe.Pointer, ptr unsafe.Pointer){
+    shade(*slot)
+    shade(ptr)
+*slot = ptr
+}
+</code></pre>
+<p>在这个实现中，如果无条件对引用双方进行着色，自然结合了 Dijkstra 和 Yuasa 写屏障的优势，但缺点也非常明显，因为着色成本是双倍的，而且编译器需要插入的代码也成倍增加，随之带来的结果就是编译后的二进制文件大小也进一步增加。为了针对写屏障的性能进行优化，Go 1.10 前后，Go 团队随后实现了批量写屏障机制。其基本想法是将需要着色的指针统一写入一个缓存，每当缓存满时统一对缓存中的所有<code>ptr</code>指针进行着色。</p>
 <h1 id="gc的触发方式">GC的触发方式</h1>
 <p>1、内存分配阈值，阈值=上次 GC 内存分配值 * 内存增长率，其中内存增长率由环境变量 GOGC 设定（GC Percentage），默认值为 100。每次内存分配时，都会先检查当前内存分配是否已经达到阈值，如果已达到阈值，就会触发 GC，即每当内存分配量将要增长一倍时则触发 GC。<br>
 2、定时触发，src/runtime/proc.go 文件中的 forcegcperiod 设定触发 GC 的时间间隔，默认值为 2 分钟。<br>
 3、手动触发，通过调用 runtime.GC() 方法，触发 GC。</p>
+<h1 id="需要关注哪些gc指标">需要关注哪些GC指标</h1>
+<p>Go 的 GC 被设计为成比例触发、大部分工作与赋值器并发、不分代、无内存移动且会主动向操作系统归还申请的内存。因此最主要关注的、能够影响赋值器的性能指标有：</p>
+<ul>
+<li>CPU 利用率：回收算法会在多大程度上拖慢程序？有时候，这个是通过回收占用的 CPU 时间与其它 CPU 时间的百分比来描述的。</li>
+<li>GC 停顿时间：回收器会造成多长时间的停顿？目前的 GC 中需要考虑 STW 和 Mark Assist 两个部分可能造成的停顿。</li>
+<li>GC 停顿频率：回收器造成的停顿频率是怎样的？目前的 GC 中需要考虑 STW 和 Mark Assist 两个部分可能造成的停顿。</li>
+<li>GC 可扩展性：当堆内存变大时，垃圾回收器的性能如何？但大部分的程序可能并不一定关心这个问题。</li>
+</ul>
+<h1 id="如何调优gc">如何调优GC</h1>
+<ul>
+<li>控制内存分配的速度，限制 goroutine 的数量，从而提高赋值器对 CPU 的利用率。</li>
+<li>减少并复用内存，例如使用 sync.Pool 来复用需要频繁创建临时对象，例如提前分配足够的内存来降低多余的拷贝。</li>
+<li>需要时，增大 GOGC 的值，降低 GC 的运行频率。</li>
+</ul>
+<h1 id="有了gc为什么还会有内存泄露">有了GC，为什么还会有内存泄露？</h1>
 <h1 id="演化历程的启发">演化历程的启发</h1>
-<p>通观GC的进化历程，我比较关注的有两个重要的点，<br>
+<ul>
+<li>Go 1：串行三色标记清扫</li>
+<li>Go 1.3：并行清扫，标记过程需要 STW，停顿时间在约几百毫秒</li>
+<li>Go 1.5：并发标记清扫，停顿时间在一百毫秒以内</li>
+<li>Go 1.6：使用 bitmap 来记录回收内存的位置，大幅优化垃圾回收器自身消耗的内存，停顿时间在十毫秒以内</li>
+<li>Go 1.7：停顿时间控制在两毫秒以内</li>
+<li>Go 1.8：混合写屏障，停顿时间在半个毫秒左右</li>
+<li>Go 1.9：彻底移除了栈的重扫描过程</li>
+<li>Go 1.12：整合了两个阶段的 Mark Termination，但引入了一个严重的 GC Bug 至今未修（见问题 20），尚无该 Bug 对 GC 性能影响的报告</li>
+<li>Go 1.13：着手解决向操作系统归还内存的，提出了新的 Scavenger</li>
+<li>Go 1.14：替代了仅存活了一个版本的 scavenger，全新的页分配器，优化分配内存过程的速率与现有的扩展性问题，并引入了异步抢占，解决了由于密集循环导致的 STW 时间过长的问题<br>
+通观GC的进化历程，我比较关注的有两个重要的点，<br>
 一是，通过一步步的不断改进，极大的缩减了STW，这个过程，缺失了每一环，都是有可能无法达到这个局面的。我想说的是，罗马不是一天建成的，我们应该不断积累自己的系统能力，不断完善和强大，为的是有一天，完成那些难以想象的事情。<br>
-二是，不要最优，要最简单，这跟go的设计理念相符。我们做项目也是如此，很多时候并不是没有更好的解法，只是，有很多利弊需要权衡，我们要选的，从来都是最适合的。</p>
-<p>谢谢大家</p>
+二是，不要最优，要最简单，这跟go的设计理念相符。我们做项目也是如此，很多时候并不是没有更好的解法，只是，有很多利弊需要权衡，我们要选的，从来都是最适合的。</li>
+</ul>
 <h1 id="引用">引用</h1>
 <p><a href="https://www.cnblogs.com/Delo/articles/12553593.html">【转载】图解Go语言的gc算法——三色标记</a><br>
 <a href="https://studygolang.com/articles/27243?fr=sidebar">Golang三色标记、混合写屏障GC模式图文全分析</a><br>
@@ -399,7 +505,9 @@ func (v *Value) Store(x interface{}) {
 <a href="https://www.ardanlabs.com/blog/2019/05/garbage-collection-in-go-part2-gctraces.html">Garbage Collection In Go : Part II - GC Traces</a><br>
 <a href="https://www.ardanlabs.com/blog/2019/07/garbage-collection-in-go-part3-gcpacing.html">Garbage Collection In Go : Part III - GC Pacing</a><br>
 <a href="https://www.jianshu.com/p/310257582232">golang 1.8 gc的演进</a><br>
-<a href="https://mp.weixin.qq.com/s/gkBg742lpBVRBhTPhOQ7hg">每位 Gopher 都应该了解的 Golang 语言的垃圾回收算法</a></p>
+<a href="https://mp.weixin.qq.com/s/gkBg742lpBVRBhTPhOQ7hg">每位 Gopher 都应该了解的 Golang 语言的垃圾回收算法</a><br>
+<a href="https://www.bookstack.cn/read/qcrao-Go-Questions/spilt.9.GC-GC.md">什么是写屏障、混合写屏障，如何实现？</a><br>
+<a href="https://www.bookstack.cn/read/qcrao-Go-Questions/spilt.16.GC-GC.md">Go 历史各个版本在 GC 方面的改进？</a></p>
 ]]></content>
     </entry>
     <entry>
