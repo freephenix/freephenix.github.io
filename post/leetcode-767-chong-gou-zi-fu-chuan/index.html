@@ -5,7 +5,7 @@
 <meta name="description" content="" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>
-    DDD 学习笔记（四） | 半亩房顶
+    LeetCode-767  重构字符串 | 半亩房顶
 </title>
 <link rel="shortcut icon" href="https://freephenix.github.io//favicon.ico?v=1618414789980">
 <!-- <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous"> -->
@@ -118,44 +118,78 @@
                 <div id="content" class="main-container-left">
                     <article class="post i-card">
                         <h2 class="post-title">
-                            DDD 学习笔记（四）
+                            LeetCode-767  重构字符串
                         </h2>
                         <div class="post-info">
-                            <time class="post-time">2020-09-11</time>
+                            <time class="post-time">2021-04-14</time>
                             
-                                <a href="https://freephenix.github.io/tag/DOSTPMjk_/" class="post-tag i-tag
-                            i-tag-info">
-                            #DDD
-                        </a>
-                                
                         </div>
                         
-                            <div class="post-feature-image" style="background-image: url('https://freephenix.github.io//post-images/ddd-xue-xi-bi-ji-si.jpeg')"></div>
-                            
                                 <div class="post-content">
-                                    <p>DDD 分层架构、整洁架构、六边形架构都是以领域模型 为核心，实行分层架构，内部核心业务逻辑与外部应用、资源隔离并解耦。</p>
+                                    <p>刷题使我快乐，满脸开心.jpg</p>
 <!-- more -->
-<h1 id="架构种类">架构种类</h1>
-<h3 id="整洁架构">整洁架构</h3>
-<p>又名“洋葱架构”，越往里，越核心，越少依赖<br>
-<img src="https://freephenix.github.io//post-images/1599801911257.png" alt="" loading="lazy"><br>
-领域模型实现领域内核心业务逻辑<br>
-领域服务实现涉及多个实体的复杂业务逻辑<br>
-应用服务实现与用户操作相关的服务组合与编排<br>
-用户界面主要提供适配的能力</p>
-<h3 id="六边形架构">六边形架构</h3>
-<p>又名“端口适配器架构”，应用通过端口与外部进行交互<br>
-<img src="https://freephenix.github.io//post-images/1599806278259.png" alt="" loading="lazy"><br>
-红圈内的六边形完成核心业务逻辑<br>
-外部的六边形完成外部依赖、驱动和基础资源等的交互</p>
-<h3 id="总结">总结</h3>
-<p>结合上讲中提到的DDD 分层架构，对于这三种进行一个对比<br>
-<img src="https://freephenix.github.io//post-images/1599806564666.png" alt="" loading="lazy"><br>
-红圈中均为最核心的逻辑，而三者都考虑到了前端需求会经常改变，但是领域模型并不会经常改变</p>
-<p>DDD 分层架构、整洁架构、六边形架构都是以领域模型 为核心，实行分层架构，内部核心业务逻辑与外部应用、资源隔离并解耦。</p>
-<hr>
-<p>欢迎大家关注我的公众号<br>
-<img src="https://freephenix.github.io//post-images/1599807261669.jpeg" alt="" loading="lazy"></p>
+<h1 id="题目">题目</h1>
+<p>给定一个字符串S，检查是否能重新排布其中的字母，使得两相邻的字符不同。<br>
+若可行，输出任意可行的结果。若不可行，返回空字符串。</p>
+<p>示例 1:</p>
+<pre><code>输入: S = &quot;aab&quot;
+输出: &quot;aba&quot;
+</code></pre>
+<p>示例 2:</p>
+<pre><code>输入: S = &quot;aaab&quot;
+输出: &quot;&quot;
+</code></pre>
+<p>注意:<br>
+<code>S 只包含小写字母并且长度在[1, 500]区间内。</code></p>
+<h1 id="思路">思路</h1>
+<p>本题有两块内容需要思考，一个是如何判断能否得到相邻字符不同的字符串；一个是如何得到这样的字符串<br>
+通过一些常识，不难想到，如果字符串中最多的一个字符不大于n+1/2，则就存在这样的一个字符串<br>
+这块相对简单<br>
+剩下的就是如何得到一个这样的字符串了<br>
+首先考虑下极限情况，如果只有一个字符串或者空字符串，则直接返回<br>
+如果一共奇数长，有n+1/2个相同的字符，则一定是偶数位置全部摆放最多的这个字符才会得到相邻字符不同的字符串，如果一共偶数长，n/2的最多字符可以在奇数位，也可以在偶数位，那么我们就划分出奇数位和偶数位，间隔插入相同字符即可得到一个这样的字符串。<code>贪心思路</code></p>
+<h1 id="代码">代码</h1>
+<pre><code>func reorganizeStringMY(S string) string {
+    n := len(S)
+    if n &lt;= 1 {
+        return S
+    }
+
+    cnt := [26]int{}
+    maxC := 0
+    for _, c := range S {
+        c -= 'a'
+        cnt[c] += 1
+        if cnt[c] &gt; maxC {
+            maxC = cnt[c]
+        }
+    }
+
+    if maxC &gt; (n + 1) / 2 {
+        return &quot;&quot;
+    }
+
+    // 输出
+    ret := make([]byte, n)
+    oddP, evenP, halfLen := 1, 0, n/2
+    for k, v := range cnt {
+        // 分奇数位 和 偶数位输出
+        c := byte('a' + k)
+        for v &gt; 0 &amp;&amp; v &lt;= halfLen &amp;&amp; oddP &lt; n {
+            ret[oddP] = c
+            v --
+            oddP += 2
+        }
+        for v &gt; 0 &amp;&amp; evenP &lt; n {
+            ret[evenP] = c
+            v --
+            evenP += 2
+        }
+    }
+    return string(ret)
+}
+</code></pre>
+<p>此致，共勉</p>
 
                                 </div>
                     </article>
@@ -163,9 +197,9 @@
                     
                         <div class="next-post">
                             <div class="next">下一篇</div>
-                            <a href="https://freephenix.github.io/post/ddd-xue-xi-bi-ji-er-ji-chu-gai-nian/">
+                            <a href="https://freephenix.github.io/post/yuan-ma-za-huo-pu-atomic-bao/">
                                 <h3 class="post-title">
-                                    DDD 学习笔记（二）基础概念
+                                    源码杂货铺：atomic包
                                 </h3>
                             </a>
                         </div>
@@ -184,14 +218,9 @@
         <div class="toc-title i-card-title">目录</div>
         <div class="toc-content">
             <ul class="markdownIt-TOC">
-<li><a href="#%E6%9E%B6%E6%9E%84%E7%A7%8D%E7%B1%BB">架构种类</a><br>
-*
-<ul>
-<li><a href="#%E6%95%B4%E6%B4%81%E6%9E%B6%E6%9E%84">整洁架构</a></li>
-<li><a href="#%E5%85%AD%E8%BE%B9%E5%BD%A2%E6%9E%B6%E6%9E%84">六边形架构</a></li>
-<li><a href="#%E6%80%BB%E7%BB%93">总结</a></li>
-</ul>
-</li>
+<li><a href="#%E9%A2%98%E7%9B%AE">题目</a></li>
+<li><a href="#%E6%80%9D%E8%B7%AF">思路</a></li>
+<li><a href="#%E4%BB%A3%E7%A0%81">代码</a></li>
 </ul>
 
         </div>
