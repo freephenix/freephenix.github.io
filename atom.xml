@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://freephenix.github.io/</id>
     <title>半亩房顶</title>
-    <updated>2021-04-14T15:40:19.208Z</updated>
+    <updated>2021-04-20T16:38:13.637Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://freephenix.github.io/"/>
     <link rel="self" href="https://freephenix.github.io/atom.xml"/>
@@ -82,6 +82,690 @@
 }
 </code></pre>
 <p>此致，共勉</p>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[源码杂货铺：channel]]></title>
+        <id>https://freephenix.github.io/post/ren-shi-golang-channel/</id>
+        <link href="https://freephenix.github.io/post/ren-shi-golang-channel/">
+        </link>
+        <updated>2021-03-29T09:28:55.000Z</updated>
+        <summary type="html"><![CDATA[<p>Do not communicate by sharing memory; instead, share memory by communicating.<br>
+这句话相比大家都听过，&quot;不要通过共享内存来通信，而要通过通信来实现内存共享&quot;。<br>
+这就是 Go 的并发哲学，它依赖 CSP 模型，基于 channel 实现。</p>
+]]></summary>
+        <content type="html"><![CDATA[<p>Do not communicate by sharing memory; instead, share memory by communicating.<br>
+这句话相比大家都听过，&quot;不要通过共享内存来通信，而要通过通信来实现内存共享&quot;。<br>
+这就是 Go 的并发哲学，它依赖 CSP 模型，基于 channel 实现。</p>
+<!-- more -->
+<h1 id="认识channel">认识channel</h1>
+<h2 id="什么是csp模型">什么是CSP模型</h2>
+<p>CSP 是 Communicating Sequential Process 的简称，中文可以叫做通信顺序进程，是一种并发编程模型，由 Tony Hoare 于 1977 年提出。简单来说，CSP 就是用<code>通信来实现内存共享</code>的概念模型。</p>
+<h2 id="channel-使用">channel 使用</h2>
+<p>先来看一个简单的使用</p>
+<pre><code>// 注意，channel 是需要使用make来初始化的，如同 slice、map一样
+ch := make(chan int, 10)
+
+// 读操作
+x &lt;- ch
+
+// 写操作
+ch &lt;- x
+
+// 关闭channl
+close(ch)
+</code></pre>
+<ul>
+<li>如果我们没有使用make初始化chan的话，那无论读写，都会阻塞g（调用gopark函数），进而造成死锁，fatal error: deadlock</li>
+<li>如果我们往一个关闭的channel写，会引发panic</li>
+<li>从关闭的channel读，如果缓冲区有内容则还能继续读取到，如果缓存区已经空了，那么会读取到空值</li>
+</ul>
+<h2 id="channel-底层数据结构">channel 底层数据结构</h2>
+<pre><code>type hchan struct {
+	qcount   uint           // total data in the queue // 队列中的所有数据数
+	dataqsiz uint           // size of the circular queue // 环形队列的大小
+	buf      unsafe.Pointer // points to an array of dataqsiz elements // 指向大小为 dataqsiz 的数组
+	elemsize uint16
+	closed   uint32
+	elemtype *_type // element type// 元素类型
+	sendx    uint   // send index// 发送索引
+	recvx    uint   // receive index// 接受索引
+	recvq    waitq  // list of recv waiters 等待列表，即（ &lt;-chan）
+	sendq    waitq  // list of send waiters 等待列表，即（ ch&lt;- ）
+
+	// lock protects all fields in hchan, as well as several
+	// fields in sudogs blocked on this channel.
+	//
+	// Do not change another G's status while holding this lock
+	// (in particular, do not ready a G), as this can deadlock
+	// with stack shrinking.
+	// lock 保护了 hchan 的所有字段，以及在此 channel 上阻塞的 sudog 的一些字段
+	// 当持有此锁时不应该改变其他 G 的状态（特别的，不 ready 一个 G），因为它会在栈收缩时发生死锁
+	lock mutex
+}
+</code></pre>
+<p>主要由一块buffer，发送、接受的指针和列表，还有关闭标识，还有一个互斥锁组成（所以channel是线程安全的）<br>
+buffer是有一个环形的队列组成的，但是其实是一个连续内存的数组，用下标作为标记组成的队列，分配的位置就在channel结构体的后面，之后看到源码能看到的，这样用数组访问也方便，性能也会好一些，也是得力于chan不涉及扩缩容</p>
+<p><a href="https://go.godbolt.org/">推荐一个golang转汇编在线工具</a>，通过汇编观察，可以看到<br>
+1、channel 的构造语句 make(chan int), 对应的是 runtime.makechan 函数<br>
+2、发送语句 c &lt;- 1, 对应的是 runtime.chansend1 函数<br>
+3、接收语句 x := &lt;- c, 对应的是 runtime.chanrecv1 函数<br>
+下面来一个个看下源码</p>
+<h2 id="makechan">makeChan</h2>
+<pre><code>func makechan64(t *chantype, size int64) *hchan {
+    // 其实还是限制int32为最大size
+	if int64(int(size)) != size {
+		panic(plainError(&quot;makechan: size out of range&quot;))
+	}
+
+	return makechan(t, int(size))
+}
+
+func makechan(t *chantype, size int) *hchan {
+	elem := t.elem
+
+	// compiler checks this but be safe.
+	// 最大为65535
+	if elem.size &gt;= 1&lt;&lt;16 {
+		throw(&quot;makechan: invalid channel element type&quot;)
+	}
+    // maxAlign  = 8  校验内存对齐
+	if hchanSize%maxAlign != 0 || elem.align &gt; maxAlign {
+		throw(&quot;makechan: bad alignment&quot;)
+	}
+    // 校验内存溢出
+	mem, overflow := math.MulUintptr(elem.size, uintptr(size))
+	if overflow || mem &gt; maxAlloc-hchanSize || size &lt; 0 {
+		panic(plainError(&quot;makechan: size out of range&quot;))
+	}
+
+	// hchan除了buffer中包含指针之外，不会产生让GC感兴趣的指针
+	// 环形队列用的是数组形式分配的，内存块和type都是固定的
+	// SudoG's 都被各自的线程引用，所以不会被收集
+	// TODO(dvyukov,rlh): Rethink when collector can move allocated objects.
+	var c *hchan
+	switch {
+	case mem == 0:
+		// Queue or element size is zero.
+		// 队列或元素大小为零
+		c = (*hchan)(mallocgc(hchanSize, nil, true))
+		// Race detector uses this location for synchronization.
+		// 竞争检查使用此位置进行同步
+		c.buf = c.raceaddr()
+	case elem.ptrdata == 0:
+		// Elements do not contain pointers.
+		// Allocate hchan and buf in one call.
+		// 元素不包含指针，在一个调用中分配 hchan 和 buf
+		c = (*hchan)(mallocgc(hchanSize+mem, nil, true))
+		c.buf = add(unsafe.Pointer(c), hchanSize)
+	default:
+		// Elements contain pointers.
+		// 元素包含指针，hchan本身使用new，buf使用mallocgc
+		c = new(hchan)
+		c.buf = mallocgc(mem, elem, true)
+	}
+
+	c.elemsize = uint16(elem.size)
+	c.elemtype = elem
+	c.dataqsiz = uint(size)
+	lockInit(&amp;c.lock, lockRankHchan)
+
+	if debugChan {
+		print(&quot;makechan: chan=&quot;, c, &quot;; elemsize=&quot;, elem.size, &quot;; dataqsiz=&quot;, size, &quot;\n&quot;)
+	}
+	return c
+}
+</code></pre>
+<h2 id="chansend">chansend</h2>
+<pre><code>// entry point for c &lt;- x from compiled code
+//go:nosplit
+func chansend1(c *hchan, elem unsafe.Pointer) {
+	chansend(c, elem, true, getcallerpc())
+}
+
+/*
+ * generic single channel send/recv
+ * If block is not nil,
+ * then the protocol will not
+ * sleep but return if it could
+ * not complete.
+// 泛型单 channel send/recv
+// 如果 block 非空，则 protocol 在未完成的情况下会返回而非 sleep
+ *
+ * sleep can wake up with g.param == nil
+ * when a channel involved in the sleep has
+ * been closed.  it is easiest to loop and re-run
+ * the operation; we'll see that it's now closed.
+*/
+func chansend(c *hchan, ep unsafe.Pointer, block bool, callerpc uintptr) bool {
+	// 当向 nil channel 发送数据时，会调用 gopark
+	// 而 gopark 会将当前的 goroutine 休眠，并用过第一个参数的 unlockf 来回调唤醒
+	// 但此处传递的参数为 nil，因此向 channel 发送数据的 goroutine 和接收数据的 goroutine 都会阻塞，
+	// 进而死锁
+	if c == nil {
+		if !block {
+			return false
+		}
+		gopark(nil, nil, waitReasonChanSendNilChan, traceEvGoStop, 2)
+		throw(&quot;unreachable&quot;)
+	}
+
+	if debugChan {
+		print(&quot;chansend: chan=&quot;, c, &quot;\n&quot;)
+	}
+
+	if raceenabled {
+		racereadpc(c.raceaddr(), callerpc, funcPC(chansend))
+	}
+
+	// Fast path: check for failed non-blocking operation without acquiring the lock.
+	// 快速路径: 在不需要锁的情况下检查失败的非阻塞操作
+	// 注意到 channel 不可能从关闭转换为未关闭状态，因此这里的失败条件为：
+	// buffer 为空（或没有）时 c.recvq.first 为空，或 buffer 已满
+	// 当 c.closed 发生重排在条件之后被读取时，
+	// 其实已经隐含了上一个条件检查中 channel 未被关闭。
+	if !block &amp;&amp; c.closed == 0 &amp;&amp; full(c) {
+		return false
+	}
+
+	var t0 int64
+	if blockprofilerate &gt; 0 {
+		t0 = cputicks()
+	}
+
+	lock(&amp;c.lock)
+
+    // 加完锁后，会再次校验一些内容，确保没有问题
+	if c.closed != 0 { // 不允许向已经 close 的 channel 发送数据
+		unlock(&amp;c.lock)
+		panic(plainError(&quot;send on closed channel&quot;))
+	}
+
+	// 1. 找到了阻塞在 channel 上的 reciver，直接将数据写入等待的goroutinue的栈上
+	if sg := c.recvq.dequeue(); sg != nil {
+		// Found a waiting receiver. We pass the value we want to send
+		// directly to the receiver, bypassing the channel buffer (if any).
+        // 下面有源码，主要是做了memmove内存拷贝和goready唤醒接收的goroutinue
+		send(c, sg, ep, func() { unlock(&amp;c.lock) }, 3)
+		return true
+	}
+
+	// 2. 判断 channel 中缓存区是否仍然有空间剩余
+	if c.qcount &lt; c.dataqsiz {
+		// Space is available in the channel buffer. Enqueue the element to send.
+		// 有空间剩余，加入缓存区
+		qp := chanbuf(c, c.sendx)
+		if raceenabled {
+			racereleaseacquire(qp)
+		}
+		typedmemmove(c.elemtype, qp, ep)
+		c.sendx++
+		if c.sendx == c.dataqsiz {
+			c.sendx = 0
+		}
+		c.qcount++
+		unlock(&amp;c.lock)
+		return true
+	}
+
+	if !block {
+		unlock(&amp;c.lock)
+		return false
+	}
+
+	// Block on the channel. Some receiver will complete our operation for us.
+	// 3. 阻塞在 channel 上，等待接收方接收数据
+	gp := getg()
+	mysg := acquireSudog()
+	mysg.releasetime = 0
+	if t0 != 0 {
+		mysg.releasetime = -1
+	}
+	// No stack splits between assigning elem and enqueuing mysg
+	// on gp.waiting where copystack can find it.
+	mysg.elem = ep
+	mysg.waitlink = nil
+	mysg.g = gp
+	mysg.isSelect = false
+	mysg.c = c
+	gp.waiting = mysg
+	gp.param = nil
+	c.sendq.enqueue(mysg)
+	// Signal to anyone trying to shrink our stack that we're about
+	// to park on a channel. The window between when this G's status
+	// changes and when we set gp.activeStackChans is not safe for
+	// stack shrinking.
+	atomic.Store8(&amp;gp.parkingOnChan, 1)
+    // 将当前的 g 从调度队列移出
+	gopark(chanparkcommit, unsafe.Pointer(&amp;c.lock), waitReasonChanSend, traceEvGoBlockSend, 2) 
+	// 因为调度器在停止当前 g 的时候会记录运行现场，当恢复阻塞的发送操作时候，会从此处继续开始执行
+	// Ensure the value being sent is kept alive until the
+	// receiver copies it out. The sudog has a pointer to the
+	// stack object, but sudogs aren't considered as roots of the
+	// stack tracer.
+	KeepAlive(ep)
+
+	// someone woke us up.
+	// 被唤醒
+	if mysg != gp.waiting {
+		throw(&quot;G waiting list is corrupted&quot;)
+	}
+	gp.waiting = nil
+	gp.activeStackChans = false
+	closed := !mysg.success
+	gp.param = nil
+	if mysg.releasetime &gt; 0 {
+		blockevent(mysg.releasetime-t0, 2)
+	}
+	mysg.c = nil
+	releaseSudog(mysg)
+	if closed {
+		// 正常唤醒状态，goroutine 应该包含需要传递的参数，但如果没有唤醒时的参数，且 channel 没有被关闭，则为虚假唤醒
+		if c.closed == 0 {
+			throw(&quot;chansend: spurious wakeup&quot;)
+		}
+		panic(plainError(&quot;send on closed channel&quot;))
+	}
+	return true
+}
+
+// send processes a send operation on an empty channel c.
+// The value ep sent by the sender is copied to the receiver sg.
+// The receiver is then woken up to go on its merry way.
+// Channel c must be empty and locked.  send unlocks c with unlockf.
+// sg must already be dequeued from c.
+// ep must be non-nil and point to the heap or the caller's stack.
+func send(c *hchan, sg *sudog, ep unsafe.Pointer, unlockf func(), skip int) {
+	if raceenabled {
+		if c.dataqsiz == 0 {
+			racesync(c, sg)
+		} else {
+			// Pretend we go through the buffer, even though
+			// we copy directly. Note that we need to increment
+			// the head/tail locations only when raceenabled.
+			qp := chanbuf(c, c.recvx)
+			racereleaseacquire(qp)
+			racereleaseacquireg(sg.g, qp)
+			c.recvx++
+			if c.recvx == c.dataqsiz {
+				c.recvx = 0
+			}
+			c.sendx = c.recvx // c.sendx = (c.sendx+1) % c.dataqsiz
+		}
+	}
+	if sg.elem != nil {
+		sendDirect(c.elemtype, sg, ep)
+		sg.elem = nil
+	}
+	gp := sg.g
+	unlockf()
+	gp.param = unsafe.Pointer(sg)
+	sg.success = true
+	if sg.releasetime != 0 {
+		sg.releasetime = cputicks()
+	}
+	// 复始一个 goroutine，放入调度队列等待被后续调度
+	// 第二个参数用于 trace 追踪 ip 寄存器的位置，go runtime 又不希望暴露太多内部的调用，因此记录需要跳过多少 ip
+	goready(gp, skip+1)
+}
+
+// Sends and receives on unbuffered or empty-buffered channels are the
+// only operations where one running goroutine writes to the stack of
+// another running goroutine. The GC assumes that stack writes only
+// happen when the goroutine is running and are only done by that
+// goroutine. Using a write barrier is sufficient to make up for
+// violating that assumption, but the write barrier has to work.
+// typedmemmove will call bulkBarrierPreWrite, but the target bytes
+// are not in the heap, so that will not help. We arrange to call
+// memmove and typeBitsBulkBarrier instead.
+
+func sendDirect(t *_type, sg *sudog, src unsafe.Pointer) {
+	// src is on our stack, dst is a slot on another stack.
+
+	// Once we read sg.elem out of sg, it will no longer
+	// be updated if the destination's stack gets copied (shrunk).
+	// So make sure that no preemption points can happen between read &amp; use.
+	// 我们必须在一个函数调用中完成 sg.elem 指针的读取，否则当发生栈伸缩时，指针可能失效（被移动了）。
+	dst := sg.elem
+	// 为了确保发送的数据能够被立刻观察到，需要写屏障支持，执行写屏障，保证代码正确性
+	typeBitsBulkBarrier(t, uintptr(dst), uintptr(src), t.size)
+	// No need for cgo write barrier checks because dst is always
+	// Go memory.
+	memmove(dst, src, t.size) // 直接写入 reader 的执行栈！
+}
+</code></pre>
+<p>发送函数，其中有一个地方需要注意，当有等待的接收者时，会直接将内容拷贝进接收者的栈中，就是这么的直接<br>
+另外，加锁后，<code>重复校验重要内容</code>值得学习，如校验chan是否关闭等</p>
+<h2 id="chanrev">chanrev</h2>
+<pre><code>// entry points for &lt;- c from compiled code
+//go:nosplit
+func chanrecv1(c *hchan, elem unsafe.Pointer) {
+	chanrecv(c, elem, true)
+}
+
+//go:nosplit
+func chanrecv2(c *hchan, elem unsafe.Pointer) (received bool) {
+	_, received = chanrecv(c, elem, true)
+	return
+}
+
+// chanrecv receives on channel c and writes the received data to ep.
+// ep may be nil, in which case received data is ignored.
+// If block == false and no elements are available, returns (false, false).
+// Otherwise, if c is closed, zeros *ep and returns (true, false).
+// Otherwise, fills in *ep with an element and returns (true, true).
+// A non-nil ep must point to the heap or the caller's stack.
+func chanrecv(c *hchan, ep unsafe.Pointer, block bool) (selected, received bool) {
+	// raceenabled: don't need to check ep, as it is always on the stack
+	// or is new memory allocated by reflect.
+
+	if debugChan {
+		print(&quot;chanrecv: chan=&quot;, c, &quot;\n&quot;)
+	}
+
+	if c == nil {
+		if !block {
+			return
+		}
+		gopark(nil, nil, waitReasonChanReceiveNilChan, traceEvGoStop, 2)
+		throw(&quot;unreachable&quot;)
+	}
+
+	// Fast path: check for failed non-blocking operation without acquiring the lock.
+	// 快速路径: 在不需要锁的情况下检查失败的非阻塞操作
+	//
+	// 注意到 channel 不能由已关闭转换为未关闭，则
+	// 失败的条件是：1. 无 buf 时发送队列为空 2. 有 buf 时，buf 为空
+	// 此处的 c.closed 必须在条件判断之后进行验证，
+	// 因为指令重排后，如果先判断 c.closed，得出 channel 未关闭，无法判断失败条件中
+	// channel 是已关闭还是未关闭（从而需要 atomic 操作）
+	if !block &amp;&amp; empty(c) {
+		// After observing that the channel is not ready for receiving, we observe whether the
+		// channel is closed.
+		//
+		// Reordering of these checks could lead to incorrect behavior when racing with a close.
+		// For example, if the channel was open and not empty, was closed, and then drained,
+		// reordered reads could incorrectly indicate &quot;open and empty&quot;. To prevent reordering,
+		// we use atomic loads for both checks, and rely on emptying and closing to happen in
+		// separate critical sections under the same lock.  This assumption fails when closing
+		// an unbuffered channel with a blocked send, but that is an error condition anyway.
+		if atomic.Load(&amp;c.closed) == 0 {
+			// Because a channel cannot be reopened, the later observation of the channel
+			// being not closed implies that it was also not closed at the moment of the
+			// first observation. We behave as if we observed the channel at that moment
+			// and report that the receive cannot proceed.
+			return
+		}
+		// The channel is irreversibly closed. Re-check whether the channel has any pending data
+		// to receive, which could have arrived between the empty and closed checks above.
+		// Sequential consistency is also required here, when racing with such a send.
+		if empty(c) {
+			// The channel is irreversibly closed and empty.
+			if raceenabled {
+				raceacquire(c.raceaddr())
+			}
+			if ep != nil {
+				typedmemclr(c.elemtype, ep)
+			}
+			return true, false
+		}
+	}
+
+	var t0 int64
+	if blockprofilerate &gt; 0 {
+		t0 = cputicks()
+	}
+
+	lock(&amp;c.lock)
+
+	// 1. channel 已经 close，且 channel 中没有数据，则直接返回
+	if c.closed != 0 &amp;&amp; c.qcount == 0 {
+		if raceenabled {
+			raceacquire(c.raceaddr())
+		}
+		unlock(&amp;c.lock)
+		if ep != nil {
+			typedmemclr(c.elemtype, ep)
+		}
+		return true, false
+	}
+	// 2. 找到发送方，直接接收
+	if sg := c.sendq.dequeue(); sg != nil {
+		// Found a waiting sender. If buffer is size 0, receive value
+		// directly from sender. Otherwise, receive from head of queue
+		// and add sender's value to the tail of the queue (both map to
+		// the same buffer slot because the queue is full).
+		recv(c, sg, ep, func() { unlock(&amp;c.lock) }, 3)
+		return true, true
+	}
+	// 3. channel 的 buf 不空
+	if c.qcount &gt; 0 {
+		// Receive directly from queue
+		qp := chanbuf(c, c.recvx)
+		if raceenabled {
+			racereleaseacquire(qp)
+		}
+		if ep != nil {
+			typedmemmove(c.elemtype, ep, qp)
+		}
+		typedmemclr(c.elemtype, qp)
+		c.recvx++
+		if c.recvx == c.dataqsiz {
+			c.recvx = 0
+		}
+		c.qcount--
+		unlock(&amp;c.lock)
+		return true, true
+	}
+
+	if !block {
+		unlock(&amp;c.lock)
+		return false, false
+	}
+
+	// no sender available: block on this channel.
+	// 4. 没有更多的发送方，阻塞 channel
+	gp := getg()
+	mysg := acquireSudog()
+	mysg.releasetime = 0
+	if t0 != 0 {
+		mysg.releasetime = -1
+	}
+	// No stack splits between assigning elem and enqueuing mysg
+	// on gp.waiting where copystack can find it.
+	mysg.elem = ep
+	mysg.waitlink = nil
+	gp.waiting = mysg
+	mysg.g = gp
+	mysg.isSelect = false
+	mysg.c = c
+	gp.param = nil
+	c.recvq.enqueue(mysg)
+	// Signal to anyone trying to shrink our stack that we're about
+	// to park on a channel. The window between when this G's status
+	// changes and when we set gp.activeStackChans is not safe for
+	// stack shrinking.
+	atomic.Store8(&amp;gp.parkingOnChan, 1)
+	gopark(chanparkcommit, unsafe.Pointer(&amp;c.lock), waitReasonChanReceive, traceEvGoBlockRecv, 2)
+
+	// someone woke us up
+	// 唤醒
+	if mysg != gp.waiting {
+		throw(&quot;G waiting list is corrupted&quot;)
+	}
+	gp.waiting = nil
+	gp.activeStackChans = false
+	if mysg.releasetime &gt; 0 {
+		blockevent(mysg.releasetime-t0, 2)
+	}
+	success := mysg.success
+	gp.param = nil
+	mysg.c = nil
+	releaseSudog(mysg)
+	return true, success
+}
+
+// recv processes a receive operation on a full channel c.
+// There are 2 parts:
+// 1) The value sent by the sender sg is put into the channel
+//    and the sender is woken up to go on its merry way.
+// 2) The value received by the receiver (the current G) is
+//    written to ep.
+// For synchronous channels, both values are the same.
+// For asynchronous channels, the receiver gets its data from
+// the channel buffer and the sender's data is put in the
+// channel buffer.
+// Channel c must be full and locked. recv unlocks c with unlockf.
+// sg must already be dequeued from c.
+// A non-nil ep must point to the heap or the caller's stack.
+func recv(c *hchan, sg *sudog, ep unsafe.Pointer, unlockf func(), skip int) {
+	if c.dataqsiz == 0 {
+		if raceenabled {
+			racesync(c, sg)
+		}
+		if ep != nil {
+			// copy data from sender
+			// 直接从对方的栈进行拷贝
+			recvDirect(c.elemtype, sg, ep)
+		}
+	} else {
+		// Queue is full. Take the item at the
+		// head of the queue. Make the sender enqueue
+		// its item at the tail of the queue. Since the
+		// queue is full, those are both the same slot.
+		// 从缓存队列拷贝
+		qp := chanbuf(c, c.recvx)
+		if raceenabled {
+			racereleaseacquire(qp)
+			racereleaseacquireg(sg.g, qp)
+		}
+		// copy data from queue to receiver
+		// 从队列拷贝数据到接收方
+		if ep != nil {
+			typedmemmove(c.elemtype, ep, qp)
+		}
+		// copy data from sender to queue
+		// 从发送方拷贝数据到队列
+		typedmemmove(c.elemtype, qp, sg.elem)
+		c.recvx++
+		if c.recvx == c.dataqsiz {
+			c.recvx = 0
+		}
+		c.sendx = c.recvx // c.sendx = (c.sendx+1) % c.dataqsiz
+	}
+	sg.elem = nil
+	gp := sg.g
+	unlockf()
+	gp.param = unsafe.Pointer(sg)
+	sg.success = true
+	if sg.releasetime != 0 {
+		sg.releasetime = cputicks()
+	}
+	goready(gp, skip+1)
+}
+
+func recvDirect(t *_type, sg *sudog, dst unsafe.Pointer) {
+	// dst is on our stack or the heap, src is on another stack.
+	// The channel is locked, so src will not move during this
+	// operation.
+	src := sg.elem
+	typeBitsBulkBarrier(t, uintptr(dst), uintptr(src), t.size)
+	memmove(dst, src, t.size)
+}
+</code></pre>
+<p>接收和发送的代码比较相似，思路之类的都是相似的，大家可以相互借鉴着看</p>
+<h2 id="closechan">closechan</h2>
+<p>下面来看看关闭操作</p>
+<pre><code>func closechan(c *hchan) {
+	if c == nil {
+        // 不能关闭未初始化的chan
+		panic(plainError(&quot;close of nil channel&quot;))
+	}
+
+	lock(&amp;c.lock)
+	if c.closed != 0 {
+		unlock(&amp;c.lock)
+        // 不能重复关闭chan，注意细节，panic前释放锁
+		panic(plainError(&quot;close of closed channel&quot;))
+	}
+
+	if raceenabled {
+		callerpc := getcallerpc()
+		racewritepc(c.raceaddr(), callerpc, funcPC(closechan))
+		racerelease(c.raceaddr())
+	}
+
+	c.closed = 1
+
+	var glist gList
+
+	// release all readers
+	// 释放所有的读者
+	for {
+		sg := c.recvq.dequeue()
+		if sg == nil {
+			break
+		}
+		if sg.elem != nil {
+			typedmemclr(c.elemtype, sg.elem)
+			sg.elem = nil
+		}
+		if sg.releasetime != 0 {
+			sg.releasetime = cputicks()
+		}
+		gp := sg.g
+		gp.param = unsafe.Pointer(sg)
+		sg.success = false
+		if raceenabled {
+			raceacquireg(gp, c.raceaddr())
+		}
+		glist.push(gp)
+	}
+
+	// release all writers (they will panic)
+	// 释放所有的写者 (panic)
+	for {
+		sg := c.sendq.dequeue()
+		if sg == nil {
+			break
+		}
+		sg.elem = nil
+		if sg.releasetime != 0 {
+			sg.releasetime = cputicks()
+		}
+		gp := sg.g
+		gp.param = unsafe.Pointer(sg)
+		sg.success = false
+		if raceenabled {
+			raceacquireg(gp, c.raceaddr())
+		}
+		glist.push(gp)
+	}
+	unlock(&amp;c.lock)
+
+	// Ready all Gs now that we've dropped the channel lock.
+	// 就绪所有的 G 即可释放 channel 锁
+    // 并不是在解锁前一个个直接goready去释放，因为这个过程需要与系统交互，成本较高，划重点
+	for !glist.empty() {
+		gp := glist.pop()
+		gp.schedlink = 0
+		goready(gp, 3)
+	}
+}
+</code></pre>
+<p>释放资源时，没有直接释放资源再解锁，减小了锁占用时间，很值得学习的思路</p>
+<h2 id="小结">小结</h2>
+<p>Golang 的 channel 将 goroutine 隔离开，并发编程的时候可以将注意力放在 channel 上。在一定程度上，这个和消息队列的解耦功能还是挺像的。有时间多看看源码果真受益匪浅。共勉</p>
+<h1 id="引用">引用</h1>
+<ul>
+<li><a href="https://www.bookstack.cn/read/qcrao-Go-Questions/channel.md">Go语言问题集-channel</a></li>
+<li><a href="https://blog.csdn.net/qq_34777600/article/details/81023585?utm_medium=distribute.pc_relevant_t0.none-task-blog-2%7Edefault%7EBlogCommendFromMachineLearnPai2%7Edefault-1.control&amp;dist_request_id=1330144.35573.16182266038558659&amp;depth_1-utm_source=distribute.pc_relevant_t0.none-task-blog-2%7Edefault%7EBlogCommendFromMachineLearnPai2%7Edefault-1.control">Go语言并发与并行--goroutine和channel和deadlock详解</a></li>
+<li><a href="https://www.bilibili.com/video/BV1g4411R7p5?from=search&amp;seid=8242326480627556376">#56 channel &amp; select 源码分析 【 Go 夜读 】</a></li>
+<li><a href="https://sourcegraph.com/github.com/golang/go@go1.13/-/blob/src/runtime/chan.go#L176">sourcegraph  runtime/chan.go</a></li>
+<li><a href="http://legendtkl.com/2017/07/30/understanding-golang-channel/">深入理解 Go Channel</a></li>
+<li><a href="https://github.com/golang-design/under-the-hood/blob/master/gosrc/runtime/chan.go">欧长坤大佬注释的go channel源码</a></li>
+<li><a href="https://blog.csdn.net/u010853261/article/details/85887948">Golang-gopark函数和goready函数原理分析</a></li>
+</ul>
 ]]></content>
     </entry>
     <entry>
@@ -1321,59 +2005,6 @@ DB.Scopes(UserTable(&amp;user)).Create(&amp;user)
 <hr>
 <p>欢迎大家关注公众号一起交流<br>
 <img src="https://freephenix.github.io//post-images/1599790602118.jpeg" alt="" loading="lazy"></p>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[DDD 学习笔记（一）]]></title>
-        <id>https://freephenix.github.io/post/ddd-xue-xi-bi-ji-yi/</id>
-        <link href="https://freephenix.github.io/post/ddd-xue-xi-bi-ji-yi/">
-        </link>
-        <updated>2020-09-08T12:45:11.000Z</updated>
-        <summary type="html"><![CDATA[<p>架构演进概览</p>
-]]></summary>
-        <content type="html"><![CDATA[<p>架构演进概览</p>
-<!-- more -->
-<h3 id="前言">前言</h3>
-<p>笔记内容中，图片以及定义等描述性内容主要来自于极客时间《DDD实战课程》，思考和QA多为结合网络资料自己思考后总结的。如有侵权，请联系删除。谢谢</p>
-<h3 id="软件架构模式的演进">软件架构模式的演进</h3>
-<figure data-type="image" tabindex="1"><img src="https://freephenix.github.io//post-images/1599790481374.jpg" alt="软件架构模式的演进" loading="lazy"></figure>
-<ul>
-<li>
-<p>第一阶段是单机架构<br>
-采用面向过程的设计方法，系统包括客户端 UI 层和数据库两层，采用 C/S 架构模式，整个系统围绕数据库驱动设计和开发，并且总是从设计数据库和字段开始。</p>
-</li>
-<li>
-<p>第二阶段是集中式架构<br>
-采用面向对象的设计方法，系统包括业务接入层、业务逻辑层和数据库层，采用经典的三层架构，也有部分应用采用传统的 SOA 架构。这种架构容易使系统变得臃肿，可扩展性和弹性伸缩性差。</p>
-</li>
-<li>
-<p>第三阶段是分布式微服务架构<br>
-随着微服务架构理念的提出，集中式架构正向分布式微服务架构演进。微服务架构可以很好地实现应用之间的解耦，解决单体应用扩展性和弹性伸缩能力不足的问题。</p>
-</li>
-</ul>
-<h3 id="微服务架构">微服务架构</h3>
-<h5 id="微服务架构旨在解决什么问题">微服务架构旨在解决什么问题？</h5>
-<p>在单机和集中式架构这两种模式下，软件无法快速响应需求和业务的迅速变化，再究其原因，有系统依赖复杂，越来越笨重等多种因素，而微服务，旨在应用解耦，提高系统的扩展性和弹性伸缩能力，加速技术对于业务的响应和支持</p>
-<h5 id="微服务架构实现面临什么问题">微服务架构实现面临什么问题？</h5>
-<p>微服务将复杂系统拆分为多个子系统，而此时，如何拆分、粒度如何把握便成了最大的问题</p>
-<h5 id="ddd-和微服务的关系">DDD 和微服务的关系？</h5>
-<p>DDD 是一种架构设计方法，从业务领域视角划分领域边界，对于微服务的边界提供了一种解决方案<br>
-微服务是一种架构风格，关注的点偏技术，旨在更好的为业务提供支持</p>
-<p>两者从本质上都是为了追求高响应力，而从业务视角去分离应用系统建设复杂度的手段。两者都强调根据业务发展，合理划分领域边界，持续调整现有架构，优化代码，即演进式架构。</p>
-<h5 id="ddd-如何解决微服务实现面临的问题">DDD 如何解决微服务实现面临的问题？</h5>
-<p><strong><code>DDD分战略设计和战术设计</code></strong><br>
-DDD 战略设计会建立领域模型，用于指导微服务的设计和拆分。<br>
-通过事件风暴的方法，在业务专家的带领下，全员参与，梳理业务中出现的实体、命令、事件等领域对象，并将这些对象根据其关联性组合、划分，最终形成 聚合、限界上下文等边界，建立领域模型。<br>
-<img src="https://freephenix.github.io//post-images/1599790519983.jpg" alt="领域" loading="lazy"></p>
-<p><strong>我们可以用三步来划定领域模型和微服务的边界</strong></p>
-<ul>
-<li>第一步：在事件风暴中梳理业务过程中的用户操作、事件以及外部依赖关系等，根据这些要素梳理出领域实体等领域对象。</li>
-<li>第二步：根据领域实体之间的业务关联性，将业务紧密相关的实体进行组合形成聚合，同时确定聚合中的聚合根、值对象和实体。在这个图里，聚合之间的边界是第一层边界，它们在同一个微服务实例中运行，这个边界是逻辑边界，所以用虚线表示。</li>
-<li>第三步：根据业务及语义边界等因素，将一个或者多个聚合划定在一个限界上下文内，形成领域模型。在这个图里，限界上下文之间的边界是第二层边界，这一层边界可能就是未来微服务的边界，不同限界上下文内的领域逻辑被隔离在不同的微服务实例中运行，物理上相互隔离，所以是物理边界，边界之间用实线来表示。</li>
-</ul>
-<hr>
-<p>欢迎大家关注公众号一起交流<br>
-<img src="https://freephenix.github.io//post-images/1599790532315.jpeg" alt="" loading="lazy"></p>
 ]]></content>
     </entry>
 </feed>
