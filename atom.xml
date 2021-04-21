@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://freephenix.github.io/</id>
     <title>半亩房顶</title>
-    <updated>2021-04-21T15:04:22.926Z</updated>
+    <updated>2021-04-21T15:41:07.562Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://freephenix.github.io/"/>
     <link rel="self" href="https://freephenix.github.io/atom.xml"/>
@@ -10,6 +10,89 @@
     <logo>https://freephenix.github.io/images/avatar.png</logo>
     <icon>https://freephenix.github.io/favicon.ico</icon>
     <rights>All rights reserved 2021, 半亩房顶</rights>
+    <entry>
+        <title type="html"><![CDATA[LeetCode-70 爬楼梯]]></title>
+        <id>https://freephenix.github.io/post/leetcode-70-pa-lou-ti/</id>
+        <link href="https://freephenix.github.io/post/leetcode-70-pa-lou-ti/">
+        </link>
+        <updated>2021-04-21T15:22:03.000Z</updated>
+        <summary type="html"><![CDATA[<p>刷题使我快乐，满脸开心.jpg</p>
+<p>来源：力扣（LeetCode）<br>
+链接：https://leetcode-cn.com/problems/climbing-stairs<br>
+著作权归领扣网络所有。商业转载请联系官方授权，非商业转载请注明出处。</p>
+]]></summary>
+        <content type="html"><![CDATA[<p>刷题使我快乐，满脸开心.jpg</p>
+<p>来源：力扣（LeetCode）<br>
+链接：https://leetcode-cn.com/problems/climbing-stairs<br>
+著作权归领扣网络所有。商业转载请联系官方授权，非商业转载请注明出处。</p>
+<!-- more -->
+<h1 id="题目">题目</h1>
+<p>假设你正在爬楼梯。需要 n 阶你才能到达楼顶。</p>
+<p>每次你可以爬 1 或 2 个台阶。你有多少种不同的方法可以爬到楼顶呢？</p>
+<p>注意：给定 n 是一个正整数。</p>
+<p>示例 1：</p>
+<pre><code>输入： 2
+输出： 2
+解释： 有两种方法可以爬到楼顶。
+1.  1 阶 + 1 阶
+2.  2 阶
+</code></pre>
+<p>示例 2：</p>
+<pre><code>输入： 3
+输出： 3
+解释： 有三种方法可以爬到楼顶。
+1.  1 阶 + 1 阶 + 1 阶
+2.  1 阶 + 2 阶
+3.  2 阶 + 1 阶
+</code></pre>
+<h1 id="思路">思路</h1>
+<ul>
+<li>动态规划，f(n) = f(n-1) + f(n-2)</li>
+<li>记忆递归<br>
+就是保存台阶数的结果，加速递归过程</li>
+</ul>
+<h1 id="代码">代码</h1>
+<h2 id="动态规划">动态规划</h2>
+<pre><code>func climbStairs(n int) int {
+    if n == 1 {
+        return 1
+    }
+    fn_2 := 1
+    fn_1 := 1
+    fn := fn_2 + fn_1
+    for i := 2; i &lt; n; i++ {
+        fn_2 = fn_1
+        fn_1 = fn
+        fn = fn_2 + fn_1
+    }
+    return fn
+}
+</code></pre>
+<h2 id="记忆递归">记忆递归</h2>
+<p>主要是，空间换时间的思路，类似的还有ip排序</p>
+<pre><code>func climbStairs(n int) int {
+    mapTemp := make(map[int]int, n + 1)
+    return robot(n, mapTemp)
+}
+
+func robot(n int, tmp map[int]int) int {
+    if n == 0 {
+        return 1
+    }
+    if n &lt; 0 {
+        return 0
+    }
+    if tmp[n] &gt; 0 {
+        return tmp[n]
+    }
+    k := robot(n-1, tmp) + robot(n-2, tmp)
+    tmp[n] = k
+    return k
+}
+</code></pre>
+<p>共勉</p>
+]]></content>
+    </entry>
     <entry>
         <title type="html"><![CDATA[LeetCode-91 解码方法]]></title>
         <id>https://freephenix.github.io/post/leetcode/</id>
@@ -1958,39 +2041,6 @@ DB.Scopes(UserTable(&amp;user)).Create(&amp;user)
 <hr>
 <p>欢迎大家关注我的公众号，一起交流<br>
 <img src="https://freephenix.github.io//post-images/1601453523798.jpeg" alt="" loading="lazy"></p>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[DDD 学习笔记（四）]]></title>
-        <id>https://freephenix.github.io/post/ddd-xue-xi-bi-ji-si/</id>
-        <link href="https://freephenix.github.io/post/ddd-xue-xi-bi-ji-si/">
-        </link>
-        <updated>2020-09-11T05:14:26.000Z</updated>
-        <summary type="html"><![CDATA[<p>DDD 分层架构、整洁架构、六边形架构都是以领域模型 为核心，实行分层架构，内部核心业务逻辑与外部应用、资源隔离并解耦。</p>
-]]></summary>
-        <content type="html"><![CDATA[<p>DDD 分层架构、整洁架构、六边形架构都是以领域模型 为核心，实行分层架构，内部核心业务逻辑与外部应用、资源隔离并解耦。</p>
-<!-- more -->
-<h1 id="架构种类">架构种类</h1>
-<h3 id="整洁架构">整洁架构</h3>
-<p>又名“洋葱架构”，越往里，越核心，越少依赖<br>
-<img src="https://freephenix.github.io//post-images/1599801911257.png" alt="" loading="lazy"><br>
-领域模型实现领域内核心业务逻辑<br>
-领域服务实现涉及多个实体的复杂业务逻辑<br>
-应用服务实现与用户操作相关的服务组合与编排<br>
-用户界面主要提供适配的能力</p>
-<h3 id="六边形架构">六边形架构</h3>
-<p>又名“端口适配器架构”，应用通过端口与外部进行交互<br>
-<img src="https://freephenix.github.io//post-images/1599806278259.png" alt="" loading="lazy"><br>
-红圈内的六边形完成核心业务逻辑<br>
-外部的六边形完成外部依赖、驱动和基础资源等的交互</p>
-<h3 id="总结">总结</h3>
-<p>结合上讲中提到的DDD 分层架构，对于这三种进行一个对比<br>
-<img src="https://freephenix.github.io//post-images/1599806564666.png" alt="" loading="lazy"><br>
-红圈中均为最核心的逻辑，而三者都考虑到了前端需求会经常改变，但是领域模型并不会经常改变</p>
-<p>DDD 分层架构、整洁架构、六边形架构都是以领域模型 为核心，实行分层架构，内部核心业务逻辑与外部应用、资源隔离并解耦。</p>
-<hr>
-<p>欢迎大家关注我的公众号<br>
-<img src="https://freephenix.github.io//post-images/1599807261669.jpeg" alt="" loading="lazy"></p>
 ]]></content>
     </entry>
 </feed>
