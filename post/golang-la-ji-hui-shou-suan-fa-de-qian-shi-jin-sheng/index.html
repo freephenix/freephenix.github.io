@@ -7,7 +7,7 @@
 <title>
     Golang 垃圾回收算法 | 半亩房顶
 </title>
-<link rel="shortcut icon" href="https://freephenix.github.io//favicon.ico?v=1619019664853">
+<link rel="shortcut icon" href="https://freephenix.github.io//favicon.ico?v=1619093598455">
 <!-- <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous"> -->
 <link href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
@@ -47,7 +47,7 @@
     <div class="nav">
         <div class="logo">
             <a href="https://freephenix.github.io/">
-                <img class="avatar" src="https://freephenix.github.io//images/avatar.png?v=1619019664853" alt="">
+                <img class="avatar" src="https://freephenix.github.io//images/avatar.png?v=1619093598455" alt="">
             </a>
             <div class="site-title">
                 <h1>
@@ -124,17 +124,17 @@
                             <time class="post-time">2021-01-29</time>
                             
                                 <a href="https://freephenix.github.io/tag/WucazjDbn/" class="post-tag i-tag
-                            i-tag-primary">
+                            i-tag-other_2">
                             #算法
                         </a>
                                 
                                 <a href="https://freephenix.github.io/tag/HgE3rCkXf/" class="post-tag i-tag
-                            i-tag-warning">
+                            i-tag-info">
                             #垃圾回收
                         </a>
                                 
                                 <a href="https://freephenix.github.io/tag/_8npzAvVN/" class="post-tag i-tag
-                            i-tag-">
+                            i-tag-success">
                             #Golang
                         </a>
                                 
@@ -219,18 +219,7 @@ if enableMarkAssist {
 满足强三色不变性，即被引用对象，会被强制标记为灰色。<br>
 2、删除写屏障<br>
 满足弱三色不变性，即被删除对象，如果自身为灰色或者白色，会被标记为灰色。<br>
-这个机制是否可以优化？看v1.8！</p>
-<h2 id="一些补充点">一些补充点</h2>
-<h3 id="gc-percentage">GC Percentage</h3>
-<p>runtime中有GC Percentage的选项，这个配置数字默认是100表明，需要有新分配100%的堆内存时才会触发下一次GC，请谨慎，设置100会造成延迟</p>
-<h3 id="gc-trace">GC Trace</h3>
-<p>可以通过包含环境变量 GODEBUG 和 gctrace = 1选项来开启GC trace，这样每次GC时，就会将GC信息写入stderr。运行 GC trace可以告诉我们很多关于应用程序的健康状况和收集器的速度的信息。收集器的运行速度在收集过程中起着重要作用。</p>
-<h3 id="pacing">Pacing</h3>
-<p>收集器有一个决定GC间隔的算法，即调整GC步长，这个算法依赖于收集的程序信息和程序对堆内存的压力反馈（其实就是分配堆内存速度）</p>
-<h3 id="collector-latency-costs">Collector Latency Costs</h3>
-<p>GC有两部分的延误程序。<br>
-1、CPU占用，减少了CPU，应用程序此时肯定会受到影响。<br>
-2、STW，硬生生的暂停和上下文切换成本</p>
+这个机制最大的问题在于，如果面临栈内存分配时，因为屏障机制增加的时间成本比较大，那么，这个机制是否可以优化？看v1.8！</p>
 <h1 id="golang-v18-混合写屏障机制">Golang v1.8 混合写屏障机制</h1>
 <p>在说v1.8改进之前，先说明下三色原理：</p>
 <ul>
@@ -322,6 +311,17 @@ func HybridWritePointerSimple(slot *unsafe.Pointer, ptr unsafe.Pointer){
 <li>需要时，增大 GOGC 的值，降低 GC 的运行频率。</li>
 </ul>
 <h1 id="有了gc为什么还会有内存泄露">有了GC，为什么还会有内存泄露？</h1>
+<h1 id="一些补充点">一些补充点</h1>
+<h2 id="gc-percentage">GC Percentage</h2>
+<p>runtime中有GC Percentage的选项，这个配置数字默认是100表明，需要有新分配100%的堆内存时才会触发下一次GC，请谨慎，设置100会造成延迟</p>
+<h2 id="gc-trace">GC Trace</h2>
+<p>可以通过包含环境变量 GODEBUG 和 gctrace = 1选项来开启GC trace，这样每次GC时，就会将GC信息写入stderr。运行 GC trace可以告诉我们很多关于应用程序的健康状况和收集器的速度的信息。收集器的运行速度在收集过程中起着重要作用。</p>
+<h2 id="pacing">Pacing</h2>
+<p>收集器有一个决定GC间隔的算法，即调整GC步长，这个算法依赖于收集的程序信息和程序对堆内存的压力反馈（其实就是分配堆内存速度）</p>
+<h2 id="collector-latency-costs">Collector Latency Costs</h2>
+<p>GC有两部分的延误程序。<br>
+1、CPU占用，减少了CPU，应用程序此时肯定会受到影响。<br>
+2、STW，硬生生的暂停和上下文切换成本</p>
 <h1 id="演化历程的启发">演化历程的启发</h1>
 <ul>
 <li>Go 1：串行三色标记清扫</li>
@@ -395,14 +395,6 @@ func HybridWritePointerSimple(slot *unsafe.Pointer, ptr unsafe.Pointer){
 </li>
 <li><a href="#%E6%A0%87%E8%AE%B0%E7%BB%88%E6%AD%A2mark-termination-stw">标记终止（Mark Termination - STW）</a></li>
 <li><a href="#%E5%86%99%E5%B1%8F%E9%9A%9C%E6%9C%BA%E5%88%B6">写屏障机制</a></li>
-<li><a href="#%E4%B8%80%E4%BA%9B%E8%A1%A5%E5%85%85%E7%82%B9">一些补充点</a>
-<ul>
-<li><a href="#gc-percentage">GC Percentage</a></li>
-<li><a href="#gc-trace">GC Trace</a></li>
-<li><a href="#pacing">Pacing</a></li>
-<li><a href="#collector-latency-costs">Collector Latency Costs</a></li>
-</ul>
-</li>
 </ul>
 </li>
 <li><a href="#golang-v18-%E6%B7%B7%E5%90%88%E5%86%99%E5%B1%8F%E9%9A%9C%E6%9C%BA%E5%88%B6">Golang v1.8 混合写屏障机制</a>
@@ -420,6 +412,14 @@ func HybridWritePointerSimple(slot *unsafe.Pointer, ptr unsafe.Pointer){
 <li><a href="#%E9%9C%80%E8%A6%81%E5%85%B3%E6%B3%A8%E5%93%AA%E4%BA%9Bgc%E6%8C%87%E6%A0%87">需要关注哪些GC指标</a></li>
 <li><a href="#%E5%A6%82%E4%BD%95%E8%B0%83%E4%BC%98gc">如何调优GC</a></li>
 <li><a href="#%E6%9C%89%E4%BA%86gc%E4%B8%BA%E4%BB%80%E4%B9%88%E8%BF%98%E4%BC%9A%E6%9C%89%E5%86%85%E5%AD%98%E6%B3%84%E9%9C%B2">有了GC，为什么还会有内存泄露？</a></li>
+<li><a href="#%E4%B8%80%E4%BA%9B%E8%A1%A5%E5%85%85%E7%82%B9">一些补充点</a>
+<ul>
+<li><a href="#gc-percentage">GC Percentage</a></li>
+<li><a href="#gc-trace">GC Trace</a></li>
+<li><a href="#pacing">Pacing</a></li>
+<li><a href="#collector-latency-costs">Collector Latency Costs</a></li>
+</ul>
+</li>
 <li><a href="#%E6%BC%94%E5%8C%96%E5%8E%86%E7%A8%8B%E7%9A%84%E5%90%AF%E5%8F%91">演化历程的启发</a></li>
 <li><a href="#%E5%BC%95%E7%94%A8">引用</a></li>
 </ul>
