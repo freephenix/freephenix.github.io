@@ -7,7 +7,7 @@
 <title>
     Golang 垃圾回收算法 | 半亩房顶
 </title>
-<link rel="shortcut icon" href="https://freephenix.github.io//favicon.ico?v=1619093598455">
+<link rel="shortcut icon" href="https://freephenix.github.io//favicon.ico?v=1619322245230">
 <!-- <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous"> -->
 <link href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
@@ -47,7 +47,7 @@
     <div class="nav">
         <div class="logo">
             <a href="https://freephenix.github.io/">
-                <img class="avatar" src="https://freephenix.github.io//images/avatar.png?v=1619093598455" alt="">
+                <img class="avatar" src="https://freephenix.github.io//images/avatar.png?v=1619322245230" alt="">
             </a>
             <div class="site-title">
                 <h1>
@@ -124,12 +124,12 @@
                             <time class="post-time">2021-01-29</time>
                             
                                 <a href="https://freephenix.github.io/tag/WucazjDbn/" class="post-tag i-tag
-                            i-tag-other_2">
+                            i-tag-other_3">
                             #算法
                         </a>
                                 
                                 <a href="https://freephenix.github.io/tag/HgE3rCkXf/" class="post-tag i-tag
-                            i-tag-info">
+                            i-tag-">
                             #垃圾回收
                         </a>
                                 
@@ -311,6 +311,27 @@ func HybridWritePointerSimple(slot *unsafe.Pointer, ptr unsafe.Pointer){
 <li>需要时，增大 GOGC 的值，降低 GC 的运行频率。</li>
 </ul>
 <h1 id="有了gc为什么还会有内存泄露">有了GC，为什么还会有内存泄露？</h1>
+<p>首先来看下内存泄露严谨些的解释：&quot;预期的能很快被释放的内存由于附着在了长期存活的内存上、或生命期意外地被延长，导致预计能够立即回收的内存而长时间得不到回收&quot;。</p>
+<h3 id="形式1预期能被快速释放的内存因被根对象引用而没有得到迅速释放">形式1：预期能被快速释放的内存因被根对象引用而没有得到迅速释放</h3>
+<p>当有一个全局对象时，可能不经意间将某个变量附着在其上，且忽略的将其进行释放，则该内存永远不会得到释放。</p>
+<pre><code>var cache = map[interface{}]interface{}{}
+func keepalloc() {
+    for i := 0; i &lt; 10000; i++ {
+        m := make([]byte, 1&lt;&lt;10)
+        cache[i] = m
+    }
+}
+</code></pre>
+<h3 id="形式2goroutine-泄漏">形式2：goroutine 泄漏</h3>
+<p>Goroutine 作为一种逻辑上理解的轻量级线程，需要维护执行用户代码的上下文信息。在运行过程中也需要消耗一定的内存来保存这类信息，而这些内存在目前版本的 Go 中是不会被释放的。因此，如果一个程序持续不断地产生新的 goroutine、且不结束已经创建的 goroutine 并复用这部分内存，就会造成内存泄漏的现象</p>
+<pre><code>func keepalloc2() {
+    for i := 0; i &lt; 100000; i++ {
+        go func() {
+            select {}
+        }()
+    }
+}
+</code></pre>
 <h1 id="一些补充点">一些补充点</h1>
 <h2 id="gc-percentage">GC Percentage</h2>
 <p>runtime中有GC Percentage的选项，这个配置数字默认是100表明，需要有新分配100%的堆内存时才会触发下一次GC，请谨慎，设置100会造成延迟</p>
@@ -411,7 +432,13 @@ func HybridWritePointerSimple(slot *unsafe.Pointer, ptr unsafe.Pointer){
 <li><a href="#gc%E7%9A%84%E8%A7%A6%E5%8F%91%E6%96%B9%E5%BC%8F">GC的触发方式</a></li>
 <li><a href="#%E9%9C%80%E8%A6%81%E5%85%B3%E6%B3%A8%E5%93%AA%E4%BA%9Bgc%E6%8C%87%E6%A0%87">需要关注哪些GC指标</a></li>
 <li><a href="#%E5%A6%82%E4%BD%95%E8%B0%83%E4%BC%98gc">如何调优GC</a></li>
-<li><a href="#%E6%9C%89%E4%BA%86gc%E4%B8%BA%E4%BB%80%E4%B9%88%E8%BF%98%E4%BC%9A%E6%9C%89%E5%86%85%E5%AD%98%E6%B3%84%E9%9C%B2">有了GC，为什么还会有内存泄露？</a></li>
+<li><a href="#%E6%9C%89%E4%BA%86gc%E4%B8%BA%E4%BB%80%E4%B9%88%E8%BF%98%E4%BC%9A%E6%9C%89%E5%86%85%E5%AD%98%E6%B3%84%E9%9C%B2">有了GC，为什么还会有内存泄露？</a><br>
+*
+<ul>
+<li><a href="#%E5%BD%A2%E5%BC%8F1%E9%A2%84%E6%9C%9F%E8%83%BD%E8%A2%AB%E5%BF%AB%E9%80%9F%E9%87%8A%E6%94%BE%E7%9A%84%E5%86%85%E5%AD%98%E5%9B%A0%E8%A2%AB%E6%A0%B9%E5%AF%B9%E8%B1%A1%E5%BC%95%E7%94%A8%E8%80%8C%E6%B2%A1%E6%9C%89%E5%BE%97%E5%88%B0%E8%BF%85%E9%80%9F%E9%87%8A%E6%94%BE">形式1：预期能被快速释放的内存因被根对象引用而没有得到迅速释放</a></li>
+<li><a href="#%E5%BD%A2%E5%BC%8F2goroutine-%E6%B3%84%E6%BC%8F">形式2：goroutine 泄漏</a></li>
+</ul>
+</li>
 <li><a href="#%E4%B8%80%E4%BA%9B%E8%A1%A5%E5%85%85%E7%82%B9">一些补充点</a>
 <ul>
 <li><a href="#gc-percentage">GC Percentage</a></li>

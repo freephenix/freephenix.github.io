@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://freephenix.github.io/</id>
     <title>半亩房顶</title>
-    <updated>2021-04-22T12:13:20.401Z</updated>
+    <updated>2021-04-25T03:44:07.307Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://freephenix.github.io/"/>
     <link rel="self" href="https://freephenix.github.io/atom.xml"/>
@@ -1450,6 +1450,27 @@ func HybridWritePointerSimple(slot *unsafe.Pointer, ptr unsafe.Pointer){
 <li>需要时，增大 GOGC 的值，降低 GC 的运行频率。</li>
 </ul>
 <h1 id="有了gc为什么还会有内存泄露">有了GC，为什么还会有内存泄露？</h1>
+<p>首先来看下内存泄露严谨些的解释：&quot;预期的能很快被释放的内存由于附着在了长期存活的内存上、或生命期意外地被延长，导致预计能够立即回收的内存而长时间得不到回收&quot;。</p>
+<h3 id="形式1预期能被快速释放的内存因被根对象引用而没有得到迅速释放">形式1：预期能被快速释放的内存因被根对象引用而没有得到迅速释放</h3>
+<p>当有一个全局对象时，可能不经意间将某个变量附着在其上，且忽略的将其进行释放，则该内存永远不会得到释放。</p>
+<pre><code>var cache = map[interface{}]interface{}{}
+func keepalloc() {
+    for i := 0; i &lt; 10000; i++ {
+        m := make([]byte, 1&lt;&lt;10)
+        cache[i] = m
+    }
+}
+</code></pre>
+<h3 id="形式2goroutine-泄漏">形式2：goroutine 泄漏</h3>
+<p>Goroutine 作为一种逻辑上理解的轻量级线程，需要维护执行用户代码的上下文信息。在运行过程中也需要消耗一定的内存来保存这类信息，而这些内存在目前版本的 Go 中是不会被释放的。因此，如果一个程序持续不断地产生新的 goroutine、且不结束已经创建的 goroutine 并复用这部分内存，就会造成内存泄漏的现象</p>
+<pre><code>func keepalloc2() {
+    for i := 0; i &lt; 100000; i++ {
+        go func() {
+            select {}
+        }()
+    }
+}
+</code></pre>
 <h1 id="一些补充点">一些补充点</h1>
 <h2 id="gc-percentage">GC Percentage</h2>
 <p>runtime中有GC Percentage的选项，这个配置数字默认是100表明，需要有新分配100%的堆内存时才会触发下一次GC，请谨慎，设置100会造成延迟</p>
