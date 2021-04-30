@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://freephenix.github.io/</id>
     <title>半亩房顶</title>
-    <updated>2021-04-27T10:58:42.692Z</updated>
+    <updated>2021-04-30T08:22:31.070Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://freephenix.github.io/"/>
     <link rel="self" href="https://freephenix.github.io/atom.xml"/>
@@ -10,6 +10,145 @@
     <logo>https://freephenix.github.io/images/avatar.png</logo>
     <icon>https://freephenix.github.io/favicon.ico</icon>
     <rights>All rights reserved 2021, 半亩房顶</rights>
+    <entry>
+        <title type="html"><![CDATA[LeetCode-1011 在D天内送达包裹的能力]]></title>
+        <id>https://freephenix.github.io/post/leetcode-1011-zai-d-tian-nei-song-da-bao-guo-de-neng-li/</id>
+        <link href="https://freephenix.github.io/post/leetcode-1011-zai-d-tian-nei-song-da-bao-guo-de-neng-li/">
+        </link>
+        <updated>2021-04-27T10:58:53.000Z</updated>
+        <summary type="html"><![CDATA[<p>刷题使我快乐，满脸开心.jpg</p>
+<p>来源：力扣（LeetCode）<br>
+链接：https://leetcode-cn.com/problems/capacity-to-ship-packages-within-d-days<br>
+著作权归领扣网络所有。商业转载请联系官方授权，非商业转载请注明出处。</p>
+]]></summary>
+        <content type="html"><![CDATA[<p>刷题使我快乐，满脸开心.jpg</p>
+<p>来源：力扣（LeetCode）<br>
+链接：https://leetcode-cn.com/problems/capacity-to-ship-packages-within-d-days<br>
+著作权归领扣网络所有。商业转载请联系官方授权，非商业转载请注明出处。</p>
+<!-- more -->
+<h1 id="题目">题目</h1>
+<p>传送带上的包裹必须在 D 天内从一个港口运送到另一个港口。</p>
+<p>传送带上的第 i 个包裹的重量为 weights[i]。每一天，我们都会按给出重量的顺序往传送带上装载包裹。我们装载的重量不会超过船的最大运载重量。<br>
+返回能在 D 天内将传送带上的所有包裹送达的船的最低运载能力。</p>
+<p>示例 1：</p>
+<pre><code>输入：weights = [1,2,3,4,5,6,7,8,9,10], D = 5
+输出：15
+解释：
+船舶最低载重 15 就能够在 5 天内送达所有包裹，如下所示：
+第 1 天：1, 2, 3, 4, 5
+第 2 天：6, 7
+第 3 天：8
+第 4 天：9
+第 5 天：10
+
+请注意，货物必须按照给定的顺序装运，因此使用载重能力为 14 的船舶并将包装分成 (2, 3, 4, 5), (1, 6, 7), (8), (9), (10) 是不允许的。 
+</code></pre>
+<p>示例 2：</p>
+<pre><code>输入：weights = [3,2,2,4,1,4], D = 3
+输出：6
+解释：
+船舶最低载重 6 就能够在 3 天内送达所有包裹，如下所示：
+第 1 天：3, 2
+第 2 天：2, 4
+第 3 天：1, 4
+</code></pre>
+<p>示例 3：</p>
+<pre><code>输入：weights = [1,2,3,1,1], D = 4
+输出：3
+解释：
+第 1 天：1
+第 2 天：2
+第 3 天：3
+第 4 天：1, 1
+</code></pre>
+<p>提示：</p>
+<ul>
+<li>1、1 &lt;= D &lt;= weights.length &lt;= 50000</li>
+<li>2、1 &lt;= weights[i] &lt;= 500</li>
+</ul>
+<h1 id="思路">思路</h1>
+<p>贪心的思想会很容易想到，那下面来想下如何应用贪心<br>
+如果我们知道一个给定的承载能力，那通过遍历一遍货物，就很容易能够得到需要的天数</p>
+<pre><code>    if 当天载重 + 下一个货物 &gt; 承载量
+        天数加一，当前载重归零
+    else
+       当天载重 += 下一个货物 
+</code></pre>
+<p>如此得到的天数再跟给定的天数比较，满足条件即可<br>
+又因为需要找的是最小载重，所以需要从下往上寻找</p>
+<p>那说道寻找，有两个问题<br>
+1、起点和终点<br>
+2、步长 或者 有没有更好的挑选条件</p>
+<p>第一点，最小载重量，那从题意，易得应为最大货物重量，不然根本运送不了；最大载重量就是所有货物的和了<br>
+第二点，发现暂时没有想到好的寻找方法，只得从下界开始遍历</p>
+<h1 id="代码">代码</h1>
+<pre><code>func shipWithinDays(weights []int, D int) int {
+    // 确定遍历上下界
+    minLoadW, maxLoadW := 0, 0
+    for _, w := range weights {
+        if w &gt; minLoadW {
+            minLoadW = w
+        }
+        maxLoadW += w
+    }
+
+    // 从最小可能载重量遍历寻找题解，最大值为所有货物之和，最小为最大货物重量
+    loadW := 0
+    for loadW = minLoadW; loadW &lt;= maxLoadW; loadW++ {
+        needDay := 1 // 需要运送的天数
+        todayLoadW := 0 // 当前这一天已经运送的包裹重量之和
+        for _, w := range weights {
+            if todayLoadW + w &gt; loadW {
+                needDay++
+                todayLoadW = 0
+            }
+            todayLoadW += w
+        }
+        if needDay &lt;= D {
+            break
+        } else {
+            continue
+        }
+    }
+
+    return loadW
+}
+</code></pre>
+<p>官方题解</p>
+<pre><code>func shipWithinDays(weights []int, D int) int {
+    // 确定二分查找左右边界
+    left, right := 0, 0
+    for _, w := range weights {
+        if w &gt; left {
+            left = w
+        }
+        right += w
+    }
+
+    // sort.Search 会遍历从0 到 传入值，步进为1，f(x) 为true时返回x
+    return left + sort.Search(right-left, func(x int) bool {
+        x += left
+        day := 1 // 需要运送的天数
+        sum := 0 // 当前这一天已经运送的包裹重量之和
+        for _, w := range weights {
+            if sum+w &gt; x {
+                day++
+                sum = 0
+            }
+            sum += w
+        }
+        return day &lt;= D
+    })
+}
+
+作者：LeetCode-Solution
+链接：https://leetcode-cn.com/problems/capacity-to-ship-packages-within-d-days/solution/zai-d-tian-nei-song-da-bao-guo-de-neng-l-ntml/
+来源：力扣（LeetCode）
+著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。
+</code></pre>
+<p>共勉</p>
+]]></content>
+    </entry>
     <entry>
         <title type="html"><![CDATA[LeetCode-20 有效的括号]]></title>
         <id>https://freephenix.github.io/post/leetcode-20-you-xiao-de-gua-hao/</id>
@@ -2038,256 +2177,6 @@ func (g *Group) Forget(key string) {
 <a href="https://www.jianshu.com/p/ddaec84de653">singleflight源码注释</a><br>
 <a href="https://github.com/cch123/golang-notes/blob/master/sync.md">曹大golang笔记 - sync包</a><br>
 <a href="https://blog.csdn.net/weixin_43183475/article/details/105093355">singleflight 防缓存击穿 使用及原理</a></p>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[源码杂货铺：sync.WaitGroup]]></title>
-        <id>https://freephenix.github.io/post/yuan-ma-za-huo-pu-syncwaitgroup/</id>
-        <link href="https://freephenix.github.io/post/yuan-ma-za-huo-pu-syncwaitgroup/">
-        </link>
-        <updated>2021-01-10T21:55:59.000Z</updated>
-        <summary type="html"><![CDATA[<p>了解一个包的使用，首先从阅读它的注释开始</p>
-]]></summary>
-        <content type="html"><![CDATA[<p>了解一个包的使用，首先从阅读它的注释开始</p>
-<!-- more -->
-<h1 id="简介">简介</h1>
-<p>sync.WaitGroup相信大家都不陌生，当我们起了多个goroutinue，但是有希望他们同时ready之后再做一些事情的时候，WaitGroup就可以闪亮登场了，举个栗子：</p>
-<pre><code>g := sync.WaitGroup{}
-// 输入即将要等待goroutinue的数量
-g.Add(2)
-// func1
-go func() {
-	// do something
-    // 手动确认完成
-	g.Done()
-}()
-
-// func2
-go func() {
-	// do something
-	g.Done()
-}()
-// 此时的主goroutinue就会等待 func1 func2完成后再继续往下进行
-g.Wait()
-</code></pre>
-<p>可以说是使用相当方便了，其源码也是非常少的<br>
-sync.WaitGroup包注释如下：</p>
-<pre><code>// A WaitGroup waits for a collection of goroutines to finish.
-// The main goroutine calls Add to set the number of
-// goroutines to wait for. Then each of the goroutines
-// runs and calls Done when finished. At the same time,
-// Wait can be used to block until all goroutines have finished.
-//
-// A WaitGroup must not be copied after first use.
-</code></pre>
-<p>包中大体的结构：</p>
-<pre><code>type WaitGroup struct {}
-func (wg *WaitGroup) state() (statep *uint64, semap *uint32) {}
-func (wg *WaitGroup) Add(delta int) {}
-func (wg *WaitGroup) Done() {}
-func (wg *WaitGroup) Wait() {}
-</code></pre>
-<p>下面来一个个看其中有什么玄机</p>
-<h1 id="waitgroup-struct">WaitGroup struct</h1>
-<pre><code>// A WaitGroup waits for a collection of goroutines to finish.
-// The main goroutine calls Add to set the number of
-// goroutines to wait for. Then each of the goroutines
-// runs and calls Done when finished. At the same time,
-// Wait can be used to block until all goroutines have finished.
-//
-// A WaitGroup must not be copied after first use.
-type WaitGroup struct {
-	noCopy noCopy
-
-	// 64-bit value: high 32 bits are counter, low 32 bits are waiter count.
-	// 64-bit atomic operations require 64-bit alignment, but 32-bit
-	// compilers do not ensure it. So we allocate 12 bytes and then use
-	// the aligned 8 bytes in them as state, and the other 4 as storage
-	// for the sema.
-	state1 [3]uint32
-}
-</code></pre>
-<h2 id="nocopy">noCopy</h2>
-<p>注释中其实简单向我们介绍了用法，这里不多说了。最后的一句话可以关注下，WaitGroup使用后，不可以值拷贝，也就是struct中的noCopy声明实现的效果，这个noCopy的实现和原理大家可以去查阅下资料，go源码中注释和定义如下：</p>
-<pre><code>// noCopy may be embedded into structs which must not be copied
-// after the first use.
-//
-// See https://golang.org/issues/8005#issuecomment-190753527
-// for details.
-type noCopy struct{}
-</code></pre>
-<p>有时间了可以研究下，这里先简单介绍下，它是Lock包中的一个空结构体，当我们不希望某个struct可以值拷贝时候可以在struct定义里添加这个noCopy结构体，需要注意，编译时候noCopy不会导致报错，可以使用go vet检查</p>
-<h2 id="state1">state1</h2>
-<p>这个是waitGroup struct中唯一的一个变量了，长度为12个字节，三个变量各用四个字节，从注释中也可以看到其作用的划分，</p>
-<ul>
-<li>高64位分为两部分，高32位存add、done两个函数操作计数，低32位用于Wait 的计数，存等待中的goroutinue数量</li>
-<li>低32位，存储信号量，用于等待和唤醒各个goroutinue，runtime_Semrelease 和 runtime_Semacquire会操作</li>
-</ul>
-<p>下面开始一个个函数阅读</p>
-<h1 id="state函数">state函数</h1>
-<pre><code>// state returns pointers to the state and sema fields stored within wg.state1.
-func (wg *WaitGroup) state() (statep *uint64, semap *uint32) {
-	if uintptr(unsafe.Pointer(&amp;wg.state1))%8 == 0 {
-		return (*uint64)(unsafe.Pointer(&amp;wg.state1)), &amp;wg.state1[2]
-	} else {
-		return (*uint64)(unsafe.Pointer(&amp;wg.state1[1])), &amp;wg.state1[0]
-	}
-}
-</code></pre>
-<p>这个函数会返回两个计数器和信号量两个数据，这里的if条件很有意思，这里其实是判断了变量起始地址，除8能除尽，表示的是state1起始地址是内存对齐的，两个计数器数据存在一定关系，所以此时会将前8个字节放在一起，存储两个计数器，这样可以让cpu一次读取，提高效率</p>
-<h1 id="add函数-和-done函数">add函数 和 done函数</h1>
-<p>done函数本质就是add函数，主要来看下add函数</p>
-<pre><code>// Done decrements the WaitGroup counter by one.
-func (wg *WaitGroup) Done() {
-	wg.Add(-1)
-}
-</code></pre>
-<p>直接上add函数源码，注释中见</p>
-<pre><code>// Add adds delta, which may be negative, to the WaitGroup counter.
-// add函数可能加正数也可能加负数，负数即done操作
-// If the counter becomes zero, all goroutines blocked on Wait are released.
-// 如果计数器为0，那所有等待的goroutinue就会被释放
-// If the counter goes negative, Add panics.
-// 如果计数器为负，调用add会panic，可能是使用有误或者出现并发问题
-// Note that calls with a positive delta that occur when the counter is zero
-// must happen before a Wait. 
-// add只会出现在wait之前，代码中一会儿可以看到判断add和wait未出现并发的校验
-// Calls with a negative delta, or calls with a positive delta that start when
-// the counter is greater than zero, may happen at any time.
-// add 和 done是有可能并发的
-// Typically this means the calls to Add should execute before the statement
-// creating the goroutine or other event to be waited for.
-// add 操作要放在起goroutinue之前和有事情阻塞之前
-// If a WaitGroup is reused to wait for several independent sets of events,
-// new Add calls must happen after all previous Wait calls have returned.
-// 如果要复用一个waitGroup，那么add操作一定要在之前的wait结束之后
-// See the WaitGroup example.
-func (wg *WaitGroup) Add(delta int) {
-    //取计数器和信号量两个参数
-	statep, semap := wg.state()
-	if race.Enabled {
-		// 竞态检查用，可以暂不关注
-	}
-    // AddUint64 会原子的将传参加到statep上，并且返回一个新值，注意新值，这个下面会用到
-    // 原子操作计数器的高4位，即 add 和 done操作的值
-	state := atomic.AddUint64(statep, uint64(delta)&lt;&lt;32)
-    //v是 add 和 done操作的值
-	v := int32(state &gt;&gt; 32)
-    //w是 用于wait的值
-	w := uint32(state)
-	if race.Enabled &amp;&amp; delta &gt; 0 &amp;&amp; v == int32(delta) {
-		// 竞态检查用，可以暂不关注
-	}
-    // v小于零，即注释中说的add 和done的使用出现了问题，panic
-	if v &lt; 0 {
-		panic(&quot;sync: negative WaitGroup counter&quot;)
-	}
-    // w != 0 说明有goroutinue走到了wait，delta &gt; 0 &amp;&amp; v == int32(delta) 说明正在调用add
-    // 即，wait与add存在并发调用，或者顺序颠倒、使用有误
-	if w != 0 &amp;&amp; delta &gt; 0 &amp;&amp; v == int32(delta) {
-		panic(&quot;sync: WaitGroup misuse: Add called concurrently with Wait&quot;)
-	}
-    // v &gt; 0 即调用了add，或者goroutinue们还没有执行完，w == 0表示还没有程序走到wait
-    // 直接返回等待后续操作即可
-	if v &gt; 0 || w == 0 {
-		return
-	}
-    // 此时，v == 0，即所有goroutinue都已经执行了done，并且w!=0，即有goroutinue开始等待
-	// This goroutine has set counter to 0 when waiters &gt; 0.
-	// Now there can't be concurrent mutations of state:
-	// - Adds must not happen concurrently with Wait,
-	// - Wait does not increment waiters if it sees counter == 0.
-	// Still do a cheap sanity check to detect WaitGroup misuse.
-    // 在v==0的情况下，说明goroutinue都已经执行done完毕了，wait函数就不会有
-    // 阻塞效果（一会儿wait代码中能看到），此时statep（原值地址）
-    // 不等于state(原子操作后的新值)，只会是又有add参与了执行，致使原值发生改变
-    // 本次操作为done，此时接下来要做的wait还没有执行完毕，
-    // 又有新的add，说明wait和add并发执行了
-	if *statep != state {
-		panic(&quot;sync: WaitGroup misuse: Add called concurrently with Wait&quot;)
-	}
-	// Reset waiters count to 0.
-	*statep = 0
-    // done均完毕，开始释放信号量
-	for ; w != 0; w-- {
-		runtime_Semrelease(semap, false, 0)
-	}
-}
-</code></pre>
-<h1 id="wait-函数">wait 函数</h1>
-<p>注释见</p>
-<pre><code>// Wait blocks until the WaitGroup counter is zero.
-func (wg *WaitGroup) Wait() {
-	statep, semap := wg.state()
-	if race.Enabled {
-		// 竞态检查用，可以暂不关注
-	}
-	for 
-        // 原子加载statep
-		state := atomic.LoadUint64(statep)
-		v := int32(state &gt;&gt; 32)
-		w := uint32(state)
-        // v==0表示done执行完毕，不需要阻塞了
-		if v == 0 {
-			// Counter is 0, no need to wait.
-			if race.Enabled {
-				// 竞态检查用，可以暂不关注
-			}
-			return
-		}
-		// Increment waiters count.
-        // 此时会先比较statep和state是否相等，即有没有其他线程在操作，
-        // 如果依然相等则用state+1复制给statep
-		if atomic.CompareAndSwapUint64(statep, state, state+1) {
-			if race.Enabled &amp;&amp; w == 0 {
-				// 竞态检查用，可以暂不关注
-			}
-            // 在semap上等待信号量
-			runtime_Semacquire(semap)
-            // add函数中释放信号量时，statep已经被清零了，如果此时不为零说明又有add执行了
-			if *statep != 0 {
-				panic(&quot;sync: WaitGroup is reused before previous Wait has returned&quot;)
-			}
-			if race.Enabled {
-				// 竞态检查用，可以暂不关注
-			}
-			return
-		}
-	}
-}
-</code></pre>
-<h1 id="信号量操作">信号量操作</h1>
-<p>信号量相比大家都不陌生，这里贴下两个函数的注释，感兴趣可以深入研究下，这里暂不讨论了<br>
-runtime_Semrelease</p>
-<pre><code>// Semrelease atomically increments *s and notifies a waiting goroutine
-// if one is blocked in Semacquire.
-// It is intended as a simple wakeup primitive for use by the synchronization
-// library and should not be used directly.
-// If handoff is true, pass count directly to the first waiter.
-// skipframes is the number of frames to omit during tracing, counting from
-// runtime_Semrelease's caller.
-func runtime_Semrelease(s *uint32, handoff bool, skipframes int)
-</code></pre>
-<p>runtime_Semacquire</p>
-<pre><code>// Semacquire waits until *s &gt; 0 and then atomically decrements it.
-// It is intended as a simple sleep primitive for use by the synchronization
-// library and should not be used directly.
-func runtime_Semacquire(s *uint32)
-</code></pre>
-<h1 id="总结">总结</h1>
-<p>到这里所有的代码都已经读过了，waitGroup的代码量确实并不多，但是有比较实用，建议多看看，琢磨琢磨，有很多细节值得我们去学习，比如原子做加法、时刻警惕校验异常并发等等<br>
-并发问题，确实是一个心智上相对更难理解，但是我们却更加需要特别注意的问题，尤其是我这种从PHP一把梭转到go语言的菜鸟，踩了不少坑。还望大佬们多多指点🙏</p>
-<p>下面是总结下waitGroup流程的一个简易图解：<br>
-<img src="https://freephenix.github.io//post-images/1610490130883.png" alt="waitGroup" loading="lazy"></p>
-<h1 id="引用文章">引用文章</h1>
-<ul>
-<li><a href="http://yangxikun.com/golang/2020/02/15/golang-sync-waitgroup.html">sync.waitgroup 源码解析</a></li>
-<li><a href="https://www.cnblogs.com/rongfengliang/p/14092207.html">golang noCopy 的功能</a></li>
-<li><a href="https://github.com/golang/go/issues/8005#issuecomment-190753527">github noCopy特性讨论</a></li>
-<li><a href="https://golang.org/cmd/vet/">go vet</a></li>
-<li><a href="https://blog.csdn.net/yanluandai1985/article/details/82686486">无锁机制----比较交换CAS Compare And Swap</a></li>
-<li><a href="https://blog.csdn.net/qq_19782019/article/details/79746627">操作系统之信号量</a></li>
-</ul>
 ]]></content>
     </entry>
 </feed>
