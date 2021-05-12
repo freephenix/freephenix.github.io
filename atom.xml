@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://freephenix.github.io/</id>
     <title>半亩房顶</title>
-    <updated>2021-04-30T08:22:31.070Z</updated>
+    <updated>2021-05-12T09:54:08.357Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://freephenix.github.io/"/>
     <link rel="self" href="https://freephenix.github.io/atom.xml"/>
@@ -147,6 +147,72 @@
 著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。
 </code></pre>
 <p>共勉</p>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[MySQL：BTREE索引和HASH索引]]></title>
+        <id>https://freephenix.github.io/post/mysqlbtree-suo-yin-he-hash-suo-yin/</id>
+        <link href="https://freephenix.github.io/post/mysqlbtree-suo-yin-he-hash-suo-yin/">
+        </link>
+        <updated>2021-04-22T09:21:01.000Z</updated>
+        <summary type="html"><![CDATA[<p>MySQL学的不好，补补课</p>
+]]></summary>
+        <content type="html"><![CDATA[<p>MySQL学的不好，补补课</p>
+<!-- more -->
+<h1 id="btree索引">Btree索引</h1>
+<p>数据结构为B+树，结构特点为</p>
+<ul>
+<li>树形结构：由根、分支、叶三级节点组成，其中分支节点可以有多层。</li>
+<li>多分支结构：跟节点和分支节点可以由多个子节点（超过2），因此树的深度较小</li>
+<li>数据或数据指针都在叶子节点上，根、分支节点上只有索引，叶子节点之间有双向链表</li>
+</ul>
+<h2 id="btree索引的特点如下">Btree索引的特点如下：</h2>
+<h3 id="数据结构利用率高-定位高效">数据结构利用率高、定位高效</h3>
+<p>因其分支较多，树的深度小，往往千万数据也只是3层，即千万数据中查询一个数据，只需读取三次即可定位</p>
+<h3 id="平衡扩张">平衡扩张</h3>
+<p>在数据扩张过程中，会用额外的开销处理数据，使树保持<code>平衡</code>，并且保证叶子节点都在<code>同一深度</code><br>
+单叶子节点数据插入：<br>
+<img src="https://freephenix.github.io//post-images/1620804955745.png" alt="" loading="lazy"><br>
+叶子节点拆分：<br>
+<img src="https://freephenix.github.io//post-images/1620804962536.png" alt="" loading="lazy"><br>
+叶子节点增加：<br>
+<img src="https://freephenix.github.io//post-images/1620804966514.png" alt="" loading="lazy"><br>
+叶子节点深度增加：<br>
+<img src="https://freephenix.github.io//post-images/1620804969676.png" alt="" loading="lazy"></p>
+<h2 id="btree索引的问题如下">Btree索引的问题如下：</h2>
+<h3 id="单一方向扩展引起的索引竞争index-contention">单一方向扩展引起的索引竞争(Index Contention)</h3>
+<p>若索引列使用sequence或者timestamp这类只增不减的数据类型。这种情况下Btree索引的增长方向总是不变的，不断的向右边扩展，因为新插入的值永远是最大的。<br>
+当一个最大值插入到叶子节点中后，需要向上更新分支节点、根节点的最大值，并且可能因为块写满后执行块拆分。<br>
+如果此时并发插入多个最大值，则最右边索引数据块的的更新与拆分都会存在争抢，影响效率。在AWR报告中可以通过检测enq: TX – index contention事件的时间来评估争抢的影响。解决此类问题可以使用Reverse Index解决，不过会带来新的问题。</p>
+<h3 id="索引失效index-browning">索引失效（Index Browning）</h3>
+<p>我们知道当表中的数据删除后，索引上对应的索引值是不会删除的，特别是在一性次删除大批量数据后，会造成大量的失效叶子节点挂到索引树上。此时如果对该列取max()，则会去相邻叶子节点中查找数据，拖慢速度<br>
+<img src="https://freephenix.github.io//post-images/1620812257766.png" alt="" loading="lazy"></p>
+<p>oracle中有一个方案，使用coalesce语句来整理这些失效叶子节点到freelist中，就可以避免这些问题。理论上oracle中这步操作是可以自动完成的，但在实际中一次性大量删除数据后，oracle在短时间内是反应不过来的。</p>
+<h1 id="hash索引">HASH索引</h1>
+<p>Hash索引只能用于对等比较，例如=,&lt;=&gt;（相当于=）操作符。由于是一次定位数据，不像BTree索引需要从根节点到枝节点，最后才能访问到页节点这样多次IO访问，所以<code>检索效率远高于BTree索引</code>。</p>
+<p>但同样的，限制也会有很多</p>
+<h2 id="hash索引缺点">hash索引缺点</h2>
+<ul>
+<li>不能避免读取行<br>
+哈希索引只包含哈希值和行指针，而不存储字段值，所以不能使用索引中的值来避免读取行。不过，访问内存中的行的速度很快，所以大部分情况下这一点对性能的影响并不明显。</li>
+<li>无法用于排序<br>
+哈希索引数据并不是按照索引值顺序存储的，所以也就无法用于排序。</li>
+<li>无法使用部分索引列匹配查找<br>
+哈希索引也不支持部分索引列匹配查找，因为哈希索引始终是使用索引列的全部内容来计算哈希值的。</li>
+<li>只支持等值查找<br>
+哈希索引只支持等值比较查询，包括=、IN()、&lt;=&gt;（注意&lt;&gt;和&lt;=&gt;是不同的操作）</li>
+<li>存在Hash冲突<br>
+访问哈希索引的数据非常快，除非有很多哈希冲突（不同的索引列值却有相同的哈希值）。当出现哈希冲突的时候，存储引擎必须遍历链表中所有的行指针，逐行进行比较，直到找到所有符合条件的行。<br>
+同时，当哈希冲突很多的时候，一些索引维护操作的代价也会很高。</li>
+</ul>
+<h1 id="总结">总结</h1>
+<p>当我们对比了这两种索引的特性之后，此时两种索引的对比也就很明显了，<br>
+HASH索引往往只适用于某些特定场景，不过HASH结构是一个值得关注的结构，很多时候可以用它来空间换时间<br>
+BTREE索引则适应面更广，一般来说我们都会选用它</p>
+<h1 id="引用">引用</h1>
+<p><a href="https://blog.csdn.net/xu_flash/article/details/62216969">Btree索引详解</a><br>
+<a href="https://blog.csdn.net/mzhnuaa/article/details/93473373">MySQL: Hash索引优缺点</a><br>
+<a href="https://blog.csdn.net/superdangbo/article/details/79485724">Hash索引和BTree索引区别</a></p>
 ]]></content>
     </entry>
     <entry>
@@ -2014,169 +2080,6 @@ func keepalloc() {
 <a href="https://mp.weixin.qq.com/s/gkBg742lpBVRBhTPhOQ7hg">每位 Gopher 都应该了解的 Golang 语言的垃圾回收算法</a><br>
 <a href="https://www.bookstack.cn/read/qcrao-Go-Questions/spilt.9.GC-GC.md">什么是写屏障、混合写屏障，如何实现？</a><br>
 <a href="https://www.bookstack.cn/read/qcrao-Go-Questions/spilt.16.GC-GC.md">Go 历史各个版本在 GC 方面的改进？</a></p>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[源码杂货铺：singleflight]]></title>
-        <id>https://freephenix.github.io/post/yuan-ma-za-huo-pu-singleflight/</id>
-        <link href="https://freephenix.github.io/post/yuan-ma-za-huo-pu-singleflight/">
-        </link>
-        <updated>2021-01-21T11:26:34.000Z</updated>
-        <summary type="html"><![CDATA[<p>当缓存被击穿，DB不被压垮的一个解法</p>
-]]></summary>
-        <content type="html"><![CDATA[<p>当缓存被击穿，DB不被压垮的一个解法</p>
-<!-- more -->
-<h1 id="简介">简介</h1>
-<p>这一切都源于一个大接口的优化，当并发升高，很多缓存有可能同时失效时，如何防止DB被打挂，尽可能的保护？重复的请求，重复的资源，如果节约成本？<br>
-这一切，有一个解法 -- singleflight</p>
-<h1 id="结构体">结构体</h1>
-<pre><code>// call is an in-flight or completed singleflight.Do call
-// call 表示一个正在执行的或已完成的函数调用，存储调用的接口、报错一些标记等等，
-type call struct {
-    // 可以看到，singleflight实现中用到了WaitGroup
-	wg sync.WaitGroup
-
-	// These fields are written once before the WaitGroup is done
-	// and are only read after the WaitGroup is done.
-    // 记录结果，在WaitGroup完成之前，只会写入一次，重点在此了
-	val interface{}
-	err error
-
-	// forgotten indicates whether Forget was called with this call's key
-	// while the call was still in flight.
-    // 用来标识执行完成之后结果立马删除还是保留在singleflight中
-	forgotten bool
-
-	// These fields are read and written with the singleflight
-	// mutex held before the WaitGroup is done, and are read but
-	// not written after the WaitGroup is done.
-    // 这个字段记录执行次数，更新时机是发起请求，waitGroup执行完成‘之前’
-	dups  int
-    // 用来记录DoChan中需要返回的数据
-	chans []chan&lt;- Result
-}
-
-// Group represents a class of work and forms a namespace in
-// which units of work can be executed with duplicate suppression.
-// 用来记录已经存在的对某key的请求和对应的实际请求函数（call）的映射
-type Group struct {
-	mu sync.Mutex       // protects m 加锁保护m
-	m  map[string]*call // lazily initialized  懒加载
-}
-
-// Result holds the results of Do, so they can be passed
-// on a channel.
-// 记录结果，结果值Val，结果报错Err，结果是实际请求还是分享的返回
-type Result struct {
-	Val    interface{}
-	Err    error
-	Shared bool
-}
-</code></pre>
-<h1 id="方法">方法</h1>
-<h2 id="do">Do</h2>
-<pre><code>// Do executes and returns the results of the given function, making
-// sure that only one execution is in-flight for a given key at a
-// time. If a duplicate comes in, the duplicate caller waits for the
-// original to complete and receives the same results.
-// The return value shared indicates whether v was given to multiple callers.
-// Do执行并返回给定函数的结果，确保在给定时间仅对给定键进行一次执行。
-// 如果出现重复，则重复的调用者将等待原始请求接收到相同的结果。
-// 共享的返回值指示是否将v分配给多个调用者。
-func (g *Group) Do(key string, fn func() (interface{}, error)) (v interface{}, err error, shared bool) {
-    // 加锁，主要防止请求重复记录，并非加锁去做请求
-	g.mu.Lock()
-	if g.m == nil {
-		g.m = make(map[string]*call)
-	}
-    // 校验是否已经完成请求，有则直接返回，shared肯定为true
-	if c, ok := g.m[key]; ok {
-		c.dups++
-		g.mu.Unlock()
-		c.wg.Wait()
-		return c.val, c.err, true
-	}
-    // 校验是新的请求，waitGroup加1，存储，解锁
-    // 注意，只有真正发起请求时候，才会执行waitGroup加1
-	c := new(call)
-	c.wg.Add(1)
-	g.m[key] = c
-	g.mu.Unlock()
-    // 实际去请求，返回结果，此时
-	g.doCall(c, key, fn)
-    // 此时dups应该是恒定为0的？没想明白为什么需要判断，手动执行过Forget时？
-	return c.val, c.err, c.dups &gt; 0
-}
-</code></pre>
-<h2 id="dochan">DoChan</h2>
-<pre><code>// DoChan is like Do but returns a channel that will receive the
-// results when they are ready.
-// 整体上与Do函数很类似，只是返回结果变为了chan
-func (g *Group) DoChan(key string, fn func() (interface{}, error)) &lt;-chan Result {
-	ch := make(chan Result, 1)
-	g.mu.Lock()
-	if g.m == nil {
-		g.m = make(map[string]*call)
-	}
-	if c, ok := g.m[key]; ok {
-		c.dups++
-		c.chans = append(c.chans, ch)
-		g.mu.Unlock()
-		return ch
-	}
-	c := &amp;call{chans: []chan&lt;- Result{ch}}
-	c.wg.Add(1)
-	g.m[key] = c
-	g.mu.Unlock()
-
-	go g.doCall(c, key, fn)
-
-	return ch
-}
-</code></pre>
-<h2 id="docall">doCall</h2>
-<pre><code>// doCall handles the single call for a key.
-// 实际执行函数
-func (g *Group) doCall(c *call, key string, fn func() (interface{}, error)) {
-	c.val, c.err = fn()
-	c.wg.Done()
-    // 请求完结果，置好waitGroup状态 Done，加锁开始处理后续逻辑
-	g.mu.Lock()
-    // 默认forgotten为false，会去删除请求好的状态，所以单飞只控制了同一时间相同请求
-	if !c.forgotten {
-		delete(g.m, key)
-	}
-    // 将chans中的结果发出去
-	for _, ch := range c.chans {
-		ch &lt;- Result{c.val, c.err, c.dups &gt; 0}
-	}
-	g.mu.Unlock()
-}
-</code></pre>
-<h2 id="forget">Forget</h2>
-<pre><code>// Forget tells the singleflight to forget about a key.  Future calls
-// to Do for this key will call the function rather than waiting for
-// an earlier call to complete.
-func (g *Group) Forget(key string) {
-	g.mu.Lock()
-    // 防止重复删除
-	if c, ok := g.m[key]; ok {
-		c.forgotten = true
-	}
-    // 删除后，同样的请求，会同时去真实的发起请求
-	delete(g.m, key)
-	g.mu.Unlock()
-}
-</code></pre>
-<h1 id="总结">总结</h1>
-<p>并发是一个双刃剑，节约了时间，但是也带来了很多的问题，不断学习，不断进步，自己要学习的还有很多，共勉！💪💪<br>
-希望能用好并发这个工具，解决更多的问题。</p>
-<h1 id="引用">引用</h1>
-<p><a href="https://blog.csdn.net/yang198907/article/details/108690876">深入理解singleflight</a><br>
-<a href="https://www.codeleading.com/article/591682326/">源码分析-singleflight</a><br>
-<a href="https://www.jianshu.com/p/ddaec84de653">singleflight源码注释</a><br>
-<a href="https://github.com/cch123/golang-notes/blob/master/sync.md">曹大golang笔记 - sync包</a><br>
-<a href="https://blog.csdn.net/weixin_43183475/article/details/105093355">singleflight 防缓存击穿 使用及原理</a></p>
 ]]></content>
     </entry>
 </feed>
