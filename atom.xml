@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://freephenix.github.io/</id>
     <title>半亩房顶</title>
-    <updated>2021-05-24T03:14:12.397Z</updated>
+    <updated>2021-05-24T03:17:01.393Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://freephenix.github.io/"/>
     <link rel="self" href="https://freephenix.github.io/atom.xml"/>
@@ -154,7 +154,9 @@ type Group struct {
 <a href="https://blog.csdn.net/jiaomeng/article/details/1495500">Bloom Filter概念和原理</a><br>
 <a href="https://www.cnblogs.com/itplay/p/10029884.html">【缓存】缓存穿透、缓存并发、热点缓存解决方案</a><br>
 <a href="https://www.jianshu.com/p/652f64f49dca">缓存穿透与热点缓存等问题的解决方案</a><br>
-<a href="https://blog.csdn.net/weixin_38055381/article/details/81161870">缓存击穿、缓存并发和缓存雪崩</a></p>
+<a href="https://blog.csdn.net/weixin_38055381/article/details/81161870">缓存击穿、缓存并发和缓存雪崩</a><br>
+<a href="https://blog.csdn.net/a745233700/article/details/88088669">Redis的缓存雪崩、缓存击穿、缓存穿透与缓存预热、缓存降级</a><br>
+<a href="https://segmentfault.com/a/1190000039393736">面试Redis——缓存并发 缓存雪崩 缓存穿透</a></p>
 ]]></content>
     </entry>
     <entry>
