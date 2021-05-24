@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://freephenix.github.io/</id>
     <title>半亩房顶</title>
-    <updated>2021-05-21T08:56:43.237Z</updated>
+    <updated>2021-05-24T03:14:12.397Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://freephenix.github.io/"/>
     <link rel="self" href="https://freephenix.github.io/atom.xml"/>
@@ -10,6 +10,153 @@
     <logo>https://freephenix.github.io/images/avatar.png</logo>
     <icon>https://freephenix.github.io/favicon.ico</icon>
     <rights>All rights reserved 2021, 半亩房顶</rights>
+    <entry>
+        <title type="html"><![CDATA[缓存穿透、缓存并发、缓存雪崩、缓存预热解决方案]]></title>
+        <id>https://freephenix.github.io/post/huan-cun-chuan-tou-huan-cun-bing-fa-re-dian-huan-cun-jie-jue-fang-an/</id>
+        <link href="https://freephenix.github.io/post/huan-cun-chuan-tou-huan-cun-bing-fa-re-dian-huan-cun-jie-jue-fang-an/">
+        </link>
+        <updated>2021-05-20T03:28:56.000Z</updated>
+        <content type="html"><![CDATA[<!-- more -->
+<h1 id="缓存的必要性">缓存的必要性</h1>
+<ol>
+<li>增强用户体验，减少用户等待时间；</li>
+<li>降低服务器压力；</li>
+<li>降低APP客户端的网络流量消耗；</li>
+</ol>
+<p>从业务考虑，缓存更多是为了增强用户体验<br>
+从技术考虑，缓存更多是为了提高系统的响应速度<br>
+当然于此同时，我们要面临的就是引入缓存所带来的问题：<br>
+<code>缓存穿透</code>、<code>缓存击穿</code>、<code>缓存雪崩</code></p>
+<h1 id="缓存穿透">缓存穿透</h1>
+<h2 id="什么是缓存穿透">什么是缓存穿透</h2>
+<p>正常情况下，我们去查询数据都是存在。那么请求去查询一条压根儿数据库中根本就不存在的数据，也就是缓存和数据库都查询不到这条数据，但是请求每次都会打到数据库上面去。这种查询不存在数据的现象我们称为<code>缓存穿透</code>。</p>
+<h2 id="带来的问题">带来的问题</h2>
+<p>试想一下，如果有黑客会对你的系统进行攻击，拿一个不存在的id去查询数据，会产生大量的请求到数据库去查询。可能会导致你的数据库由于压力过大而宕掉。</p>
+<h2 id="如何解决">如何解决</h2>
+<ul>
+<li>参数校验<br>
+对于一部分不应该存在的参数，我们理应提前限制住，fail fast</li>
+<li>缓存空值<br>
+这种做法有点类似于一种降级策略；对于不存在的值，如果我们能够往内存中填充一个空值，那么就不会导致每次查询都打到数据库，当然，这种情况下需要设置过期时间，并且需要仔细的评估业务需要而设置过期时间</li>
+<li>布隆过滤器（BloomFilter）</li>
+</ul>
+<blockquote>
+<p>布隆过滤器适用于数据量较大时使用，如果数据量较小，那么弄一个hash表或者bit数组之类的即可</p>
+</blockquote>
+<p>布隆过滤器是<code>巴顿.布隆</code>于一九七零年提出的，核心就是一个超大的位数组和多个哈希函数，如下图：<br>
+<img src="http://ww1.sinaimg.cn/large/b2488845ly1gqq0qxlg6oj20qg09kglq.jpg" alt="" loading="lazy"><br>
+查询：需要判断一个数据w是否存在时，用多个hash函数求得w的hash值，然后在这些位上查看是否都有1，均为1则证明元素有<code>可能</code>存在，如果存在0则证明肯定不存在<br>
+添加：添加元素则将多个hash值位置上的位置为1</p>
+<p>布隆过滤器是有错误率的，不过很小，所以，只要不是<code>零错误</code>的场景，都是可以满足需求的，感兴趣可以看下这位大佬的错误率计算：<a href="https://blog.csdn.net/jiaomeng/article/details/1495500">Bloom Filter概念和原理</a></p>
+<p>使用布隆过滤器后的流程图如下：<br>
+<img src="https://freephenix.github.io//post-images/1621578074638.png" alt="" loading="lazy"></p>
+<p>这里有一个golang的代码实现<a href="https://github.com/steakknife/bloomfilter">bloomfilter</a></p>
+<pre><code>type Filter struct {
+	lock sync.RWMutex
+	bits []uint64
+	keys []uint64
+	m    uint64 // number of bits the &quot;bits&quot; field should recognize
+	n    uint64 // number of inserted elements
+}
+</code></pre>
+<h1 id="缓存击穿">缓存击穿</h1>
+<h2 id="什么是缓存击穿">什么是缓存击穿</h2>
+<p>在平常高并发的系统中，大量的请求同时查询一个key时，此时这个key正好失效了，就会导致大量的请求都打到数据库上面去。这种现象我们称为<code>缓存击穿</code>。</p>
+<h2 id="带来的问题-2">带来的问题</h2>
+<p>会造成某一时刻数据库请求量过大，压力剧增。</p>
+<h2 id="如何解决-2">如何解决</h2>
+<p>这种场景，一般我们会限制同一个key的多次数据回捞，例如使用singleflight（单飞）等工具。<br>
+单飞主要有两个重要的结构体</p>
+<pre><code>// call is an in-flight or completed singleflight.Do call
+// call 表示一个正在执行的或已完成的函数调用，存储调用的接口、报错一些标记等等，
+type call struct {
+    // 可以看到，singleflight实现中用到了WaitGroup来保证只有一个goroutinue去回捞
+	wg sync.WaitGroup
+
+	// These fields are written once before the WaitGroup is done
+	// and are only read after the WaitGroup is done.
+    // 记录结果，在WaitGroup完成之前，只会写入一次，重点在此了
+	val interface{}
+	err error
+
+	// forgotten indicates whether Forget was called with this call's key
+	// while the call was still in flight.
+    // 用来标识执行完成之后结果立马删除还是保留在singleflight中
+	forgotten bool
+
+	// These fields are read and written with the singleflight
+	// mutex held before the WaitGroup is done, and are read but
+	// not written after the WaitGroup is done.
+    // 这个字段记录执行次数，更新时机是发起请求，waitGroup执行完成‘之前’
+	dups  int
+    // 用来记录DoChan中需要返回的数据
+	chans []chan&lt;- Result
+}
+
+// Group represents a class of work and forms a namespace in
+// which units of work can be executed with duplicate suppression.
+// 用来记录已经存在的对某key的请求和对应的实际请求函数（call）的映射
+type Group struct {
+	mu sync.Mutex       // protects m 加锁保护m，并不是用锁来保证只有一个goroutinue去回捞
+	m  map[string]*call // lazily initialized  懒加载
+}
+</code></pre>
+<p>详情可以自己看下源码，或者看下我自己写的这篇文章<a href="https://freephenix.github.io/post/yuan-ma-za-huo-pu-singleflight/">源码杂货铺：singleflight</a></p>
+<h1 id="缓存雪崩">缓存雪崩</h1>
+<h2 id="什么是缓存雪崩">什么是缓存雪崩</h2>
+<p><code>缓存雪崩</code>的情况是说，当某一时刻发生大规模的缓存失效的情况，比如你的缓存服务宕机了，会有大量的请求进来直接打到DB上面。结果就是DB撑不住挂掉。</p>
+<h2 id="带来的问题-3">带来的问题</h2>
+<p>会造成某一时刻数据库请求量过大，压力剧增。</p>
+<h2 id="如何解决-3">如何解决</h2>
+<p>（1）事前：</p>
+<ul>
+<li>均匀过期：设置不同的过期时间，让缓存失效的时间尽量均匀，避免相同的过期时间导致缓存雪崩，造成大量数据库的访问。</li>
+<li>分级缓存：第一级缓存失效的基础上，访问二级缓存，每一级缓存的失效时间都不同。</li>
+<li>热点数据缓存永远不过期。</li>
+</ul>
+<blockquote>
+<p>永不过期实际包含两层意思：<br>
+物理不过期，针对热点key不设置过期时间<br>
+逻辑过期，把过期时间存在key对应的value里，如果发现要过期了，通过一个后台的异步线程进行缓存的构建</p>
+</blockquote>
+<ul>
+<li>保证Redis缓存的高可用，防止Redis宕机导致缓存雪崩的问题。可以使用 主从+ 哨兵，Redis集群来避免 Redis 全盘崩溃的情况。</li>
+</ul>
+<p>（2）事中：</p>
+<ul>
+<li>互斥锁：在缓存失效后，通过互斥锁或者队列来控制读数据写缓存的线程数量，比如某个key只允许一个线程查询数据和写缓存，其他线程等待。这种方式会阻塞其他的线程，此时系统的吞吐量会下降</li>
+<li>使用熔断机制，限流降级。当流量达到一定的阈值，直接返回“系统拥挤”之类的提示，防止过多的请求打在数据库上将数据库击垮，至少能保证一部分用户是可以正常使用，其他用户多刷新几次也能得到结果。</li>
+</ul>
+<p>（3）事后：</p>
+<ul>
+<li>开启Redis持久化机制，尽快恢复缓存数据，一旦重启，就能从磁盘上自动加载数据恢复内存中的数据。</li>
+</ul>
+<h1 id="缓存预热和缓存降级">缓存预热和缓存降级</h1>
+<p>这两个并非问题，而是两个策略，为了解决一些问题</p>
+<h2 id="什么是缓存预热">什么是缓存预热</h2>
+<p>缓存预热是指系统上线后，提前将相关的缓存数据加载到缓存系统。避免在用户请求的时候，先查询数据库，然后再将数据缓存的问题，用户直接查询事先被预热的缓存数据。<br>
+如果不进行预热，那么Redis初始状态数据为空，系统上线初期，对于高并发的流量，都会访问到数据库中， 对数据库造成流量的压力。</p>
+<h2 id="缓存预热方案">缓存预热方案：</h2>
+<ul>
+<li>数据量不大的时候，工程启动的时候进行加载缓存动作；</li>
+<li>数据量大的时候，设置一个定时任务脚本，进行缓存的刷新；</li>
+<li>数据量太大的时候，优先保证热点数据进行提前加载到缓存。</li>
+</ul>
+<h2 id="什么是缓存降级">什么是缓存降级</h2>
+<p>缓存降级是指缓存失效或缓存服务器挂掉的情况下，不去访问数据库，直接返回默认数据或访问服务的内存数据。降级一般是有损的操作，所以尽量减少降级对于业务的影响程度。</p>
+<h2 id="缓存降级方案">缓存降级方案：</h2>
+<p>在项目实战中通常会将部分热点数据缓存到服务的内存中，这样一旦缓存出现异常，可以直接使用服务的内存数据，从而避免数据库遭受巨大压力。</p>
+<h1 id="引用">引用</h1>
+<p><a href="https://zhuanlan.zhihu.com/p/74204346">缓存技术方案</a><br>
+<a href="https://www.cnblogs.com/yelongsan/p/9045782.html">缓存三种模式</a><br>
+<a href="https://www.cnblogs.com/mrcharleshu/p/13200461.html">理解与解决缓存穿透、缓存击穿、缓存雪崩、热点数据失效问题</a><br>
+<a href="https://www.jianshu.com/p/88c6ac4b38c8">布隆过滤器(Bloom Filter)的原理和实现</a><br>
+<a href="https://blog.csdn.net/jiaomeng/article/details/1495500">Bloom Filter概念和原理</a><br>
+<a href="https://www.cnblogs.com/itplay/p/10029884.html">【缓存】缓存穿透、缓存并发、热点缓存解决方案</a><br>
+<a href="https://www.jianshu.com/p/652f64f49dca">缓存穿透与热点缓存等问题的解决方案</a><br>
+<a href="https://blog.csdn.net/weixin_38055381/article/details/81161870">缓存击穿、缓存并发和缓存雪崩</a></p>
+]]></content>
+    </entry>
     <entry>
         <title type="html"><![CDATA[分布式锁]]></title>
         <id>https://freephenix.github.io/post/fen-bu-shi-suo/</id>
@@ -1772,286 +1919,6 @@ sds sdscat(sds s, const char *t) {
 <li><a href="http://cbsheng.github.io/posts/redis%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90%E4%B9%8Bsds%E5%AF%B9%E8%B1%A1/">Redis(5.0.3)源码分析之sds对象</a></li>
 <li><a href="https://www.hoohack.me/2017/11/13/read-redis-src-sds">［Redis源码阅读］sds字符串实现</a></li>
 </ul>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[源码杂货铺：atomic包]]></title>
-        <id>https://freephenix.github.io/post/yuan-ma-za-huo-pu-atomic-bao/</id>
-        <link href="https://freephenix.github.io/post/yuan-ma-za-huo-pu-atomic-bao/">
-        </link>
-        <updated>2021-01-29T07:15:18.000Z</updated>
-        <summary type="html"><![CDATA[<p>原子(atomic)本意是&quot;不能被进一步分割的最小粒子&quot;，而原子操作(atomic operation)意为&quot;不可中断的一个或一系列操作&quot;。</p>
-]]></summary>
-        <content type="html"><![CDATA[<p>原子(atomic)本意是&quot;不能被进一步分割的最小粒子&quot;，而原子操作(atomic operation)意为&quot;不可中断的一个或一系列操作&quot;。</p>
-<!-- more -->
-<h1 id="简介">简介</h1>
-<p>golang 中 atomic 类操作最终是使用 assembly 进行 cpu 指令调用实现的，本文只是简单介绍下，至于汇编代码，基本都还给老师了，能捡多少是多少，用到了继续深究</p>
-<h1 id="接口定义">接口定义</h1>
-<p>主要接口定义在 sync/atomic/doc.go文件中</p>
-<pre><code>// Copyright 2011 The Go Authors. All rights reserved.
-// Use of this source code is governed by a BSD-style
-// license that can be found in the LICENSE file.
-
-// Package atomic provides low-level atomic memory primitives
-// useful for implementing synchronization algorithms.
-//
-// These functions require great care to be used correctly.
-// Except for special, low-level applications, synchronization is better
-// done with channels or the facilities of the sync package.
-// Share memory by communicating;
-// don't communicate by sharing memory.
-//
-// The swap operation, implemented by the SwapT functions, is the atomic
-// equivalent of:
-//
-//	old = *addr
-//	*addr = new
-//	return old
-//
-// The compare-and-swap operation, implemented by the CompareAndSwapT
-// functions, is the atomic equivalent of:
-//
-//	if *addr == old {
-//		*addr = new
-//		return true
-//	}
-//	return false
-//
-// The add operation, implemented by the AddT functions, is the atomic
-// equivalent of:
-//
-//	*addr += delta
-//	return *addr
-//
-// The load and store operations, implemented by the LoadT and StoreT
-// functions, are the atomic equivalents of &quot;return *addr&quot; and
-// &quot;*addr = val&quot;.
-//
-package atomic
-
-import (
-	&quot;unsafe&quot;
-)
-
-// BUG(rsc): On x86-32, the 64-bit functions use instructions unavailable before the Pentium MMX.
-//
-// On non-Linux ARM, the 64-bit functions use instructions unavailable before the ARMv6k core.
-//
-// On ARM, x86-32, and 32-bit MIPS,
-// it is the caller's responsibility to arrange for 64-bit
-// alignment of 64-bit words accessed atomically. The first word in a
-// variable or in an allocated struct, array, or slice can be relied upon to be
-// 64-bit aligned.
-
-// SwapInt32 atomically stores new into *addr and returns the previous *addr value.
-func SwapInt32(addr *int32, new int32) (old int32)
-
-// SwapInt64 atomically stores new into *addr and returns the previous *addr value.
-func SwapInt64(addr *int64, new int64) (old int64)
-
-// SwapUint32 atomically stores new into *addr and returns the previous *addr value.
-func SwapUint32(addr *uint32, new uint32) (old uint32)
-
-// SwapUint64 atomically stores new into *addr and returns the previous *addr value.
-func SwapUint64(addr *uint64, new uint64) (old uint64)
-
-// SwapUintptr atomically stores new into *addr and returns the previous *addr value.
-func SwapUintptr(addr *uintptr, new uintptr) (old uintptr)
-
-// SwapPointer atomically stores new into *addr and returns the previous *addr value.
-func SwapPointer(addr *unsafe.Pointer, new unsafe.Pointer) (old unsafe.Pointer)
-
-// CompareAndSwapInt32 executes the compare-and-swap operation for an int32 value.
-func CompareAndSwapInt32(addr *int32, old, new int32) (swapped bool)
-
-// CompareAndSwapInt64 executes the compare-and-swap operation for an int64 value.
-func CompareAndSwapInt64(addr *int64, old, new int64) (swapped bool)
-
-// CompareAndSwapUint32 executes the compare-and-swap operation for a uint32 value.
-func CompareAndSwapUint32(addr *uint32, old, new uint32) (swapped bool)
-
-// CompareAndSwapUint64 executes the compare-and-swap operation for a uint64 value.
-func CompareAndSwapUint64(addr *uint64, old, new uint64) (swapped bool)
-
-// CompareAndSwapUintptr executes the compare-and-swap operation for a uintptr value.
-func CompareAndSwapUintptr(addr *uintptr, old, new uintptr) (swapped bool)
-
-// CompareAndSwapPointer executes the compare-and-swap operation for a unsafe.Pointer value.
-func CompareAndSwapPointer(addr *unsafe.Pointer, old, new unsafe.Pointer) (swapped bool)
-
-// AddInt32 atomically adds delta to *addr and returns the new value.
-func AddInt32(addr *int32, delta int32) (new int32)
-
-// AddUint32 atomically adds delta to *addr and returns the new value.
-// To subtract a signed positive constant value c from x, do AddUint32(&amp;x, ^uint32(c-1)).
-// In particular, to decrement x, do AddUint32(&amp;x, ^uint32(0)).
-func AddUint32(addr *uint32, delta uint32) (new uint32)
-
-// AddInt64 atomically adds delta to *addr and returns the new value.
-func AddInt64(addr *int64, delta int64) (new int64)
-
-// AddUint64 atomically adds delta to *addr and returns the new value.
-// To subtract a signed positive constant value c from x, do AddUint64(&amp;x, ^uint64(c-1)).
-// In particular, to decrement x, do AddUint64(&amp;x, ^uint64(0)).
-func AddUint64(addr *uint64, delta uint64) (new uint64)
-
-// AddUintptr atomically adds delta to *addr and returns the new value.
-func AddUintptr(addr *uintptr, delta uintptr) (new uintptr)
-
-// LoadInt32 atomically loads *addr.
-func LoadInt32(addr *int32) (val int32)
-
-// LoadInt64 atomically loads *addr.
-func LoadInt64(addr *int64) (val int64)
-
-// LoadUint32 atomically loads *addr.
-func LoadUint32(addr *uint32) (val uint32)
-
-// LoadUint64 atomically loads *addr.
-func LoadUint64(addr *uint64) (val uint64)
-
-// LoadUintptr atomically loads *addr.
-func LoadUintptr(addr *uintptr) (val uintptr)
-
-// LoadPointer atomically loads *addr.
-func LoadPointer(addr *unsafe.Pointer) (val unsafe.Pointer)
-
-// StoreInt32 atomically stores val into *addr.
-func StoreInt32(addr *int32, val int32)
-
-// StoreInt64 atomically stores val into *addr.
-func StoreInt64(addr *int64, val int64)
-
-// StoreUint32 atomically stores val into *addr.
-func StoreUint32(addr *uint32, val uint32)
-
-// StoreUint64 atomically stores val into *addr.
-func StoreUint64(addr *uint64, val uint64)
-
-// StoreUintptr atomically stores val into *addr.
-func StoreUintptr(addr *uintptr, val uintptr)
-
-// StorePointer atomically stores val into *addr.
-func StorePointer(addr *unsafe.Pointer, val unsafe.Pointer)
-
-// Helper for ARM.  Linker will discard on other systems
-func panic64() {
-	panic(&quot;sync/atomic: broken 64-bit atomic operations (buggy QEMU)&quot;)
-}
-</code></pre>
-<p>一大堆函数，不慌，因为正如开头注释中所说的，主要的就是分为5类函数</p>
-<h2 id="swap">Swap</h2>
-<p>将参数new的值换到参数addr地址中去，返回地址中存放的旧值</p>
-<h2 id="compareandswap">CompareAndSwap</h2>
-<p>如果参数addr指向的值与参数old相等，则将addr指向新值参数new，返回true，否则返回false</p>
-<h2 id="add">Add</h2>
-<p>将参数delta加到参数addr指向的值上，返回加和后新的值</p>
-<h2 id="load">Load</h2>
-<p>加载参数addr指向的值</p>
-<h2 id="store">Store</h2>
-<p>存储参数val的值到参数addr指向的地址中</p>
-<h1 id="代码实现">代码实现</h1>
-<p>那这里只有定义，实现在哪里呢？<br>
-sync/atomic/asm.s 中可以看到所有的这些方法，但是这里只是一个JMP，跳转到了 runtime∕internal∕atomic<br>
-追到runtime∕internal∕atomic会发现，这里有很多个atomic开头的文件，这里就是针对不同的cpu所需要选择的实际执行的代码了。其中go文件提供接口定义.s文件提供实现，具体的汇编代码分析请各位移步网上各位大神的分析，可以自行百度，或者看看引用文章吧。</p>
-<h1 id="value">value</h1>
-<p>golang 1.4之后追加了value这个结构，这是atmoic包中提供的一个可以原子保存和加载的结构体</p>
-<h2 id="结构体">结构体</h2>
-<pre><code>// A Value provides an atomic load and store of a consistently typed value.
-// The zero value for a Value returns nil from Load.
-// Once Store has been called, a Value must not be copied.
-// 一旦被使用过后，就会不能拷贝
-// A Value must not be copied after first use.
-type Value struct {
-	v interface{}
-}
-</code></pre>
-<p>并且，定义了这个结构体，ifaceWords，备注中说明，这个就是空接口的内部实现</p>
-<pre><code>// ifaceWords is interface{} internal representation.
-type ifaceWords struct {
-	typ  unsafe.Pointer
-	data unsafe.Pointer
-}
-</code></pre>
-<h2 id="函数">函数</h2>
-<p>首先是load方法，顾名思义，取最新store的值返回，没有存过则返回nil</p>
-<pre><code>// Load returns the value set by the most recent Store.
-// It returns nil if there has been no call to Store for this Value.
-func (v *Value) Load() (x interface{}) {
-	vp := (*ifaceWords)(unsafe.Pointer(v))
-	typ := LoadPointer(&amp;vp.typ)
-    // 如果当前的typ是 nil 或者^uintptr(0)，那就证明第一次写入还没有开始，或者还没完成
-	if typ == nil || uintptr(typ) == ^uintptr(0) {
-		// First store not yet completed.
-		return nil
-	}
-	data := LoadPointer(&amp;vp.data)
-	xp := (*ifaceWords)(unsafe.Pointer(&amp;x))
-	xp.typ = typ
-	xp.data = data
-	return
-}
-</code></pre>
-<p>然后是store函数</p>
-<pre><code>// Store sets the value of the Value to x.
-// All calls to Store for a given Value must use values of the same concrete type.
-// Store of an inconsistent type panics, as does Store(nil).
-func (v *Value) Store(x interface{}) {
-    // 不能存nil
-	if x == nil {
-		panic(&quot;sync/atomic: store of nil value into Value&quot;)
-	}
-	vp := (*ifaceWords)(unsafe.Pointer(v))
-	xp := (*ifaceWords)(unsafe.Pointer(&amp;x))
-	for {
-		typ := LoadPointer(&amp;vp.typ)
-		if typ == nil {
-            // 首次存入
-			// Attempt to start first store.
-			// Disable preemption so that other goroutines can use
-			// active spin wait to wait for completion; and so that
-			// GC does not see the fake type accidentally.
-            // runtime_procPin这个函数，会防止其他goroutinue抢占
-            // 并且使GC不会偶然间发现fake type，应该是指下面的CAS操作中
-            // 将vp.type 赋值unsafe.Pointer(^uintptr(0))
-			runtime_procPin()
-			if !CompareAndSwapPointer(&amp;vp.typ, nil, unsafe.Pointer(^uintptr(0))) {
-				runtime_procUnpin()
-				continue
-			}
-			// Complete first store.
-			StorePointer(&amp;vp.data, xp.data)
-			StorePointer(&amp;vp.typ, xp.typ)
-            // 解除锁定
-			runtime_procUnpin()
-			return
-		}
-        // 进入则表明有其他请求正在首次写入中
-		if uintptr(typ) == ^uintptr(0) {
-			// First store in progress. Wait.
-			// Since we disable preemption around the first store,
-			// we can wait with active spinning.
-			continue
-		}
-		// First store completed. Check type and overwrite data.
-        // 校验检查，上一次写入的类型与这一次要写入的类型是否一致，如果不一致则抛出异常
-        // 相同再写入数据
-		if typ != xp.typ {
-			panic(&quot;sync/atomic: store of inconsistently typed value into Value&quot;)
-		}
-		StorePointer(&amp;vp.data, xp.data)
-		return
-	}
-}
-</code></pre>
-<h2 id="引申">引申</h2>
-<p>这里用的都是原子操作，这由底层硬件支持，而策略上都是乐观锁，而悲观锁则由操作系统的调度器实现。悲观锁应当用来保护一段逻辑，对于一个变量更新的保护，而原子操作通常会更有效率，并且更能利用计算机多核的优势</p>
-<h1 id="小结">小结</h1>
-<p>到这里基本就结束啦，这里是简单的认识了下atomic包，希望在以后的工作学习中，多多打交道，真的有钻研汇编的那一天。</p>
-<h1 id="引用">引用</h1>
-<p><a href="https://github.com/cch123/golang-notes/blob/master/atomic.md">曹大golang笔记，atomic 详解</a><br>
-<a href="https://mp.weixin.qq.com/s/PQ06eL8kMWoGXodpnyjNcA">详解并发编程基础之原子操作(atomic包)</a><br>
-<a href="https://blog.betacat.io/post/golang-atomic-value-exploration/">Go 语言标准库中 atomic.Value 的前世今生</a></p>
 ]]></content>
     </entry>
 </feed>
