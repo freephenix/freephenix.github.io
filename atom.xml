@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://freephenix.github.io/</id>
     <title>半亩房顶</title>
-    <updated>2021-05-24T03:17:01.393Z</updated>
+    <updated>2021-05-24T03:18:33.763Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://freephenix.github.io/"/>
     <link rel="self" href="https://freephenix.github.io/atom.xml"/>
@@ -11,7 +11,7 @@
     <icon>https://freephenix.github.io/favicon.ico</icon>
     <rights>All rights reserved 2021, 半亩房顶</rights>
     <entry>
-        <title type="html"><![CDATA[缓存穿透、缓存并发、缓存雪崩、缓存预热解决方案]]></title>
+        <title type="html"><![CDATA[缓存穿透、缓存并发、缓存雪崩、缓存预热、缓存降级]]></title>
         <id>https://freephenix.github.io/post/huan-cun-chuan-tou-huan-cun-bing-fa-re-dian-huan-cun-jie-jue-fang-an/</id>
         <link href="https://freephenix.github.io/post/huan-cun-chuan-tou-huan-cun-bing-fa-re-dian-huan-cun-jie-jue-fang-an/">
         </link>
