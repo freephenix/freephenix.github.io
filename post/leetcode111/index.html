@@ -5,7 +5,7 @@
 <meta name="description" content="" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>
-    DDD 学习笔记（二）基础概念 | 半亩房顶
+    LeetCode-1011 完全平方数 | 半亩房顶
 </title>
 <link rel="shortcut icon" href="https://freephenix.github.io//favicon.ico?v=1623399332639">
 <!-- <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous"> -->
@@ -118,88 +118,59 @@
                 <div id="content" class="main-container-left">
                     <article class="post i-card">
                         <h2 class="post-title">
-                            DDD 学习笔记（二）基础概念
+                            LeetCode-1011 完全平方数
                         </h2>
                         <div class="post-info">
-                            <time class="post-time">2020-09-08</time>
+                            <time class="post-time">2021-06-11</time>
                             
-                                <a href="https://freephenix.github.io/tag/DOSTPMjk_/" class="post-tag i-tag
-                            i-tag-other_4">
-                            #DDD
-                        </a>
-                                
                         </div>
                         
-                            <div class="post-feature-image" style="background-image: url('https://freephenix.github.io//post-images/ddd-xue-xi-bi-ji-er-ji-chu-gai-nian.jpeg')"></div>
-                            
                                 <div class="post-content">
-                                    <p>DDD 基础概念</p>
+                                    <p>刷题使我快乐，满脸开心.jpg</p>
+<p>来源：力扣（LeetCode）<br>
+链接：https://leetcode-cn.com/problems/perfect-squares<br>
+著作权归领扣网络所有。商业转载请联系官方授权，非商业转载请注明出处。</p>
 <!-- more -->
-<h1 id="概念">概念</h1>
-<h3 id="领域-与-子域">领域 与 子域</h3>
-<ul>
-<li>DDD 的领域就是这个边界内要解决的业务问题域。</li>
-<li>我们把划分出来的多个子领域称为子域，每个子域对应一个更小的问题域或更小的业务范围。</li>
-</ul>
-<h3 id="核心域-通用域和支撑域">核心域、通用域和支撑域</h3>
-<p>这三类为三种不同的子域，不同系统中，核心域不尽相同，需要公司根据自身业务，选定核心域等，完成划分</p>
-<ul>
-<li>决定产品和公司核心竞争力的子域是核心域</li>
-<li>同时被多个子域使用的通用功能子域是通用域</li>
-<li>必需的，但既不包含决定产品和公司核心竞争力的功能，也不包含通用功能的子域，它就是支撑域。</li>
-</ul>
-<h3 id="限界上下文">限界上下文</h3>
-<p>通用语言定义上下文含义，限界上下文则定义领域边界</p>
-<h5 id="为什么要提出限界上下文的概念">为什么要提出限界上下文的概念？</h5>
-<p>在事件风暴过程中，通过团队交流达成共识的，能够简单、清晰、准确描述业务涵义和规则的语言就是通用语言。通用语言可以直接反应在代码中。<br>
-1、但是通用语言难以完成领域的划分，进而确定微服务的划分，解决微服务想要解决的问题<br>
-2、通用语言在不同上下文中会有不同的含义，引入限界上下文，可以提供上下文环境，消除歧义。</p>
-<h5 id="限界上下文在微服务设计中的作用和意义是什么">限界上下文在微服务设计中的作用和意义是什么？</h5>
-<p>1、封装通用语言和领域对象，让大家明白功能应该放于哪个领域。<br>
-2、划分领域边界，确定限界上下文，消除歧义。</p>
-<h3 id="实体-和-值对象">实体 和 值对象</h3>
-<p>实体和值对象是组成领域模型的基础单元。</p>
-<h5 id="实体">实体</h5>
-<ul>
-<li>有 ID 标识，聚合内唯一</li>
-<li>这些实体类通常采用充血模型</li>
-<li>依附于聚合根，其生命周期由聚合根管理</li>
-<li>与数据库持久化对象不一定是 一对一的关系</li>
-<li>可以引用聚合内的聚合根、实体和值对象</li>
-</ul>
-<h5 id="值对象">值对象</h5>
-<ul>
-<li>不可变，无生命周期，用完即扔</li>
-<li>通过对象属性值来识别的对象，它将多个相关属性组合为一个概念整体</li>
-<li>简单来说，值对象本质上就是一个集。由若干个用于描述目的、具有整体概念和不可修改的属性组成</li>
-<li>值对象尽量只引用值对象</li>
-</ul>
-<blockquote>
-<p>DDD 提倡从领域模型设计出发，而不是先设计数据模型</p>
-</blockquote>
-<h3 id="聚合和聚合根">聚合和聚合根</h3>
-<h5 id="聚合">聚合</h5>
-<ul>
-<li>高内聚、低耦合，它是领域模型中最底层的边界，可以作为拆分微服务的最小单位</li>
-<li>聚合让一些列实体和值对象协同工作，确保这些领域对象在实现共同业务时，保持一致性</li>
-<li>聚合之间的边界是微服务内天然的逻辑边界</li>
-</ul>
-<h5 id="聚合根">聚合根</h5>
-<ul>
-<li>聚合根是实体，有实体的特点，具有全局唯一标识，有独立的生命周期</li>
-<li>聚合相对于组织的话，聚合根则为这个组织的管理者，协调实体和值对象，完成功能</li>
-<li>一个聚合只有一个聚合根，聚合根在聚合内对实体和值对象采用直接对象引用的方式进行组织 和协调</li>
-<li>聚合根与聚合根之间通过 ID 关联的方式实现聚合之间的协同</li>
-<li>其他聚合调用其他聚合中的对象，均需要通过聚合根调用</li>
-</ul>
-<h6 id="如何设计聚合">如何设计聚合</h6>
-<p>1、根据事件风暴，梳理出实体和值对象<br>
-2、从实体中选出聚合根<br>
-3、根据单一职责，以聚合根为核心，划分出所有的相关实体和值对象（整理出依赖模型，确定依赖关系），此为一个聚合<br>
-4、将多个聚合根据业务语义和上下文划分到同一个限界上下文中，结束聚合设计</p>
-<hr>
-<p>欢迎大家关注公众号一起交流<br>
-<img src="https://freephenix.github.io//post-images/1599790602118.jpeg" alt="" loading="lazy"></p>
+<h1 id="题目">题目</h1>
+<p>给定正整数 n，找到若干个完全平方数（比如 1, 4, 9, 16, ...）使得它们的和等于 n。你需要让组成和的完全平方数的个数最少。</p>
+<p>给你一个整数 n ，返回和为 n 的完全平方数的 最少数量 。</p>
+<p>完全平方数 是一个整数，其值等于另一个整数的平方；换句话说，其值等于一个整数自乘的积。例如，1、4、9 和 16 都是完全平方数，而 3 和 11 不是。</p>
+<pre><code>示例 1：
+输入：n = 12
+输出：3 
+解释：12 = 4 + 4 + 4
+
+示例 2：
+输入：n = 13
+输出：2
+解释：13 = 4 + 9
+</code></pre>
+<p>提示：<br>
+<code>1 &lt;= n &lt;= 104</code></p>
+<h1 id="思路">思路</h1>
+<p>万变不离其宗，动规的思路应该还是很容易想到的，只是这里多了一层包装，即所谓的<code>完全平方数</code><br>
+而我们的大体思路是不用变的，只是步进就来自于这个<code>完全平方数</code>了，步进只能选择1、4、9等<code>完全平方数</code>。<br>
+所以根本方程就是 <code>f(x) = min(f(x - 1*1), f(x - 2*2), ...)</code></p>
+<h1 id="代码">代码</h1>
+<pre><code class="language-golang">func numSquares(n int) int {
+    f := make([]int, n+1)
+    for i := 1; i &lt;= n; i++ {
+        minn := math.MaxInt32
+        for j := 1; j*j &lt;= i; j++ {
+            minn = min(minn, f[i-j*j])
+        }
+        f[i] = minn + 1
+    }
+    return f[n]
+}
+
+func min(a, b int) int {
+    if a &lt; b {
+        return a
+    }
+    return b
+}
+</code></pre>
 
                                 </div>
                     </article>
@@ -207,9 +178,9 @@
                     
                         <div class="next-post">
                             <div class="next">下一篇</div>
-                            <a href="https://freephenix.github.io/post/ddd-xue-xi-bi-ji-yi/">
+                            <a href="https://freephenix.github.io/post/yuan-ma-za-huo-pu-syncmap/">
                                 <h3 class="post-title">
-                                    DDD 学习笔记（一）
+                                    源码杂货铺：Map与sync.Map
                                 </h3>
                             </a>
                         </div>
@@ -228,38 +199,9 @@
         <div class="toc-title i-card-title">目录</div>
         <div class="toc-content">
             <ul class="markdownIt-TOC">
-<li><a href="#%E6%A6%82%E5%BF%B5">概念</a><br>
-*
-<ul>
-<li><a href="#%E9%A2%86%E5%9F%9F-%E4%B8%8E-%E5%AD%90%E5%9F%9F">领域 与 子域</a></li>
-<li><a href="#%E6%A0%B8%E5%BF%83%E5%9F%9F-%E9%80%9A%E7%94%A8%E5%9F%9F%E5%92%8C%E6%94%AF%E6%92%91%E5%9F%9F">核心域、通用域和支撑域</a></li>
-<li><a href="#%E9%99%90%E7%95%8C%E4%B8%8A%E4%B8%8B%E6%96%87">限界上下文</a><br>
-*
-<ul>
-<li><a href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E8%A6%81%E6%8F%90%E5%87%BA%E9%99%90%E7%95%8C%E4%B8%8A%E4%B8%8B%E6%96%87%E7%9A%84%E6%A6%82%E5%BF%B5">为什么要提出限界上下文的概念？</a></li>
-<li><a href="#%E9%99%90%E7%95%8C%E4%B8%8A%E4%B8%8B%E6%96%87%E5%9C%A8%E5%BE%AE%E6%9C%8D%E5%8A%A1%E8%AE%BE%E8%AE%A1%E4%B8%AD%E7%9A%84%E4%BD%9C%E7%94%A8%E5%92%8C%E6%84%8F%E4%B9%89%E6%98%AF%E4%BB%80%E4%B9%88">限界上下文在微服务设计中的作用和意义是什么？</a></li>
-</ul>
-</li>
-<li><a href="#%E5%AE%9E%E4%BD%93-%E5%92%8C-%E5%80%BC%E5%AF%B9%E8%B1%A1">实体 和 值对象</a><br>
-*
-<ul>
-<li><a href="#%E5%AE%9E%E4%BD%93">实体</a></li>
-<li><a href="#%E5%80%BC%E5%AF%B9%E8%B1%A1">值对象</a></li>
-</ul>
-</li>
-<li><a href="#%E8%81%9A%E5%90%88%E5%92%8C%E8%81%9A%E5%90%88%E6%A0%B9">聚合和聚合根</a><br>
-*
-<ul>
-<li><a href="#%E8%81%9A%E5%90%88">聚合</a></li>
-<li><a href="#%E8%81%9A%E5%90%88%E6%A0%B9">聚合根</a>
-<ul>
-<li><a href="#%E5%A6%82%E4%BD%95%E8%AE%BE%E8%AE%A1%E8%81%9A%E5%90%88">如何设计聚合</a></li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-</li>
+<li><a href="#%E9%A2%98%E7%9B%AE">题目</a></li>
+<li><a href="#%E6%80%9D%E8%B7%AF">思路</a></li>
+<li><a href="#%E4%BB%A3%E7%A0%81">代码</a></li>
 </ul>
 
         </div>
