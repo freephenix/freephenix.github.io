@@ -1,0 +1,370 @@
+<html>
+
+<head>
+    <meta charset="utf-8" />
+<meta name="description" content="" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>
+    LeetCode-1201. 丑数 III | 半亩房顶
+</title>
+<link rel="shortcut icon" href="https://freephenix.github.io//favicon.ico?v=1711612618200">
+<!-- <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous"> -->
+<link href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+<link rel="stylesheet" href="https://freephenix.github.io//styles/main.css">
+<!-- js -->
+<script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.min.js"></script>
+<script src="https://freephenix.github.io//media/js/jquery.sticky-sidebar.min.js"></script>
+<script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
+<script src="https://cdn.bootcss.com/moment.js/2.23.0/moment.min.js"></script>
+
+
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-147240912-1"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+
+        function gtag() {
+            dataLayer.push(arguments);
+        }
+        gtag('js', new Date());
+
+        gtag('config', 'UA-147240912-1');
+    </script>
+    
+        
+            
+                <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+                <script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+                
+
+                    
+                            
+</head>
+
+<body>
+    <div class="main">
+        <div class="header">
+    <div class="nav">
+        <div class="logo">
+            <a href="https://freephenix.github.io/">
+                <img class="avatar" src="https://freephenix.github.io//images/avatar.png?v=1711612618200" alt="">
+            </a>
+            <div class="site-title">
+                <h1>
+                    半亩房顶
+                </h1>
+            </div>
+        </div>
+        <span class="menu-btn fa fa-align-justify"></span>
+        <div class="menu-container">
+            <ul>
+                
+                    
+                            <li>
+                                <a href="/" class="menu">
+                                    首页
+                                </a>
+                            </li>
+                            
+                                
+                    
+                            <li>
+                                <a href="/archives" class="menu">
+                                    归档
+                                </a>
+                            </li>
+                            
+                                
+                    
+                            <li>
+                                <a href="/tags" class="menu">
+                                    标签
+                                </a>
+                            </li>
+                            
+                                
+                    
+                            <li>
+                                <a href="https://freephenix.github.io//post/guan-yu-ban-mu-fang-ding/" class="menu">
+                                    关于
+                                </a>
+                            </li>
+                            
+                                
+            </ul>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function() {
+        $(".menu-btn").click(function() {
+            $(".menu-container").slideToggle();
+        });
+        $(window).resize(function() {
+
+            if (window.matchMedia('(min-width: 960px)').matches) {
+                $(".menu-container").css('display', 'block')
+            } else {
+                $(".menu-container").css('display', 'none')
+            }
+
+        });
+    });
+</script>
+
+            <div id="main-content" class="post-detail main-container">
+                <!-- left -->
+                <div id="content" class="main-container-left">
+                    <article class="post i-card">
+                        <h2 class="post-title">
+                            LeetCode-1201. 丑数 III
+                        </h2>
+                        <div class="post-info">
+                            <time class="post-time">2023-09-25</time>
+                            
+                                <a href="https://freephenix.github.io/G94PLmc-r/" class="post-tag i-tag
+                            i-tag-other_4">
+                            #丑数
+                        </a>
+                                
+                                <a href="https://freephenix.github.io/YWFpnf3Gl/" class="post-tag i-tag
+                            i-tag-banana">
+                            #刷题
+                        </a>
+                                
+                                <a href="https://freephenix.github.io/70TrDOWqgi/" class="post-tag i-tag
+                            i-tag-warning">
+                            #面试
+                        </a>
+                                
+                                <a href="https://freephenix.github.io/go/" class="post-tag i-tag
+                            i-tag-info">
+                            #Go
+                        </a>
+                                
+                                <a href="https://freephenix.github.io/k1NaSbOoC/" class="post-tag i-tag
+                            i-tag-warning">
+                            #LeetCode
+                        </a>
+                                
+                                <a href="https://freephenix.github.io/WucazjDbn/" class="post-tag i-tag
+                            i-tag-other_3">
+                            #算法
+                        </a>
+                                
+                        </div>
+                        
+                            <div class="post-feature-image" style="background-image: url('https://freephenix.github.io//post-images/5CpKzUopE.jpeg')"></div>
+                            
+                                <div class="post-content">
+                                    <p>刷题使我快乐，满脸开心.jpg</p>
+<ul>
+<li>来源：力扣（LeetCode）</li>
+<li>链接：https://leetcode.cn/problems/ugly-number-iii/</li>
+<li>著作权归领扣网络所有。商业转载请联系官方授权，非商业转载请注明出处。</li>
+</ul>
+<!-- more -->
+<h1 id="题目">题目</h1>
+<p>给你四个整数：<code>n</code> 、<code>a</code> 、<code>b</code> 、<code>c</code> ，请你设计一个算法来找出第 <code>n</code> 个丑数。<br>
+丑数是可以被 <code>a</code> 或 <code>b</code> 或 <code>c</code> 整除的 <code>正整数</code> 。</p>
+<p>示例 1：</p>
+<pre><code>输入：n = 3, a = 2, b = 3, c = 5
+输出：4
+解释：丑数序列为 2, 3, 4, 5, 6, 8, 9, 10... 其中第 3 个是 4。
+</code></pre>
+<p>示例 2：</p>
+<pre><code>输入：n = 4, a = 2, b = 3, c = 4
+输出：6
+解释：丑数序列为 2, 3, 4, 6, 8, 9, 10, 12... 其中第 4 个是 6。
+</code></pre>
+<p>示例 3：</p>
+<pre><code>输入：n = 5, a = 2, b = 11, c = 13
+输出：10
+解释：丑数序列为 2, 4, 6, 8, 10, 11, 12, 13... 其中第 5 个是 10。
+</code></pre>
+<p>示例 4：</p>
+<pre><code>输入：n = 1000000000, a = 2, b = 217983653, c = 336916467
+输出：1999999984
+</code></pre>
+<p>提示：<br>
+<code>1 &lt;= n, a, b, c &lt;= 10^9</code><br>
+<code>1 &lt;= a * b * c &lt;= 10^18</code><br>
+<code>本题结果在 [1, 2 * 10^9] 的范围内</code></p>
+<h1 id="思路">思路</h1>
+<p>这道题看似跟前面两道丑数题大差不差，但其实因为此题中，丑数是可以被<code>a</code> 、<code>b</code> 、<code>c</code>整除，而不是<strong>仅能</strong>被<code>a</code> 、<code>b</code> 、<code>c</code>整除，导致了其实跟强两道题相去略远，况且题中其实有个隐含条件，如果还按照队列方式一个个找出第<code>n</code>个丑数，会OOM，所以此题需要转换思路。</p>
+<p>解题思路如下<br>
+1、首先，就是丑数是可以被<code>a</code> 、<code>b</code> 、<code>c</code>整除的数字，所以对于一个数字来说，小于等于此数字的丑数个数是可以被计算出来的。这里用到的是<code>容斥定理</code>。</p>
+<pre><code>（A∪B∪C = A+B+C - A∩B - B∩C - C∩A + A∩B∩C）
+</code></pre>
+<p>即：<br>
+丑数个数 = 能被<code>a</code>分别整除的数字个数 + 能被<code>b</code>分别整除的数字个数 + 能被<code>c</code>分别整除的数字个数 - 能被<code>a</code>和<code>b</code>都整除的数字个数 - 能被<code>a</code>和<code>c</code>都整除的数字个数 - 能被<code>b</code>和<code>c</code>都整除的数字个数 + 能被<code>a</code>和<code>b</code>和<code>c</code>都整除的数字个数</p>
+<p>直观图如下：<br>
+<img src="https://freephenix.github.io//post-images/1695656058499.png" alt="" loading="lazy"></p>
+<p>2、其次，当得知丑数可以被计算出来之后，我们由之前的队列思维，可以小于等于某一个数字的丑数个数肯定跟这个数字的大小是正相关的，所以就可以通过二分法来逐步确认第<code>n</code>个丑数是哪个数字</p>
+<p>剩下的就是容斥定理的带入求解方式了，这里会用到的就是，最大公约数求法:</p>
+<pre><code>func gcm(a, b int) int {
+	for a != 0 {
+		a, b = b%a, a
+	}
+	return b
+}
+</code></pre>
+<p>以及最小公倍数求法，如此就可以求解给定数字内，同时被多个因数整除的数字个数了</p>
+<pre><code>func lcm(a, b int) int {
+	return a * b / gcm(a, b)
+}
+</code></pre>
+<h1 id="代码">代码</h1>
+<pre><code class="language-golang">func nthUglyNumber(n int, a int, b int, c int) int {
+
+	lcm_ab, lcm_bc, lcm_ac := lcm(a, b), lcm(b, c), lcm(a, c)
+	lcm_abc := lcm(a, lcm_bc)
+
+	floor, ceil := 0, min(min(a, b), c) * n
+	for floor &lt;= ceil {
+		mid := (floor + ceil) / 2
+		num := mid/a + mid/b + mid/c - mid/lcm_ab - mid/lcm_bc - mid/lcm_ac + mid/lcm_abc
+		if num == n {
+			if mid%a == 0 || mid%b == 0 || mid%c == 0 {
+				return mid
+			} else {
+				ceil = mid - 1
+			}
+		} else if num &gt; n {
+			ceil = mid - 1
+		} else {
+			floor = mid + 1
+		}
+	}
+	return floor
+}
+
+func lcm(a, b int) int {
+	return a * b / gcm(a, b)
+}
+
+func gcm(a, b int) int {
+	for a != 0 {
+		a, b = b%a, a
+	}
+	return b
+}
+
+func min(a, b int) int {
+	if a &lt; b {
+		return a
+	}
+	return b
+}
+</code></pre>
+
+                                </div>
+                    </article>
+                    <!--  -->
+                    
+                        <div class="next-post">
+                            <div class="next">下一篇</div>
+                            <a href="https://freephenix.github.io/_rWYoINku/">
+                                <h3 class="post-title">
+                                    LeetCode-264. 丑数 II
+                                </h3>
+                            </a>
+                        </div>
+                        
+                            <div id="disqus_thread"></div>
+                            <div id="gitalk-container"></div>
+                </div>
+                <!-- middle -->
+                <div class="main-container-middle"></div>
+                <!-- right -->
+                <div id="sidebar" class="main-container-right">
+                    
+                        <!-- toc -->
+                        
+    <div class="toc-card i-card ">
+        <div class="toc-title i-card-title">目录</div>
+        <div class="toc-content">
+            <ul class="markdownIt-TOC">
+<li><a href="#%E9%A2%98%E7%9B%AE">题目</a></li>
+<li><a href="#%E6%80%9D%E8%B7%AF">思路</a></li>
+<li><a href="#%E4%BB%A3%E7%A0%81">代码</a></li>
+</ul>
+
+        </div>
+        <script>
+            function locateCatelogList() {
+                /*获取文章目录集合,可通过:header过滤器*/
+                var alis = $('.post-content :header');
+                /*获取侧边栏目录列表集合**/
+                var sidebar_alis = $('.markdownIt-TOC a');
+                /*获取滚动条到顶部的距离*/
+                var scroll_height = $(window).scrollTop();
+                for (var i = 0; i < alis.length; i++) {
+                    /*获取锚点集合中的元素分别到顶点的距离*/
+                    var a_height = $(alis[i]).offset().top;
+                    if (a_height < scroll_height) {
+                        /*高亮显示*/
+                        sidebar_alis.removeClass('on');
+                        $(sidebar_alis[i]).addClass('on');
+                    }
+                }
+            }
+            $(function() {
+                /*绑定滚动事件 */
+                $(window).bind('scroll', locateCatelogList);
+            });
+        </script>
+    </div>
+    
+                            
+
+                </div>
+
+
+
+
+            </div>
+
+
+            <div class="site-footer">
+  Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a> | 
+  <a class="rss" href="https://freephenix.github.io//atom.xml" target="_blank">RSS</a>
+</div>
+
+<script>
+  hljs.initHighlightingOnLoad()
+</script>
+
+
+    </div>
+    <script>
+        $('#sidebar').stickySidebar({
+            topSpacing: 80,
+            // bottomSpacing: 60
+        });
+    </script>
+    
+        
+            <script>
+    window.onload = function() {
+        var gitalk = new Gitalk({
+            clientID: '008503f8c8bca8787fbe',
+            clientSecret: '5f789f71e3288ff1866d17523348881053068eb4',
+            repo: 'freephenix.github.io',
+            owner: 'freephenix',
+            admin: ['freephenix'],
+            id: (location.pathname).substring(0, 49), // Ensure uniqueness and length less than 50
+            distractionFreeMode: false // Facebook-like distraction free mode
+        })
+
+        gitalk.render('gitalk-container')
+    }
+</script>
+                
+
+                    
+                                
+</body>
+
+</html>

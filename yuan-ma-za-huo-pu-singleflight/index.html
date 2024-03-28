@@ -1,0 +1,417 @@
+<html>
+
+<head>
+    <meta charset="utf-8" />
+<meta name="description" content="" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>
+    源码杂货铺：singleflight | 半亩房顶
+</title>
+<link rel="shortcut icon" href="https://freephenix.github.io//favicon.ico?v=1711612618200">
+<!-- <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous"> -->
+<link href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+<link rel="stylesheet" href="https://freephenix.github.io//styles/main.css">
+<!-- js -->
+<script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.min.js"></script>
+<script src="https://freephenix.github.io//media/js/jquery.sticky-sidebar.min.js"></script>
+<script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
+<script src="https://cdn.bootcss.com/moment.js/2.23.0/moment.min.js"></script>
+
+
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-147240912-1"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+
+        function gtag() {
+            dataLayer.push(arguments);
+        }
+        gtag('js', new Date());
+
+        gtag('config', 'UA-147240912-1');
+    </script>
+    
+        
+            
+                <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+                <script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+                
+
+                    
+                            
+</head>
+
+<body>
+    <div class="main">
+        <div class="header">
+    <div class="nav">
+        <div class="logo">
+            <a href="https://freephenix.github.io/">
+                <img class="avatar" src="https://freephenix.github.io//images/avatar.png?v=1711612618200" alt="">
+            </a>
+            <div class="site-title">
+                <h1>
+                    半亩房顶
+                </h1>
+            </div>
+        </div>
+        <span class="menu-btn fa fa-align-justify"></span>
+        <div class="menu-container">
+            <ul>
+                
+                    
+                            <li>
+                                <a href="/" class="menu">
+                                    首页
+                                </a>
+                            </li>
+                            
+                                
+                    
+                            <li>
+                                <a href="/archives" class="menu">
+                                    归档
+                                </a>
+                            </li>
+                            
+                                
+                    
+                            <li>
+                                <a href="/tags" class="menu">
+                                    标签
+                                </a>
+                            </li>
+                            
+                                
+                    
+                            <li>
+                                <a href="https://freephenix.github.io//post/guan-yu-ban-mu-fang-ding/" class="menu">
+                                    关于
+                                </a>
+                            </li>
+                            
+                                
+            </ul>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function() {
+        $(".menu-btn").click(function() {
+            $(".menu-container").slideToggle();
+        });
+        $(window).resize(function() {
+
+            if (window.matchMedia('(min-width: 960px)').matches) {
+                $(".menu-container").css('display', 'block')
+            } else {
+                $(".menu-container").css('display', 'none')
+            }
+
+        });
+    });
+</script>
+
+            <div id="main-content" class="post-detail main-container">
+                <!-- left -->
+                <div id="content" class="main-container-left">
+                    <article class="post i-card">
+                        <h2 class="post-title">
+                            源码杂货铺：singleflight
+                        </h2>
+                        <div class="post-info">
+                            <time class="post-time">2021-01-21</time>
+                            
+                                <a href="https://freephenix.github.io/go/" class="post-tag i-tag
+                            i-tag-other_2">
+                            #Go
+                        </a>
+                                
+                                <a href="https://freephenix.github.io/k_l-BPxc0/" class="post-tag i-tag
+                            i-tag-success">
+                            #源码
+                        </a>
+                                
+                                <a href="https://freephenix.github.io/mKJdR76q2/" class="post-tag i-tag
+                            i-tag-other_4">
+                            #并发
+                        </a>
+                                
+                        </div>
+                        
+                            <div class="post-feature-image" style="background-image: url('https://freephenix.github.io//post-images/yuan-ma-za-huo-pu-singleflight.jpg')"></div>
+                            
+                                <div class="post-content">
+                                    <p>当缓存被击穿，DB不被压垮的一个解法</p>
+<!-- more -->
+<h1 id="简介">简介</h1>
+<p>这一切都源于一个大接口的优化，当并发升高，很多缓存有可能同时失效时，如何防止DB被打挂，尽可能的保护？重复的请求，重复的资源，如果节约成本？<br>
+这一切，有一个解法 -- singleflight</p>
+<h1 id="结构体">结构体</h1>
+<pre><code>// call is an in-flight or completed singleflight.Do call
+// call 表示一个正在执行的或已完成的函数调用，存储调用的接口、报错一些标记等等，
+type call struct {
+    // 可以看到，singleflight实现中用到了WaitGroup
+	wg sync.WaitGroup
+
+	// These fields are written once before the WaitGroup is done
+	// and are only read after the WaitGroup is done.
+    // 记录结果，在WaitGroup完成之前，只会写入一次，重点在此了
+	val interface{}
+	err error
+
+	// forgotten indicates whether Forget was called with this call's key
+	// while the call was still in flight.
+    // 用来标识执行完成之后结果立马删除还是保留在singleflight中
+	forgotten bool
+
+	// These fields are read and written with the singleflight
+	// mutex held before the WaitGroup is done, and are read but
+	// not written after the WaitGroup is done.
+    // 这个字段记录执行次数，更新时机是发起请求，waitGroup执行完成‘之前’
+	dups  int
+    // 用来记录DoChan中需要返回的数据
+	chans []chan&lt;- Result
+}
+
+// Group represents a class of work and forms a namespace in
+// which units of work can be executed with duplicate suppression.
+// 用来记录已经存在的对某key的请求和对应的实际请求函数（call）的映射
+type Group struct {
+	mu sync.Mutex       // protects m 加锁保护m
+	m  map[string]*call // lazily initialized  懒加载
+}
+
+// Result holds the results of Do, so they can be passed
+// on a channel.
+// 记录结果，结果值Val，结果报错Err，结果是实际请求还是分享的返回
+type Result struct {
+	Val    interface{}
+	Err    error
+	Shared bool
+}
+</code></pre>
+<h1 id="方法">方法</h1>
+<h2 id="do">Do</h2>
+<pre><code>// Do executes and returns the results of the given function, making
+// sure that only one execution is in-flight for a given key at a
+// time. If a duplicate comes in, the duplicate caller waits for the
+// original to complete and receives the same results.
+// The return value shared indicates whether v was given to multiple callers.
+// Do执行并返回给定函数的结果，确保在给定时间仅对给定键进行一次执行。
+// 如果出现重复，则重复的调用者将等待原始请求接收到相同的结果。
+// 共享的返回值指示是否将v分配给多个调用者。
+func (g *Group) Do(key string, fn func() (interface{}, error)) (v interface{}, err error, shared bool) {
+    // 加锁，主要防止请求重复记录，并非加锁去做请求
+	g.mu.Lock()
+	if g.m == nil {
+		g.m = make(map[string]*call)
+	}
+    // 校验是否已经完成请求，有则直接返回，shared肯定为true
+	if c, ok := g.m[key]; ok {
+		c.dups++
+		g.mu.Unlock()
+		c.wg.Wait()
+		return c.val, c.err, true
+	}
+    // 校验是新的请求，waitGroup加1，存储，解锁
+    // 注意，只有真正发起请求时候，才会执行waitGroup加1
+	c := new(call)
+	c.wg.Add(1)
+	g.m[key] = c
+	g.mu.Unlock()
+    // 实际去请求，返回结果，此时
+	g.doCall(c, key, fn)
+    // 此时dups应该是恒定为0的？没想明白为什么需要判断，手动执行过Forget时？
+	return c.val, c.err, c.dups &gt; 0
+}
+</code></pre>
+<h2 id="dochan">DoChan</h2>
+<pre><code>// DoChan is like Do but returns a channel that will receive the
+// results when they are ready.
+// 整体上与Do函数很类似，只是返回结果变为了chan
+func (g *Group) DoChan(key string, fn func() (interface{}, error)) &lt;-chan Result {
+	ch := make(chan Result, 1)
+	g.mu.Lock()
+	if g.m == nil {
+		g.m = make(map[string]*call)
+	}
+	if c, ok := g.m[key]; ok {
+		c.dups++
+		c.chans = append(c.chans, ch)
+		g.mu.Unlock()
+		return ch
+	}
+	c := &amp;call{chans: []chan&lt;- Result{ch}}
+	c.wg.Add(1)
+	g.m[key] = c
+	g.mu.Unlock()
+
+	go g.doCall(c, key, fn)
+
+	return ch
+}
+</code></pre>
+<h2 id="docall">doCall</h2>
+<pre><code>// doCall handles the single call for a key.
+// 实际执行函数
+func (g *Group) doCall(c *call, key string, fn func() (interface{}, error)) {
+	c.val, c.err = fn()
+	c.wg.Done()
+    // 请求完结果，置好waitGroup状态 Done，加锁开始处理后续逻辑
+	g.mu.Lock()
+    // 默认forgotten为false，会去删除请求好的状态，所以单飞只控制了同一时间相同请求
+	if !c.forgotten {
+		delete(g.m, key)
+	}
+    // 将chans中的结果发出去
+	for _, ch := range c.chans {
+		ch &lt;- Result{c.val, c.err, c.dups &gt; 0}
+	}
+	g.mu.Unlock()
+}
+</code></pre>
+<h2 id="forget">Forget</h2>
+<pre><code>// Forget tells the singleflight to forget about a key.  Future calls
+// to Do for this key will call the function rather than waiting for
+// an earlier call to complete.
+func (g *Group) Forget(key string) {
+	g.mu.Lock()
+    // 防止重复删除
+	if c, ok := g.m[key]; ok {
+		c.forgotten = true
+	}
+    // 删除后，同样的请求，会同时去真实的发起请求
+	delete(g.m, key)
+	g.mu.Unlock()
+}
+</code></pre>
+<h1 id="总结">总结</h1>
+<p>并发是一个双刃剑，节约了时间，但是也带来了很多的问题，不断学习，不断进步，自己要学习的还有很多，共勉！💪💪<br>
+希望能用好并发这个工具，解决更多的问题。</p>
+<h1 id="引用">引用</h1>
+<p><a href="https://blog.csdn.net/yang198907/article/details/108690876">深入理解singleflight</a><br>
+<a href="https://www.codeleading.com/article/591682326/">源码分析-singleflight</a><br>
+<a href="https://www.jianshu.com/p/ddaec84de653">singleflight源码注释</a><br>
+<a href="https://github.com/cch123/golang-notes/blob/master/sync.md">曹大golang笔记 - sync包</a><br>
+<a href="https://blog.csdn.net/weixin_43183475/article/details/105093355">singleflight 防缓存击穿 使用及原理</a></p>
+
+                                </div>
+                    </article>
+                    <!--  -->
+                    
+                        <div class="next-post">
+                            <div class="next">下一篇</div>
+                            <a href="https://freephenix.github.io/yuan-ma-za-huo-pu-syncwaitgroup/">
+                                <h3 class="post-title">
+                                    源码杂货铺：sync.WaitGroup
+                                </h3>
+                            </a>
+                        </div>
+                        
+                            <div id="disqus_thread"></div>
+                            <div id="gitalk-container"></div>
+                </div>
+                <!-- middle -->
+                <div class="main-container-middle"></div>
+                <!-- right -->
+                <div id="sidebar" class="main-container-right">
+                    
+                        <!-- toc -->
+                        
+    <div class="toc-card i-card ">
+        <div class="toc-title i-card-title">目录</div>
+        <div class="toc-content">
+            <ul class="markdownIt-TOC">
+<li><a href="#%E7%AE%80%E4%BB%8B">简介</a></li>
+<li><a href="#%E7%BB%93%E6%9E%84%E4%BD%93">结构体</a></li>
+<li><a href="#%E6%96%B9%E6%B3%95">方法</a>
+<ul>
+<li><a href="#do">Do</a></li>
+<li><a href="#dochan">DoChan</a></li>
+<li><a href="#docall">doCall</a></li>
+<li><a href="#forget">Forget</a></li>
+</ul>
+</li>
+<li><a href="#%E6%80%BB%E7%BB%93">总结</a></li>
+<li><a href="#%E5%BC%95%E7%94%A8">引用</a></li>
+</ul>
+
+        </div>
+        <script>
+            function locateCatelogList() {
+                /*获取文章目录集合,可通过:header过滤器*/
+                var alis = $('.post-content :header');
+                /*获取侧边栏目录列表集合**/
+                var sidebar_alis = $('.markdownIt-TOC a');
+                /*获取滚动条到顶部的距离*/
+                var scroll_height = $(window).scrollTop();
+                for (var i = 0; i < alis.length; i++) {
+                    /*获取锚点集合中的元素分别到顶点的距离*/
+                    var a_height = $(alis[i]).offset().top;
+                    if (a_height < scroll_height) {
+                        /*高亮显示*/
+                        sidebar_alis.removeClass('on');
+                        $(sidebar_alis[i]).addClass('on');
+                    }
+                }
+            }
+            $(function() {
+                /*绑定滚动事件 */
+                $(window).bind('scroll', locateCatelogList);
+            });
+        </script>
+    </div>
+    
+                            
+
+                </div>
+
+
+
+
+            </div>
+
+
+            <div class="site-footer">
+  Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a> | 
+  <a class="rss" href="https://freephenix.github.io//atom.xml" target="_blank">RSS</a>
+</div>
+
+<script>
+  hljs.initHighlightingOnLoad()
+</script>
+
+
+    </div>
+    <script>
+        $('#sidebar').stickySidebar({
+            topSpacing: 80,
+            // bottomSpacing: 60
+        });
+    </script>
+    
+        
+            <script>
+    window.onload = function() {
+        var gitalk = new Gitalk({
+            clientID: '008503f8c8bca8787fbe',
+            clientSecret: '5f789f71e3288ff1866d17523348881053068eb4',
+            repo: 'freephenix.github.io',
+            owner: 'freephenix',
+            admin: ['freephenix'],
+            id: (location.pathname).substring(0, 49), // Ensure uniqueness and length less than 50
+            distractionFreeMode: false // Facebook-like distraction free mode
+        })
+
+        gitalk.render('gitalk-container')
+    }
+</script>
+                
+
+                    
+                                
+</body>
+
+</html>
