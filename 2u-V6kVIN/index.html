@@ -1,0 +1,432 @@
+<html>
+
+<head>
+    <meta charset="utf-8" />
+<meta name="description" content="" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>
+    LeetCode-23. 合并 K 个升序链表 | 半亩房顶
+</title>
+<link rel="shortcut icon" href="https://freephenix.github.io//favicon.ico?v=1713840769430">
+<!-- <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous"> -->
+<link href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+<link rel="stylesheet" href="https://freephenix.github.io//styles/main.css">
+<!-- js -->
+<script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.min.js"></script>
+<script src="https://freephenix.github.io//media/js/jquery.sticky-sidebar.min.js"></script>
+<script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
+<script src="https://cdn.bootcss.com/moment.js/2.23.0/moment.min.js"></script>
+
+
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-147240912-1"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+
+        function gtag() {
+            dataLayer.push(arguments);
+        }
+        gtag('js', new Date());
+
+        gtag('config', 'UA-147240912-1');
+    </script>
+    
+        
+            
+                <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+                <script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+                
+
+                    
+                            
+</head>
+
+<body>
+    <div class="main">
+        <div class="header">
+    <div class="nav">
+        <div class="logo">
+            <a href="https://freephenix.github.io/">
+                <img class="avatar" src="https://freephenix.github.io//images/avatar.png?v=1713840769430" alt="">
+            </a>
+            <div class="site-title">
+                <h1>
+                    半亩房顶
+                </h1>
+            </div>
+        </div>
+        <span class="menu-btn fa fa-align-justify"></span>
+        <div class="menu-container">
+            <ul>
+                
+                    
+                            <li>
+                                <a href="/" class="menu">
+                                    首页
+                                </a>
+                            </li>
+                            
+                                
+                    
+                            <li>
+                                <a href="/archives" class="menu">
+                                    归档
+                                </a>
+                            </li>
+                            
+                                
+                    
+                            <li>
+                                <a href="/tags" class="menu">
+                                    标签
+                                </a>
+                            </li>
+                            
+                                
+                    
+                            <li>
+                                <a href="https://freephenix.github.io//post/guan-yu-ban-mu-fang-ding/" class="menu">
+                                    关于
+                                </a>
+                            </li>
+                            
+                                
+            </ul>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function() {
+        $(".menu-btn").click(function() {
+            $(".menu-container").slideToggle();
+        });
+        $(window).resize(function() {
+
+            if (window.matchMedia('(min-width: 960px)').matches) {
+                $(".menu-container").css('display', 'block')
+            } else {
+                $(".menu-container").css('display', 'none')
+            }
+
+        });
+    });
+</script>
+
+            <div id="main-content" class="post-detail main-container">
+                <!-- left -->
+                <div id="content" class="main-container-left">
+                    <article class="post i-card">
+                        <h2 class="post-title">
+                            LeetCode-23. 合并 K 个升序链表
+                        </h2>
+                        <div class="post-info">
+                            <time class="post-time">2023-11-07</time>
+                            
+                                <a href="https://freephenix.github.io/V1DFbmyKM/" class="post-tag i-tag
+                            i-tag-primary">
+                            #链表
+                        </a>
+                                
+                                <a href="https://freephenix.github.io/tgZVqiL_U/" class="post-tag i-tag
+                            i-tag-other_3">
+                            #分治法
+                        </a>
+                                
+                                <a href="https://freephenix.github.io/j61NF1ec8/" class="post-tag i-tag
+                            i-tag-other_2">
+                            #优先队列
+                        </a>
+                                
+                                <a href="https://freephenix.github.io/x0-DpCpVh/" class="post-tag i-tag
+                            i-tag-other_2">
+                            #堆排序
+                        </a>
+                                
+                                <a href="https://freephenix.github.io/YWFpnf3Gl/" class="post-tag i-tag
+                            i-tag-">
+                            #刷题
+                        </a>
+                                
+                                <a href="https://freephenix.github.io/70TrDOWqgi/" class="post-tag i-tag
+                            i-tag-primary">
+                            #面试
+                        </a>
+                                
+                                <a href="https://freephenix.github.io/go/" class="post-tag i-tag
+                            i-tag-error">
+                            #Go
+                        </a>
+                                
+                                <a href="https://freephenix.github.io/k1NaSbOoC/" class="post-tag i-tag
+                            i-tag-warning">
+                            #LeetCode
+                        </a>
+                                
+                                <a href="https://freephenix.github.io/WucazjDbn/" class="post-tag i-tag
+                            i-tag-info">
+                            #算法
+                        </a>
+                                
+                        </div>
+                        
+                            <div class="post-feature-image" style="background-image: url('https://freephenix.github.io//post-images/2u-V6kVIN.jpeg')"></div>
+                            
+                                <div class="post-content">
+                                    <p>刷题使我快乐，满脸开心.jpg<br>
+谢谢大家的支持！点个在看再走哟~</p>
+<ul>
+<li>来源：力扣（LeetCode）</li>
+<li>链接：https://leetcode.cn/problems/merge-k-sorted-lists/</li>
+<li>著作权归领扣网络所有。商业转载请联系官方授权，非商业转载请注明出处。</li>
+</ul>
+<!-- more -->
+<h1 id="题目">题目</h1>
+<p>给你一个链表数组，每个链表都<code>已经按升序排列</code>。<br>
+请你将所有链表合并到一个升序链表中，返回合并后的链表。</p>
+<p>示例 1：</p>
+<pre><code>输入：lists = [[1,4,5],[1,3,4],[2,6]]
+输出：[1,1,2,3,4,4,5,6]
+解释：链表数组如下：
+[
+  1-&gt;4-&gt;5,
+  1-&gt;3-&gt;4,
+  2-&gt;6
+]
+将它们合并到一个有序链表中得到。
+1-&gt;1-&gt;2-&gt;3-&gt;4-&gt;4-&gt;5-&gt;6
+</code></pre>
+<p>示例 2：</p>
+<pre><code>输入：lists = []
+输出：[]
+</code></pre>
+<p>示例 3：</p>
+<pre><code>输入：lists = [[]]
+输出：[]
+</code></pre>
+<p>提示：</p>
+<ul>
+<li><code>k == lists.length</code></li>
+<li><code>0 &lt;= k &lt;= 10^4</code></li>
+<li><code>0 &lt;= lists[i].length &lt;= 500</code></li>
+<li><code>-10^4 &lt;= lists[i][j] &lt;= 10^4</code></li>
+<li><code>lists[i]</code> 按 <code>升序</code> 排列</li>
+<li><code>lists[i].length</code> 的总和不超过 <code>10^4</code></li>
+</ul>
+<h1 id="思路">思路</h1>
+<p>这道题虽然标的是困难，但是其实思路上是比较直接的，属于是对于数据结构和基础算法思维的应用的题目。</p>
+<p>首先我们先来看基本的思路：<br>
+1、我们可能暂时还没有处理过合并k个链表，但是我们肯定很容易想象合并两个链表，那么只是把两个链表的对比横向扩展下：<code>同时比较k个链表的头结点，加入结果链表</code>。当然，还有后续节点则需要再次重复这个过程，直到所有链表节点都加入为止。</p>
+<p>这个思路没有问题，剩下的就是考虑<code>降低时间复杂度</code>了。对于这种场景的话，比较推荐的就是<code>堆排序</code>了。(刷题解会看到<code>优先队列</code>的思路，其实是一个道理)</p>
+<p>2、继续沿着合并两个链表的思路去想，<code>把k个链表的合并拆分成一个又一个的两个链表合并</code>即可。同样的需要考虑时间复杂度的优化，那就是<code>采用分治的方式</code>，两两合并，最终合并成为结果。</p>
+<h1 id="代码">代码</h1>
+<pre><code class="language-golang">/**
+ * Definition for singly-linked list.
+ * type ListNode struct {
+ *     Val int
+ *     Next *ListNode
+ * }
+ */
+
+// 分治方法
+func mergeKLists(lists []*ListNode) *ListNode {
+    if len(lists) &lt;= 0 {
+        return nil
+    }
+    return merge(lists, 0, len(lists)-1)
+}
+
+func merge(lists []*ListNode, left, right int) *ListNode {
+    if left == right {
+        return lists[left]
+    }
+    mid := (left + right) / 2
+    return mergeTwo(merge(lists, left, mid), merge(lists, mid + 1, right))
+}
+
+func mergeTwo(a, b *ListNode) *ListNode {
+    if a == nil {
+        return b
+    }
+    if b == nil {
+        return a
+    }
+    veryHead := &amp;ListNode{}
+    head := veryHead
+    for a != nil || b != nil {
+        if a == nil {
+            head.Next = b
+            b = b.Next
+        } else if b == nil {
+            head.Next = a
+            a = a.Next
+        } else if a.Val &gt; b.Val {
+            head.Next = b
+            b = b.Next
+        } else {
+            head.Next = a
+            a = a.Next
+        }
+        head = head.Next
+    }
+    return veryHead.Next
+}
+
+// 最小堆方法
+func mergeKLists(lists []*ListNode) *ListNode {
+	h := hp{}
+	for _, head := range lists {
+		if head != nil {
+			h = append(h, head)
+		}
+	}
+	// 堆化
+	heap.Init(&amp;h)
+
+	veryHead := &amp;ListNode{}
+	now := veryHead
+	for len(h) &gt; 0 {
+		// 初始化之后，堆顶为最小值
+		node := heap.Pop(&amp;h).(*ListNode)
+		if node.Next != nil {
+			// 如果有下个节点，继续入堆，会自动调整，保持堆顶为最小
+			heap.Push(&amp;h, node.Next)
+		}
+		now.Next = node
+		now = now.Next
+	}
+	return veryHead.Next
+}
+
+type hp []*ListNode
+
+func (h hp) Len() int {
+	return len(h)
+}
+func (h hp) Less(i, j int) bool {
+	return h[i].Val &lt; h[j].Val
+}
+func (h hp) Swap(i, j int) {
+	h[i], h[j] = h[j], h[i]
+}
+func (h *hp) Push(v interface{}) {
+	*h = append(*h, v.(*ListNode))
+}
+func (h *hp) Pop() interface{} {
+	a := *h
+	v := a[len(a)-1]
+	*h = a[:len(a)-1]
+	return v
+}
+</code></pre>
+<p>看到这里了，点个赞点个在看呗！~ 多谢啦！~</p>
+
+                                </div>
+                    </article>
+                    <!--  -->
+                    
+                        <div class="next-post">
+                            <div class="next">下一篇</div>
+                            <a href="https://freephenix.github.io/f974kCei9/">
+                                <h3 class="post-title">
+                                    LeetCode-92. 反转链表 II
+                                </h3>
+                            </a>
+                        </div>
+                        
+                            <div id="disqus_thread"></div>
+                            <div id="gitalk-container"></div>
+                </div>
+                <!-- middle -->
+                <div class="main-container-middle"></div>
+                <!-- right -->
+                <div id="sidebar" class="main-container-right">
+                    
+                        <!-- toc -->
+                        
+    <div class="toc-card i-card ">
+        <div class="toc-title i-card-title">目录</div>
+        <div class="toc-content">
+            <ul class="markdownIt-TOC">
+<li><a href="#%E9%A2%98%E7%9B%AE">题目</a></li>
+<li><a href="#%E6%80%9D%E8%B7%AF">思路</a></li>
+<li><a href="#%E4%BB%A3%E7%A0%81">代码</a></li>
+</ul>
+
+        </div>
+        <script>
+            function locateCatelogList() {
+                /*获取文章目录集合,可通过:header过滤器*/
+                var alis = $('.post-content :header');
+                /*获取侧边栏目录列表集合**/
+                var sidebar_alis = $('.markdownIt-TOC a');
+                /*获取滚动条到顶部的距离*/
+                var scroll_height = $(window).scrollTop();
+                for (var i = 0; i < alis.length; i++) {
+                    /*获取锚点集合中的元素分别到顶点的距离*/
+                    var a_height = $(alis[i]).offset().top;
+                    if (a_height < scroll_height) {
+                        /*高亮显示*/
+                        sidebar_alis.removeClass('on');
+                        $(sidebar_alis[i]).addClass('on');
+                    }
+                }
+            }
+            $(function() {
+                /*绑定滚动事件 */
+                $(window).bind('scroll', locateCatelogList);
+            });
+        </script>
+    </div>
+    
+                            
+
+                </div>
+
+
+
+
+            </div>
+
+
+            <div class="site-footer">
+  Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a> | 
+  <a class="rss" href="https://freephenix.github.io//atom.xml" target="_blank">RSS</a>
+</div>
+
+<script>
+  hljs.initHighlightingOnLoad()
+</script>
+
+
+    </div>
+    <script>
+        $('#sidebar').stickySidebar({
+            topSpacing: 80,
+            // bottomSpacing: 60
+        });
+    </script>
+    
+        
+            <script>
+    window.onload = function() {
+        var gitalk = new Gitalk({
+            clientID: '008503f8c8bca8787fbe',
+            clientSecret: '5f789f71e3288ff1866d17523348881053068eb4',
+            repo: 'freephenix.github.io',
+            owner: 'freephenix',
+            admin: ['freephenix'],
+            id: (location.pathname).substring(0, 49), // Ensure uniqueness and length less than 50
+            distractionFreeMode: false // Facebook-like distraction free mode
+        })
+
+        gitalk.render('gitalk-container')
+    }
+</script>
+                
+
+                    
+                                
+</body>
+
+</html>

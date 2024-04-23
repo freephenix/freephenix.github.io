@@ -1,0 +1,378 @@
+<html>
+
+<head>
+    <meta charset="utf-8" />
+<meta name="description" content="" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>
+    LeetCode-LCR 170. 交易逆序对的总数 | 半亩房顶
+</title>
+<link rel="shortcut icon" href="https://freephenix.github.io//favicon.ico?v=1713840769430">
+<!-- <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous"> -->
+<link href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+<link rel="stylesheet" href="https://freephenix.github.io//styles/main.css">
+<!-- js -->
+<script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.min.js"></script>
+<script src="https://freephenix.github.io//media/js/jquery.sticky-sidebar.min.js"></script>
+<script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
+<script src="https://cdn.bootcss.com/moment.js/2.23.0/moment.min.js"></script>
+
+
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-147240912-1"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+
+        function gtag() {
+            dataLayer.push(arguments);
+        }
+        gtag('js', new Date());
+
+        gtag('config', 'UA-147240912-1');
+    </script>
+    
+        
+            
+                <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+                <script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+                
+
+                    
+                            
+</head>
+
+<body>
+    <div class="main">
+        <div class="header">
+    <div class="nav">
+        <div class="logo">
+            <a href="https://freephenix.github.io/">
+                <img class="avatar" src="https://freephenix.github.io//images/avatar.png?v=1713840769430" alt="">
+            </a>
+            <div class="site-title">
+                <h1>
+                    半亩房顶
+                </h1>
+            </div>
+        </div>
+        <span class="menu-btn fa fa-align-justify"></span>
+        <div class="menu-container">
+            <ul>
+                
+                    
+                            <li>
+                                <a href="/" class="menu">
+                                    首页
+                                </a>
+                            </li>
+                            
+                                
+                    
+                            <li>
+                                <a href="/archives" class="menu">
+                                    归档
+                                </a>
+                            </li>
+                            
+                                
+                    
+                            <li>
+                                <a href="/tags" class="menu">
+                                    标签
+                                </a>
+                            </li>
+                            
+                                
+                    
+                            <li>
+                                <a href="https://freephenix.github.io//post/guan-yu-ban-mu-fang-ding/" class="menu">
+                                    关于
+                                </a>
+                            </li>
+                            
+                                
+            </ul>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function() {
+        $(".menu-btn").click(function() {
+            $(".menu-container").slideToggle();
+        });
+        $(window).resize(function() {
+
+            if (window.matchMedia('(min-width: 960px)').matches) {
+                $(".menu-container").css('display', 'block')
+            } else {
+                $(".menu-container").css('display', 'none')
+            }
+
+        });
+    });
+</script>
+
+            <div id="main-content" class="post-detail main-container">
+                <!-- left -->
+                <div id="content" class="main-container-left">
+                    <article class="post i-card">
+                        <h2 class="post-title">
+                            LeetCode-LCR 170. 交易逆序对的总数
+                        </h2>
+                        <div class="post-info">
+                            <time class="post-time">2024-02-26</time>
+                            
+                                <a href="https://freephenix.github.io/1BEayfbMe/" class="post-tag i-tag
+                            i-tag-other_1">
+                            #归并
+                        </a>
+                                
+                                <a href="https://freephenix.github.io/FRqn1m2hg/" class="post-tag i-tag
+                            i-tag-other_1">
+                            #数组
+                        </a>
+                                
+                                <a href="https://freephenix.github.io/8spMJBknC/" class="post-tag i-tag
+                            i-tag-banana">
+                            #递归
+                        </a>
+                                
+                                <a href="https://freephenix.github.io/YWFpnf3Gl/" class="post-tag i-tag
+                            i-tag-other_4">
+                            #刷题
+                        </a>
+                                
+                                <a href="https://freephenix.github.io/70TrDOWqgi/" class="post-tag i-tag
+                            i-tag-other_4">
+                            #面试
+                        </a>
+                                
+                                <a href="https://freephenix.github.io/go/" class="post-tag i-tag
+                            i-tag-info">
+                            #Go
+                        </a>
+                                
+                                <a href="https://freephenix.github.io/k1NaSbOoC/" class="post-tag i-tag
+                            i-tag-success">
+                            #LeetCode
+                        </a>
+                                
+                                <a href="https://freephenix.github.io/WucazjDbn/" class="post-tag i-tag
+                            i-tag-banana">
+                            #算法
+                        </a>
+                                
+                        </div>
+                        
+                            <div class="post-feature-image" style="background-image: url('https://freephenix.github.io//post-images/oOz3be5SD.jpeg')"></div>
+                            
+                                <div class="post-content">
+                                    <p>刷题使我快乐，满脸开心.jpg</p>
+<ul>
+<li>来源：力扣（LeetCode）</li>
+<li>链接：https://leetcode.cn/problems/shu-zu-zhong-de-ni-xu-dui-lcof/</li>
+<li>著作权归领扣网络所有。商业转载请联系官方授权，非商业转载请注明出处。</li>
+</ul>
+<!-- more -->
+<h1 id="题目">题目</h1>
+<p>在股票交易中，如果<code>前一天的股价高于后一天的股价</code>，则可以认为存在一个<code>「交易逆序对」</code>。请设计一个程序，输入一段时间内的股票交易记录 <code>record</code>，返回其中存在的<code>「交易逆序对」</code>总数。</p>
+<p>示例 1:</p>
+<pre><code>输入：record = [9, 7, 5, 4, 6]
+输出：8
+解释：交易中的逆序对为 (9, 7), (9, 5), (9, 4), (9, 6), (7, 5), (7, 4), (7, 6), (5, 4)。
+</code></pre>
+<p>限制：</p>
+<ul>
+<li><code>0 &lt;= record.length &lt;= 50000</code></li>
+</ul>
+<h1 id="思路">思路</h1>
+<p>这道题可能很多人第一反应就是双循环。思路完全正确，只可惜测试用例会让这种思路超时。。。</p>
+<p>所以得换个新的思路：</p>
+<ul>
+<li>既然 <code>O(n^2)</code> 不行，然后 <code>O(n)</code> 显然不现实，那就试试 <code>O(n*logn)</code></li>
+<li>从 <code>O(n*logn)</code> 这个复杂度，联想到了分治思想</li>
+<li>尝试思考分治思想是否可行
+<ul>
+<li>直接分块处理肯定不可以</li>
+</ul>
+<blockquote>
+<p>前后不同块的数据间还需要产生判断和计入结果，不可单独处理某块数据</p>
+</blockquote>
+<ul>
+<li>归并是否可行？</li>
+</ul>
+<blockquote>
+<p>前后两块数据之间的结果计算可行，单块数据内部的结果值可以递归处理，思路可行</p>
+</blockquote>
+</li>
+<li>具体归并思路
+<ul>
+<li>递归深入，直到元素个数<code>为零</code>或者<code>仅1个</code>，这也就是递归的退出条件</li>
+<li>以升序数组为例，在归并进行中，两个指针<code>分别指向前后</code>两块的第一个元素，往后逐个遍历进行归并</li>
+<li>当发现<code>左边</code>元素比<code>右边</code>某个元素<code>大</code>时，那么就会有<code>左边元素及其之后的所有元素</code>都可以和<code>右边当前元素</code>形成一个逆序对，也就是可以计入结果了</li>
+<li>归并完成时，逆序对个数也就统计完毕了</li>
+</ul>
+</li>
+</ul>
+<p>思路差不多就是这样了，细节在注释~</p>
+<h1 id="代码">代码</h1>
+<pre><code class="language-golang">func reversePairs(record []int) int {
+    // fail fast
+	if len(record) &lt;= 1 {
+		return 0
+	}
+
+	var split func(i, j int) int
+	split = func(start, end int) int {
+        // 递归退出条件
+		if start &gt;= end {
+			return 0
+		}
+		mid := (end-start)/2 + start
+        // 收集深层的结果
+		count := split(start, mid) + split(mid+1, end)
+        // 暂存排序结果
+		var temp []int
+		i, j := start, mid+1
+		for i &lt;= mid &amp;&amp; j &lt;= end {
+            // 结果是升序排列
+            // 所以如果 左侧当前元素大于右侧当前元素，那么：
+            // 左侧当前元素及其后续元素都能形成一个逆序对
+			if record[i] &gt; record[j] {
+				count += mid - i + 1
+				temp = append(temp, record[j])
+				j++
+			} else {
+                // 右侧元素大无法形成逆序对，‘价值’榨干，抬走下一个
+				temp = append(temp, record[i])
+				i++
+			}
+		}
+        // 剩余右侧元素时，说明比左侧元素大，无法形成逆序对
+		for ; j &lt;= end; j++ {
+			temp = append(temp, record[j])
+		}
+        // 剩余左侧元素时，均能形成逆序对，但是之前计算时已经加过了，不用再加
+		for ; i &lt;= mid; i++ {
+			temp = append(temp, record[i])
+		}
+        // 将这两段归并为升序数组，交给上层处理
+		for z := start; z &lt;= end; z++ {
+			record[z] = temp[z-start]
+		}
+		return count
+	}
+	return split(0, len(record)-1)
+}
+</code></pre>
+
+                                </div>
+                    </article>
+                    <!--  -->
+                    
+                        <div class="next-post">
+                            <div class="next">下一篇</div>
+                            <a href="https://freephenix.github.io/F4yB2fcly/">
+                                <h3 class="post-title">
+                                    LeetCode-50. Pow(x, n)
+                                </h3>
+                            </a>
+                        </div>
+                        
+                            <div id="disqus_thread"></div>
+                            <div id="gitalk-container"></div>
+                </div>
+                <!-- middle -->
+                <div class="main-container-middle"></div>
+                <!-- right -->
+                <div id="sidebar" class="main-container-right">
+                    
+                        <!-- toc -->
+                        
+    <div class="toc-card i-card ">
+        <div class="toc-title i-card-title">目录</div>
+        <div class="toc-content">
+            <ul class="markdownIt-TOC">
+<li><a href="#%E9%A2%98%E7%9B%AE">题目</a></li>
+<li><a href="#%E6%80%9D%E8%B7%AF">思路</a></li>
+<li><a href="#%E4%BB%A3%E7%A0%81">代码</a></li>
+</ul>
+
+        </div>
+        <script>
+            function locateCatelogList() {
+                /*获取文章目录集合,可通过:header过滤器*/
+                var alis = $('.post-content :header');
+                /*获取侧边栏目录列表集合**/
+                var sidebar_alis = $('.markdownIt-TOC a');
+                /*获取滚动条到顶部的距离*/
+                var scroll_height = $(window).scrollTop();
+                for (var i = 0; i < alis.length; i++) {
+                    /*获取锚点集合中的元素分别到顶点的距离*/
+                    var a_height = $(alis[i]).offset().top;
+                    if (a_height < scroll_height) {
+                        /*高亮显示*/
+                        sidebar_alis.removeClass('on');
+                        $(sidebar_alis[i]).addClass('on');
+                    }
+                }
+            }
+            $(function() {
+                /*绑定滚动事件 */
+                $(window).bind('scroll', locateCatelogList);
+            });
+        </script>
+    </div>
+    
+                            
+
+                </div>
+
+
+
+
+            </div>
+
+
+            <div class="site-footer">
+  Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a> | 
+  <a class="rss" href="https://freephenix.github.io//atom.xml" target="_blank">RSS</a>
+</div>
+
+<script>
+  hljs.initHighlightingOnLoad()
+</script>
+
+
+    </div>
+    <script>
+        $('#sidebar').stickySidebar({
+            topSpacing: 80,
+            // bottomSpacing: 60
+        });
+    </script>
+    
+        
+            <script>
+    window.onload = function() {
+        var gitalk = new Gitalk({
+            clientID: '008503f8c8bca8787fbe',
+            clientSecret: '5f789f71e3288ff1866d17523348881053068eb4',
+            repo: 'freephenix.github.io',
+            owner: 'freephenix',
+            admin: ['freephenix'],
+            id: (location.pathname).substring(0, 49), // Ensure uniqueness and length less than 50
+            distractionFreeMode: false // Facebook-like distraction free mode
+        })
+
+        gitalk.render('gitalk-container')
+    }
+</script>
+                
+
+                    
+                                
+</body>
+
+</html>

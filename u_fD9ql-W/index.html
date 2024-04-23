@@ -1,0 +1,394 @@
+<html>
+
+<head>
+    <meta charset="utf-8" />
+<meta name="description" content="" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>
+    LeetCode-151. 反转字符串中的单词 | 半亩房顶
+</title>
+<link rel="shortcut icon" href="https://freephenix.github.io//favicon.ico?v=1713840769430">
+<!-- <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous"> -->
+<link href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+<link rel="stylesheet" href="https://freephenix.github.io//styles/main.css">
+<!-- js -->
+<script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.min.js"></script>
+<script src="https://freephenix.github.io//media/js/jquery.sticky-sidebar.min.js"></script>
+<script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
+<script src="https://cdn.bootcss.com/moment.js/2.23.0/moment.min.js"></script>
+
+
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-147240912-1"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+
+        function gtag() {
+            dataLayer.push(arguments);
+        }
+        gtag('js', new Date());
+
+        gtag('config', 'UA-147240912-1');
+    </script>
+    
+        
+            
+                <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+                <script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+                
+
+                    
+                            
+</head>
+
+<body>
+    <div class="main">
+        <div class="header">
+    <div class="nav">
+        <div class="logo">
+            <a href="https://freephenix.github.io/">
+                <img class="avatar" src="https://freephenix.github.io//images/avatar.png?v=1713840769430" alt="">
+            </a>
+            <div class="site-title">
+                <h1>
+                    半亩房顶
+                </h1>
+            </div>
+        </div>
+        <span class="menu-btn fa fa-align-justify"></span>
+        <div class="menu-container">
+            <ul>
+                
+                    
+                            <li>
+                                <a href="/" class="menu">
+                                    首页
+                                </a>
+                            </li>
+                            
+                                
+                    
+                            <li>
+                                <a href="/archives" class="menu">
+                                    归档
+                                </a>
+                            </li>
+                            
+                                
+                    
+                            <li>
+                                <a href="/tags" class="menu">
+                                    标签
+                                </a>
+                            </li>
+                            
+                                
+                    
+                            <li>
+                                <a href="https://freephenix.github.io//post/guan-yu-ban-mu-fang-ding/" class="menu">
+                                    关于
+                                </a>
+                            </li>
+                            
+                                
+            </ul>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function() {
+        $(".menu-btn").click(function() {
+            $(".menu-container").slideToggle();
+        });
+        $(window).resize(function() {
+
+            if (window.matchMedia('(min-width: 960px)').matches) {
+                $(".menu-container").css('display', 'block')
+            } else {
+                $(".menu-container").css('display', 'none')
+            }
+
+        });
+    });
+</script>
+
+            <div id="main-content" class="post-detail main-container">
+                <!-- left -->
+                <div id="content" class="main-container-left">
+                    <article class="post i-card">
+                        <h2 class="post-title">
+                            LeetCode-151. 反转字符串中的单词
+                        </h2>
+                        <div class="post-info">
+                            <time class="post-time">2023-12-08</time>
+                            
+                                <a href="https://freephenix.github.io/l_D4yZcDN/" class="post-tag i-tag
+                            i-tag-warning">
+                            #字符串
+                        </a>
+                                
+                                <a href="https://freephenix.github.io/YWFpnf3Gl/" class="post-tag i-tag
+                            i-tag-other_1">
+                            #刷题
+                        </a>
+                                
+                                <a href="https://freephenix.github.io/70TrDOWqgi/" class="post-tag i-tag
+                            i-tag-">
+                            #面试
+                        </a>
+                                
+                                <a href="https://freephenix.github.io/go/" class="post-tag i-tag
+                            i-tag-">
+                            #Go
+                        </a>
+                                
+                                <a href="https://freephenix.github.io/k1NaSbOoC/" class="post-tag i-tag
+                            i-tag-other_4">
+                            #LeetCode
+                        </a>
+                                
+                                <a href="https://freephenix.github.io/WucazjDbn/" class="post-tag i-tag
+                            i-tag-primary">
+                            #算法
+                        </a>
+                                
+                        </div>
+                        
+                            <div class="post-feature-image" style="background-image: url('https://freephenix.github.io//post-images/u_fD9ql-W.jpeg')"></div>
+                            
+                                <div class="post-content">
+                                    <p>刷题使我快乐，满脸开心.jpg</p>
+<ul>
+<li>来源：力扣（LeetCode）</li>
+<li>链接：https://leetcode.cn/problems/reverse-words-in-a-string/</li>
+<li>著作权归领扣网络所有。商业转载请联系官方授权，非商业转载请注明出处。</li>
+</ul>
+<!-- more -->
+<h1 id="题目">题目</h1>
+<p>给你一个字符串 <code>s</code> ，请你反转字符串中 <code>单词</code> 的顺序。</p>
+<p><code>单词</code> 是由非空格字符组成的字符串。<code>s</code> 中使用至少一个空格将字符串中的 <code>单词</code> 分隔开。</p>
+<p>返回 <code>单词</code> 顺序颠倒且 <code>单词</code> 之间用单个空格连接的结果字符串。</p>
+<p>注意：输入字符串 s中可能会存在前导空格、尾随空格或者单词间的多个空格。返回的结果字符串中，单词间应当仅用单个空格分隔，且不包含任何额外的空格。</p>
+<p>示例 1：</p>
+<pre><code>输入：s = &quot;the sky is blue&quot;
+输出：&quot;blue is sky the&quot;
+</code></pre>
+<p>示例 2：</p>
+<pre><code>输入：s = &quot;  hello world  &quot;
+输出：&quot;world hello&quot;
+解释：反转后的字符串中不能存在前导空格和尾随空格。
+</code></pre>
+<p>示例 3：</p>
+<pre><code>输入：s = &quot;a good   example&quot;
+输出：&quot;example good a&quot;
+解释：如果两个单词间有多余的空格，反转后的字符串需要将单词间的空格减少到仅有一个。
+</code></pre>
+<p>提示：</p>
+<ul>
+<li><code>1 &lt;= s.length &lt;= 104</code></li>
+<li><code>s</code> 包含英文大小写字母、数字和空格 ' '</li>
+<li><code>s</code> 中 至少存在一个 <code>单词</code></li>
+</ul>
+<p>进阶：如果字符串在你使用的编程语言中是一种可变数据类型，请尝试使用 <code>O(1)</code> 额外空间复杂度的 <code>原地</code> 解法。</p>
+<h1 id="思路">思路</h1>
+<p>还没看到进阶时候，第一反应就是起一个新字符串，先处理掉多余的空格，然后整体反转后，再反转一个个单词即可。但是看到进阶之后，自然是要接受挑战了。</p>
+<blockquote>
+<p><code>Go</code>的字符串不能直接用下标定位赋值，所以需要先转成<code>byte</code>数组。其实<code>Go</code>中这个强转过程会发生拷贝（可以打印地址验证下），也就是空间复杂度其实并不符合。不过想要实现无拷贝转换需要使用<code>unsafe</code>包，感觉这里就不纠结这个问题了，主要是看下思路~</p>
+</blockquote>
+<h3 id="去除多余空格">去除多余空格</h3>
+<p>开始我尝试在一次遍历中兼顾反转和过滤空格，不过发现心智负担太高，暂时搞不定，所以拆解成两个步骤，先去掉<strong>多余</strong>的空格。</p>
+<blockquote>
+<p>多余就是指头尾空格，和单词之间多于一个的空格</p>
+</blockquote>
+<p>头尾不用多说，主要问题就是在于中间空格的处理了。这里很常用的办法就是<code>双指针法</code>了。</p>
+<blockquote>
+<ul>
+<li>快指针先跨过头部空格</li>
+<li>后续只往慢指针处赋予非空格和第一个空格，直到结束</li>
+<li>直到结束遍历，尾部至多留有一个空格，再行判断去除即可</li>
+</ul>
+</blockquote>
+<h3 id="反转">反转</h3>
+<p>反转就简单多了，直接首尾两个指针对向移动，交换元素直到相遇</p>
+<p>思路差不多就这样了，细节在代码注释了，上代码~</p>
+<h1 id="代码">代码</h1>
+<h3 id="个人递归解法">个人递归解法</h3>
+<pre><code class="language-golang">func reverseWords(s string) string {
+	sBytes := []byte(s)
+
+	// 使用双指针去除空格
+	slow, fast := 0, 0
+	// 头部空格部分等待被实际内容替换即可，无需现在处理
+	for fast &lt; len(sBytes) &amp;&amp; sBytes[fast] == ' ' {
+		fast++
+	}
+	for fast &lt; len(sBytes) {
+		// 非空格或者第一个空格，需要填充到头部
+		if sBytes[fast] != ' ' ||
+			(sBytes[fast] == ' ' &amp;&amp; sBytes[fast-1] != ' ') {
+			sBytes[slow] = sBytes[fast]
+			fast++
+			slow++
+		} else if sBytes[fast] == ' ' &amp;&amp; sBytes[fast-1] == ' ' {
+			// 中间多余的空格，需要跳过
+			fast++
+		}
+	}
+	// 看最后一个放进去的是不是空格，有则说明尾部有空格，截掉它
+	if slow &gt; 0 &amp;&amp; sBytes[slow-1] == ' ' {
+		sBytes = sBytes[:slow-1]
+	} else {
+		sBytes = sBytes[:slow]
+	}
+
+	// 整体反转字符串
+	reverse(&amp;sBytes, 0, len(sBytes)-1)
+
+	// 逐步反转每个单词
+	start, end := -1, -1
+	// 把超出数组的下标放进来，兼容最后一个单词的情况
+	for i := 0; i &lt;= len(sBytes); i++ {
+		// 最后一个单词的情况，外加遇到空格时，就是扫描到了一个单词，需要执行单词反转
+		if i == len(sBytes) || sBytes[i] == ' ' {
+			end = i - 1
+			reverse(&amp;sBytes, start, end)
+			start = -1
+			end = 0
+		} else if sBytes[i] != ' ' &amp;&amp; start == -1 {
+			// start未赋值时，第一次非空格就是新单词的起点
+			start = i
+		}
+	}
+	return string(sBytes)
+}
+
+func reverse(s *[]byte, start, end int) {
+	for start &lt; end {
+		(*s)[start], (*s)[end] = (*s)[end], (*s)[start]
+		start++
+		end--
+	}
+}
+</code></pre>
+
+                                </div>
+                    </article>
+                    <!--  -->
+                    
+                        <div class="next-post">
+                            <div class="next">下一篇</div>
+                            <a href="https://freephenix.github.io/m0G0Ktvhh/">
+                                <h3 class="post-title">
+                                    LeetCode-155. 最小栈
+                                </h3>
+                            </a>
+                        </div>
+                        
+                            <div id="disqus_thread"></div>
+                            <div id="gitalk-container"></div>
+                </div>
+                <!-- middle -->
+                <div class="main-container-middle"></div>
+                <!-- right -->
+                <div id="sidebar" class="main-container-right">
+                    
+                        <!-- toc -->
+                        
+    <div class="toc-card i-card ">
+        <div class="toc-title i-card-title">目录</div>
+        <div class="toc-content">
+            <ul class="markdownIt-TOC">
+<li><a href="#%E9%A2%98%E7%9B%AE">题目</a></li>
+<li><a href="#%E6%80%9D%E8%B7%AF">思路</a><br>
+*
+<ul>
+<li><a href="#%E5%8E%BB%E9%99%A4%E5%A4%9A%E4%BD%99%E7%A9%BA%E6%A0%BC">去除多余空格</a></li>
+<li><a href="#%E5%8F%8D%E8%BD%AC">反转</a></li>
+</ul>
+</li>
+<li><a href="#%E4%BB%A3%E7%A0%81">代码</a><br>
+*
+<ul>
+<li><a href="#%E4%B8%AA%E4%BA%BA%E9%80%92%E5%BD%92%E8%A7%A3%E6%B3%95">个人递归解法</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+        <script>
+            function locateCatelogList() {
+                /*获取文章目录集合,可通过:header过滤器*/
+                var alis = $('.post-content :header');
+                /*获取侧边栏目录列表集合**/
+                var sidebar_alis = $('.markdownIt-TOC a');
+                /*获取滚动条到顶部的距离*/
+                var scroll_height = $(window).scrollTop();
+                for (var i = 0; i < alis.length; i++) {
+                    /*获取锚点集合中的元素分别到顶点的距离*/
+                    var a_height = $(alis[i]).offset().top;
+                    if (a_height < scroll_height) {
+                        /*高亮显示*/
+                        sidebar_alis.removeClass('on');
+                        $(sidebar_alis[i]).addClass('on');
+                    }
+                }
+            }
+            $(function() {
+                /*绑定滚动事件 */
+                $(window).bind('scroll', locateCatelogList);
+            });
+        </script>
+    </div>
+    
+                            
+
+                </div>
+
+
+
+
+            </div>
+
+
+            <div class="site-footer">
+  Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a> | 
+  <a class="rss" href="https://freephenix.github.io//atom.xml" target="_blank">RSS</a>
+</div>
+
+<script>
+  hljs.initHighlightingOnLoad()
+</script>
+
+
+    </div>
+    <script>
+        $('#sidebar').stickySidebar({
+            topSpacing: 80,
+            // bottomSpacing: 60
+        });
+    </script>
+    
+        
+            <script>
+    window.onload = function() {
+        var gitalk = new Gitalk({
+            clientID: '008503f8c8bca8787fbe',
+            clientSecret: '5f789f71e3288ff1866d17523348881053068eb4',
+            repo: 'freephenix.github.io',
+            owner: 'freephenix',
+            admin: ['freephenix'],
+            id: (location.pathname).substring(0, 49), // Ensure uniqueness and length less than 50
+            distractionFreeMode: false // Facebook-like distraction free mode
+        })
+
+        gitalk.render('gitalk-container')
+    }
+</script>
+                
+
+                    
+                                
+</body>
+
+</html>

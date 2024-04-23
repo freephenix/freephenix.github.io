@@ -1,0 +1,354 @@
+<html>
+
+<head>
+    <meta charset="utf-8" />
+<meta name="description" content="" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>
+    LeetCode-1143. 最长公共子序列 | 半亩房顶
+</title>
+<link rel="shortcut icon" href="https://freephenix.github.io//favicon.ico?v=1713840769430">
+<!-- <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous"> -->
+<link href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+<link rel="stylesheet" href="https://freephenix.github.io//styles/main.css">
+<!-- js -->
+<script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.min.js"></script>
+<script src="https://freephenix.github.io//media/js/jquery.sticky-sidebar.min.js"></script>
+<script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
+<script src="https://cdn.bootcss.com/moment.js/2.23.0/moment.min.js"></script>
+
+
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-147240912-1"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+
+        function gtag() {
+            dataLayer.push(arguments);
+        }
+        gtag('js', new Date());
+
+        gtag('config', 'UA-147240912-1');
+    </script>
+    
+        
+            
+                <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+                <script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+                
+
+                    
+                            
+</head>
+
+<body>
+    <div class="main">
+        <div class="header">
+    <div class="nav">
+        <div class="logo">
+            <a href="https://freephenix.github.io/">
+                <img class="avatar" src="https://freephenix.github.io//images/avatar.png?v=1713840769430" alt="">
+            </a>
+            <div class="site-title">
+                <h1>
+                    半亩房顶
+                </h1>
+            </div>
+        </div>
+        <span class="menu-btn fa fa-align-justify"></span>
+        <div class="menu-container">
+            <ul>
+                
+                    
+                            <li>
+                                <a href="/" class="menu">
+                                    首页
+                                </a>
+                            </li>
+                            
+                                
+                    
+                            <li>
+                                <a href="/archives" class="menu">
+                                    归档
+                                </a>
+                            </li>
+                            
+                                
+                    
+                            <li>
+                                <a href="/tags" class="menu">
+                                    标签
+                                </a>
+                            </li>
+                            
+                                
+                    
+                            <li>
+                                <a href="https://freephenix.github.io//post/guan-yu-ban-mu-fang-ding/" class="menu">
+                                    关于
+                                </a>
+                            </li>
+                            
+                                
+            </ul>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function() {
+        $(".menu-btn").click(function() {
+            $(".menu-container").slideToggle();
+        });
+        $(window).resize(function() {
+
+            if (window.matchMedia('(min-width: 960px)').matches) {
+                $(".menu-container").css('display', 'block')
+            } else {
+                $(".menu-container").css('display', 'none')
+            }
+
+        });
+    });
+</script>
+
+            <div id="main-content" class="post-detail main-container">
+                <!-- left -->
+                <div id="content" class="main-container-left">
+                    <article class="post i-card">
+                        <h2 class="post-title">
+                            LeetCode-1143. 最长公共子序列
+                        </h2>
+                        <div class="post-info">
+                            <time class="post-time">2023-11-16</time>
+                            
+                                <a href="https://freephenix.github.io/bURmaxGfQ/" class="post-tag i-tag
+                            i-tag-info">
+                            #动态规划
+                        </a>
+                                
+                                <a href="https://freephenix.github.io/YWFpnf3Gl/" class="post-tag i-tag
+                            i-tag-warning">
+                            #刷题
+                        </a>
+                                
+                                <a href="https://freephenix.github.io/70TrDOWqgi/" class="post-tag i-tag
+                            i-tag-error">
+                            #面试
+                        </a>
+                                
+                                <a href="https://freephenix.github.io/go/" class="post-tag i-tag
+                            i-tag-primary">
+                            #Go
+                        </a>
+                                
+                                <a href="https://freephenix.github.io/k1NaSbOoC/" class="post-tag i-tag
+                            i-tag-other_3">
+                            #LeetCode
+                        </a>
+                                
+                                <a href="https://freephenix.github.io/WucazjDbn/" class="post-tag i-tag
+                            i-tag-">
+                            #算法
+                        </a>
+                                
+                        </div>
+                        
+                            <div class="post-feature-image" style="background-image: url('https://freephenix.github.io//post-images/BkeCJgyaP.jpeg')"></div>
+                            
+                                <div class="post-content">
+                                    <p>刷题使我快乐，满脸开心.jpg</p>
+<ul>
+<li>来源：力扣（LeetCode）</li>
+<li>链接：https://leetcode.cn/problems/longest-common-subsequence/</li>
+<li>著作权归领扣网络所有。商业转载请联系官方授权，非商业转载请注明出处。</li>
+</ul>
+<!-- more -->
+<h1 id="题目">题目</h1>
+<p>给定两个字符串 <code>text1</code> 和 <code>text2</code>，返回这两个字符串的最长 <code>公共子序列</code> 的长度。如果不存在 <code>公共子序列</code> ，返回 <code>0</code> 。</p>
+<p>一个字符串的 <code>子序列</code> 是指这样一个新的字符串：它是由原字符串在不改变字符的相对顺序的情况下<code>删除某些字符（也可以不删除任何字符）</code>后组成的新字符串。</p>
+<p>例如，&quot;ace&quot; 是 &quot;abcde&quot; 的子序列，但 &quot;aec&quot; 不是 &quot;abcde&quot; 的子序列。<br>
+两个字符串的 <code>公共子序列</code> 是这两个字符串所共同拥有的子序列。</p>
+<p>示例 1：</p>
+<pre><code>输入：text1 = &quot;abcde&quot;, text2 = &quot;ace&quot; 
+输出：3  
+解释：最长公共子序列是 &quot;ace&quot; ，它的长度为 3 。
+</code></pre>
+<p>示例 2：</p>
+<pre><code>输入：text1 = &quot;abc&quot;, text2 = &quot;abc&quot;
+输出：3
+解释：最长公共子序列是 &quot;abc&quot; ，它的长度为 3 。
+</code></pre>
+<p>示例 3：</p>
+<pre><code>输入：text1 = &quot;abc&quot;, text2 = &quot;def&quot;
+输出：0
+解释：两个字符串没有公共子序列，返回 0 。
+</code></pre>
+<p>提示：</p>
+<ul>
+<li><code>1 &lt;= text1.length, text2.length &lt;= 1000</code></li>
+<li><code>text1</code> 和 <code>text2</code> 仅由小写英文字符组成。</li>
+</ul>
+<h1 id="思路">思路</h1>
+<p>子序列这类问题还是挺容易能想到动态规划的，毕竟如果用字符串匹配的方式就太麻烦了，时间复杂度压不住啊</p>
+<h3 id="首先是dp定义">首先是dp定义</h3>
+<p>此dp数组定义相对简单些，定义是为了<code>往小处拆解问题</code>，并且保证<code>无后效性</code>。这里我们往小处拆解的话，就可以从两个字符串只含一个字符、两个字符、...等等这样的方式，来一个个增加字符，这样也就容易得到一个递进的逻辑关系，有助于写出状态方程。所以<br>
+<code>dp[i][j]</code>含义定为 <code>text1</code> 中 <code>[0,i]</code> 子串 和 <code>text2</code> 中 <code>[0,j]</code> 子串的<code>最长公共子序列长度</code></p>
+<h3 id="初始化条件">初始化条件</h3>
+<p>当 <code>text1</code> 或者 <code>text2</code> 的子串长度为0时，他们的公共子序列一定是空，所以，<code>i=0</code> 或者 <code>j=0</code> 这一行一列均为<code>0</code>。（恰好找不到结果时，需要返回的也就是<code>0</code>）</p>
+<h3 id="状态转移方程">状态转移方程</h3>
+<p>在 <code>text1</code> 、 <code>text2</code> 增长过程中</p>
+<ul>
+<li>如果此时下标为 <code>i</code> 、 <code>j</code> 的末尾的字符相等，那么，公共子序列长度就相当于是在 <code>i-1</code>、 <code>j-1</code> 的基础上 <code>+1</code>。即<code>dp[i][j] = dp[i-1][j-1]+1</code></li>
+<li>否则的话，则与text1 少一个字符或者 text2 少一个字符没有区别。即 <code>dp[i][j] = dp[i][j-1]</code> 或者 <code>dp[i][j] = dp[i-1][j]</code>, 取其中较大的即可。</li>
+</ul>
+<p>至此，上代码</p>
+<h1 id="代码">代码</h1>
+<pre><code class="language-golang">func longestCommonSubsequence(text1 string, text2 string) int {
+    n1 := len(text1)
+    n2 := len(text2)
+    // 别忘了为0的情况，所以要多一行/列
+    dp := make([][]int, n1+1)
+    for i:=0; i&lt;=n1; i++ {
+        dp[i] = make([]int, n2+1)
+    }
+    // 从1开始，0行为初始条件，无需遍历
+    for i:=1; i&lt;=n1; i++ {
+        for j:=1; j&lt;=n2; j++ {
+            // 因为dp数组下标从1开始，此时text1、text2末尾字符下标需 -1
+            if text1[i-1] == text2[j-1] {
+                dp[i][j] = dp[i-1][j-1] + 1
+            } else {
+                dp[i][j] = max(dp[i][j-1], dp[i-1][j])
+            }
+        }    
+    }
+    // 初始值即为找不到结果的值，所以不用特殊处理
+    return dp[n1][n2]
+}
+
+func max(a, b int) int {
+    if a &gt; b {
+        return a
+    }
+    return b
+}
+</code></pre>
+
+                                </div>
+                    </article>
+                    <!--  -->
+                    
+                        <div class="next-post">
+                            <div class="next">下一篇</div>
+                            <a href="https://freephenix.github.io/ahme6iUjr/">
+                                <h3 class="post-title">
+                                    LeetCode-72. 编辑距离
+                                </h3>
+                            </a>
+                        </div>
+                        
+                            <div id="disqus_thread"></div>
+                            <div id="gitalk-container"></div>
+                </div>
+                <!-- middle -->
+                <div class="main-container-middle"></div>
+                <!-- right -->
+                <div id="sidebar" class="main-container-right">
+                    
+                        <!-- toc -->
+                        
+    <div class="toc-card i-card ">
+        <div class="toc-title i-card-title">目录</div>
+        <div class="toc-content">
+            <ul class="markdownIt-TOC">
+<li><a href="#%E9%A2%98%E7%9B%AE">题目</a></li>
+<li><a href="#%E6%80%9D%E8%B7%AF">思路</a><br>
+*
+<ul>
+<li><a href="#%E9%A6%96%E5%85%88%E6%98%AFdp%E5%AE%9A%E4%B9%89">首先是dp定义</a></li>
+<li><a href="#%E5%88%9D%E5%A7%8B%E5%8C%96%E6%9D%A1%E4%BB%B6">初始化条件</a></li>
+<li><a href="#%E7%8A%B6%E6%80%81%E8%BD%AC%E7%A7%BB%E6%96%B9%E7%A8%8B">状态转移方程</a></li>
+</ul>
+</li>
+<li><a href="#%E4%BB%A3%E7%A0%81">代码</a></li>
+</ul>
+
+        </div>
+        <script>
+            function locateCatelogList() {
+                /*获取文章目录集合,可通过:header过滤器*/
+                var alis = $('.post-content :header');
+                /*获取侧边栏目录列表集合**/
+                var sidebar_alis = $('.markdownIt-TOC a');
+                /*获取滚动条到顶部的距离*/
+                var scroll_height = $(window).scrollTop();
+                for (var i = 0; i < alis.length; i++) {
+                    /*获取锚点集合中的元素分别到顶点的距离*/
+                    var a_height = $(alis[i]).offset().top;
+                    if (a_height < scroll_height) {
+                        /*高亮显示*/
+                        sidebar_alis.removeClass('on');
+                        $(sidebar_alis[i]).addClass('on');
+                    }
+                }
+            }
+            $(function() {
+                /*绑定滚动事件 */
+                $(window).bind('scroll', locateCatelogList);
+            });
+        </script>
+    </div>
+    
+                            
+
+                </div>
+
+
+
+
+            </div>
+
+
+            <div class="site-footer">
+  Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a> | 
+  <a class="rss" href="https://freephenix.github.io//atom.xml" target="_blank">RSS</a>
+</div>
+
+<script>
+  hljs.initHighlightingOnLoad()
+</script>
+
+
+    </div>
+    <script>
+        $('#sidebar').stickySidebar({
+            topSpacing: 80,
+            // bottomSpacing: 60
+        });
+    </script>
+    
+        
+            <script>
+    window.onload = function() {
+        var gitalk = new Gitalk({
+            clientID: '008503f8c8bca8787fbe',
+            clientSecret: '5f789f71e3288ff1866d17523348881053068eb4',
+            repo: 'freephenix.github.io',
+            owner: 'freephenix',
+            admin: ['freephenix'],
+            id: (location.pathname).substring(0, 49), // Ensure uniqueness and length less than 50
+            distractionFreeMode: false // Facebook-like distraction free mode
+        })
+
+        gitalk.render('gitalk-container')
+    }
+</script>
+                
+
+                    
+                                
+</body>
+
+</html>

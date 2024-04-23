@@ -1,0 +1,378 @@
+<html>
+
+<head>
+    <meta charset="utf-8" />
+<meta name="description" content="" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>
+    LeetCode-76. 最小覆盖子串 | 半亩房顶
+</title>
+<link rel="shortcut icon" href="https://freephenix.github.io//favicon.ico?v=1713840769430">
+<!-- <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous"> -->
+<link href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+<link rel="stylesheet" href="https://freephenix.github.io//styles/main.css">
+<!-- js -->
+<script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.min.js"></script>
+<script src="https://freephenix.github.io//media/js/jquery.sticky-sidebar.min.js"></script>
+<script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
+<script src="https://cdn.bootcss.com/moment.js/2.23.0/moment.min.js"></script>
+
+
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-147240912-1"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+
+        function gtag() {
+            dataLayer.push(arguments);
+        }
+        gtag('js', new Date());
+
+        gtag('config', 'UA-147240912-1');
+    </script>
+    
+        
+            
+                <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+                <script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+                
+
+                    
+                            
+</head>
+
+<body>
+    <div class="main">
+        <div class="header">
+    <div class="nav">
+        <div class="logo">
+            <a href="https://freephenix.github.io/">
+                <img class="avatar" src="https://freephenix.github.io//images/avatar.png?v=1713840769430" alt="">
+            </a>
+            <div class="site-title">
+                <h1>
+                    半亩房顶
+                </h1>
+            </div>
+        </div>
+        <span class="menu-btn fa fa-align-justify"></span>
+        <div class="menu-container">
+            <ul>
+                
+                    
+                            <li>
+                                <a href="/" class="menu">
+                                    首页
+                                </a>
+                            </li>
+                            
+                                
+                    
+                            <li>
+                                <a href="/archives" class="menu">
+                                    归档
+                                </a>
+                            </li>
+                            
+                                
+                    
+                            <li>
+                                <a href="/tags" class="menu">
+                                    标签
+                                </a>
+                            </li>
+                            
+                                
+                    
+                            <li>
+                                <a href="https://freephenix.github.io//post/guan-yu-ban-mu-fang-ding/" class="menu">
+                                    关于
+                                </a>
+                            </li>
+                            
+                                
+            </ul>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function() {
+        $(".menu-btn").click(function() {
+            $(".menu-container").slideToggle();
+        });
+        $(window).resize(function() {
+
+            if (window.matchMedia('(min-width: 960px)').matches) {
+                $(".menu-container").css('display', 'block')
+            } else {
+                $(".menu-container").css('display', 'none')
+            }
+
+        });
+    });
+</script>
+
+            <div id="main-content" class="post-detail main-container">
+                <!-- left -->
+                <div id="content" class="main-container-left">
+                    <article class="post i-card">
+                        <h2 class="post-title">
+                            LeetCode-76. 最小覆盖子串
+                        </h2>
+                        <div class="post-info">
+                            <time class="post-time">2023-12-04</time>
+                            
+                                <a href="https://freephenix.github.io/l_D4yZcDN/" class="post-tag i-tag
+                            i-tag-error">
+                            #字符串
+                        </a>
+                                
+                                <a href="https://freephenix.github.io/YWFpnf3Gl/" class="post-tag i-tag
+                            i-tag-other_4">
+                            #刷题
+                        </a>
+                                
+                                <a href="https://freephenix.github.io/70TrDOWqgi/" class="post-tag i-tag
+                            i-tag-error">
+                            #面试
+                        </a>
+                                
+                                <a href="https://freephenix.github.io/go/" class="post-tag i-tag
+                            i-tag-other_3">
+                            #Go
+                        </a>
+                                
+                                <a href="https://freephenix.github.io/k1NaSbOoC/" class="post-tag i-tag
+                            i-tag-info">
+                            #LeetCode
+                        </a>
+                                
+                                <a href="https://freephenix.github.io/WucazjDbn/" class="post-tag i-tag
+                            i-tag-other_2">
+                            #算法
+                        </a>
+                                
+                        </div>
+                        
+                            <div class="post-feature-image" style="background-image: url('https://freephenix.github.io//post-images/fRUvyfc_s.jpeg')"></div>
+                            
+                                <div class="post-content">
+                                    <p>刷题使我快乐，满脸开心.jpg</p>
+<ul>
+<li>来源：力扣（LeetCode）</li>
+<li>链接：https://leetcode.cn/problems/minimum-window-substring/</li>
+<li>著作权归领扣网络所有。商业转载请联系官方授权，非商业转载请注明出处。</li>
+</ul>
+<!-- more -->
+<h1 id="题目">题目</h1>
+<p>给你一个字符串 <code>s</code> 、一个字符串 <code>t</code> 。返回 <code>s</code> 中涵盖 <code>t</code> 所有字符的最小子串。如果 <code>s</code> 中不存在涵盖 <code>t</code> 所有字符的子串，则返回空字符串 <code>&quot;&quot;</code> 。</p>
+<p>注意：</p>
+<ul>
+<li>对于 <code>t</code> 中重复字符，我们寻找的子字符串中该字符数量必须不少于 <code>t</code> 中该字符数量。</li>
+<li>如果 <code>s</code> 中存在这样的子串，我们保证它是唯一的答案。</li>
+</ul>
+<p>示例 1：</p>
+<pre><code>输入：s = &quot;ADOBECODEBANC&quot;, t = &quot;ABC&quot;
+输出：&quot;BANC&quot;
+解释：最小覆盖子串 &quot;BANC&quot; 包含来自字符串 t 的 'A'、'B' 和 'C'。
+</code></pre>
+<p>示例 2：</p>
+<pre><code>输入：s = &quot;a&quot;, t = &quot;a&quot;
+输出：&quot;a&quot;
+解释：整个字符串 s 是最小覆盖子串。
+</code></pre>
+<p>示例 3:</p>
+<pre><code>输入: s = &quot;a&quot;, t = &quot;aa&quot;
+输出: &quot;&quot;
+解释: t 中两个字符 'a' 均应包含在 s 的子串中，
+因此没有符合条件的子字符串，返回空字符串。
+</code></pre>
+<p>提示：</p>
+<ul>
+<li><code>m == s.length</code></li>
+<li><code>n == t.length</code></li>
+<li><code>1 &lt;= m, n &lt;= 105</code></li>
+<li><code>s</code> 和 <code>t</code> 由英文字母组成</li>
+</ul>
+<blockquote>
+<p>进阶：你能设计一个在 <code>o(m+n)</code> 时间内解决此问题的算法吗？</p>
+</blockquote>
+<h1 id="思路">思路</h1>
+<p>最开始看到题目，想的就是哈希表存储<code>字符计数</code>，然后每次增加一个字符就看下是否满足，那么刚刚满足所有字符时就是<code>最小覆盖子串</code>了，不过当看到第一条<strong>注意</strong>以及<strong>示例</strong>时，意识到如果是字符存在重复的话，那么就有可能刚刚满足时并不是<code>最小的覆盖子串</code>。</p>
+<p>但是，基于思路不能轻易浪费的念头，继续顺着这个思路思考下：</p>
+<ul>
+<li>如果此时<code>覆盖子串</code>并不是最短的，如果收缩？</li>
+</ul>
+<blockquote>
+<p>如果需要收缩，右边界也就是遍历方向，如果遍历方向上满足了<code>覆盖子串</code>需求时，会立即触发判断，所以右边界并不需要收缩，反证法易得结论。</p>
+</blockquote>
+<ul>
+<li>左边界如果收缩？</li>
+</ul>
+<blockquote>
+<p>对于如下例子来说，刚刚找到第一个<code>覆盖子串</code>时，其实可以让<code>L</code>指针继续右移到<code>c</code>处，此时才是<code>最小覆盖子串</code>，所以左边界收缩的特点就是找到<code>覆盖子串</code>后，逐步右移<code>L</code>，并同步的修改<code>覆盖子串</code>的<code>字符计数</code>信息，只要继续满足那就有可能会更新<code>最小覆盖子串</code>的长度，同时记录<code>最小覆盖子串</code>的位置坐标信息就好了<br>
+<img src="https://freephenix.github.io//post-images/1701673217862.png" alt="" loading="lazy"></p>
+</blockquote>
+<ul>
+<li>能否简化操作。比如字符串中常见的，找到一个<code>最小覆盖子串</code>后，移动<code>L</code>到<code>R</code>位置，减少<code>L</code>的遍历次数？</li>
+</ul>
+<blockquote>
+<p>不可，因为在移动过程中，可能错过<code>覆盖子串</code>，比如上图中，如果<code>R</code>右移两个位置后，其实<code>L</code>在第一个<code>b</code>的位置才是<code>最小覆盖子串</code>，但是如果移动<code>L</code>到<code>R</code>位置，将会错过此结果</p>
+</blockquote>
+<p>至此，上代码，细节在备注里了~</p>
+<h1 id="代码">代码</h1>
+<pre><code class="language-golang">func minWindow(s string, t string) string {
+	// 用哈希表存储子串字符及对应个数
+	childCountMap := make(map[byte]int, 0)
+	for _, b := range t {
+		childCountMap[byte(b)]++
+	}
+
+	// 另用一个哈希表存储父串字符及对应个数
+	countMap := make(map[byte]int, len(childCountMap))
+	// 需要一个变量来记录最短长度方便比较；另需要两个变量来记录最短长度对应的位置
+	resStartP, resEndP, minLen := -1, -1, math.MaxInt32
+	// 记录s中覆盖t的子串的左边界，通过移动此位置来寻找最小的子串的左边界
+	l := 0
+	// s中覆盖t的子串的右边界，其实就是最开始满足覆盖t时遍历到的s的位置
+	for r, b := range s {
+		countMap[byte(b)]++
+		for checkChild(countMap, childCountMap) &amp;&amp; l &lt;= r {
+			// 注意长度是相减后+1
+			if r-l+1 &lt; minLen {
+				minLen = r - l + 1
+				// 这里记录的是起止下标，最终结果返回时候要注意
+				// 需要截取的子串应该放的下标是[resStartP, resEndP+1]
+				resStartP, resEndP = l, r
+			}
+			countMap[s[l]]--
+			l++
+		}
+	}
+	// 没有出现过覆盖子串，那就返回空
+	if resStartP == -1 {
+		return &quot;&quot;
+	}
+	return s[resStartP : resEndP+1]
+}
+
+func checkChild(countMap, childCountMap map[byte]int) bool {
+	for k, v := range childCountMap {
+		if countMap[k] &lt; v {
+			return false
+		}
+	}
+	return true
+}
+</code></pre>
+
+                                </div>
+                    </article>
+                    <!--  -->
+                    
+                        <div class="next-post">
+                            <div class="next">下一篇</div>
+                            <a href="https://freephenix.github.io/c_R684YJg/">
+                                <h3 class="post-title">
+                                    LeetCode-LCR 140. 训练计划 II
+                                </h3>
+                            </a>
+                        </div>
+                        
+                            <div id="disqus_thread"></div>
+                            <div id="gitalk-container"></div>
+                </div>
+                <!-- middle -->
+                <div class="main-container-middle"></div>
+                <!-- right -->
+                <div id="sidebar" class="main-container-right">
+                    
+                        <!-- toc -->
+                        
+    <div class="toc-card i-card ">
+        <div class="toc-title i-card-title">目录</div>
+        <div class="toc-content">
+            <ul class="markdownIt-TOC">
+<li><a href="#%E9%A2%98%E7%9B%AE">题目</a></li>
+<li><a href="#%E6%80%9D%E8%B7%AF">思路</a></li>
+<li><a href="#%E4%BB%A3%E7%A0%81">代码</a></li>
+</ul>
+
+        </div>
+        <script>
+            function locateCatelogList() {
+                /*获取文章目录集合,可通过:header过滤器*/
+                var alis = $('.post-content :header');
+                /*获取侧边栏目录列表集合**/
+                var sidebar_alis = $('.markdownIt-TOC a');
+                /*获取滚动条到顶部的距离*/
+                var scroll_height = $(window).scrollTop();
+                for (var i = 0; i < alis.length; i++) {
+                    /*获取锚点集合中的元素分别到顶点的距离*/
+                    var a_height = $(alis[i]).offset().top;
+                    if (a_height < scroll_height) {
+                        /*高亮显示*/
+                        sidebar_alis.removeClass('on');
+                        $(sidebar_alis[i]).addClass('on');
+                    }
+                }
+            }
+            $(function() {
+                /*绑定滚动事件 */
+                $(window).bind('scroll', locateCatelogList);
+            });
+        </script>
+    </div>
+    
+                            
+
+                </div>
+
+
+
+
+            </div>
+
+
+            <div class="site-footer">
+  Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a> | 
+  <a class="rss" href="https://freephenix.github.io//atom.xml" target="_blank">RSS</a>
+</div>
+
+<script>
+  hljs.initHighlightingOnLoad()
+</script>
+
+
+    </div>
+    <script>
+        $('#sidebar').stickySidebar({
+            topSpacing: 80,
+            // bottomSpacing: 60
+        });
+    </script>
+    
+        
+            <script>
+    window.onload = function() {
+        var gitalk = new Gitalk({
+            clientID: '008503f8c8bca8787fbe',
+            clientSecret: '5f789f71e3288ff1866d17523348881053068eb4',
+            repo: 'freephenix.github.io',
+            owner: 'freephenix',
+            admin: ['freephenix'],
+            id: (location.pathname).substring(0, 49), // Ensure uniqueness and length less than 50
+            distractionFreeMode: false // Facebook-like distraction free mode
+        })
+
+        gitalk.render('gitalk-container')
+    }
+</script>
+                
+
+                    
+                                
+</body>
+
+</html>

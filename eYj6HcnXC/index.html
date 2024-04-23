@@ -1,0 +1,352 @@
+<html>
+
+<head>
+    <meta charset="utf-8" />
+<meta name="description" content="" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>
+    LeetCode-179. 最大数 | 半亩房顶
+</title>
+<link rel="shortcut icon" href="https://freephenix.github.io//favicon.ico?v=1713840769430">
+<!-- <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous"> -->
+<link href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+<link rel="stylesheet" href="https://freephenix.github.io//styles/main.css">
+<!-- js -->
+<script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.min.js"></script>
+<script src="https://freephenix.github.io//media/js/jquery.sticky-sidebar.min.js"></script>
+<script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
+<script src="https://cdn.bootcss.com/moment.js/2.23.0/moment.min.js"></script>
+
+
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-147240912-1"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+
+        function gtag() {
+            dataLayer.push(arguments);
+        }
+        gtag('js', new Date());
+
+        gtag('config', 'UA-147240912-1');
+    </script>
+    
+        
+            
+                <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+                <script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+                
+
+                    
+                            
+</head>
+
+<body>
+    <div class="main">
+        <div class="header">
+    <div class="nav">
+        <div class="logo">
+            <a href="https://freephenix.github.io/">
+                <img class="avatar" src="https://freephenix.github.io//images/avatar.png?v=1713840769430" alt="">
+            </a>
+            <div class="site-title">
+                <h1>
+                    半亩房顶
+                </h1>
+            </div>
+        </div>
+        <span class="menu-btn fa fa-align-justify"></span>
+        <div class="menu-container">
+            <ul>
+                
+                    
+                            <li>
+                                <a href="/" class="menu">
+                                    首页
+                                </a>
+                            </li>
+                            
+                                
+                    
+                            <li>
+                                <a href="/archives" class="menu">
+                                    归档
+                                </a>
+                            </li>
+                            
+                                
+                    
+                            <li>
+                                <a href="/tags" class="menu">
+                                    标签
+                                </a>
+                            </li>
+                            
+                                
+                    
+                            <li>
+                                <a href="https://freephenix.github.io//post/guan-yu-ban-mu-fang-ding/" class="menu">
+                                    关于
+                                </a>
+                            </li>
+                            
+                                
+            </ul>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function() {
+        $(".menu-btn").click(function() {
+            $(".menu-container").slideToggle();
+        });
+        $(window).resize(function() {
+
+            if (window.matchMedia('(min-width: 960px)').matches) {
+                $(".menu-container").css('display', 'block')
+            } else {
+                $(".menu-container").css('display', 'none')
+            }
+
+        });
+    });
+</script>
+
+            <div id="main-content" class="post-detail main-container">
+                <!-- left -->
+                <div id="content" class="main-container-left">
+                    <article class="post i-card">
+                        <h2 class="post-title">
+                            LeetCode-179. 最大数
+                        </h2>
+                        <div class="post-info">
+                            <time class="post-time">2024-01-15</time>
+                            
+                                <a href="https://freephenix.github.io/rGlV8RhRY/" class="post-tag i-tag
+                            i-tag-banana">
+                            #排序
+                        </a>
+                                
+                                <a href="https://freephenix.github.io/YWFpnf3Gl/" class="post-tag i-tag
+                            i-tag-">
+                            #刷题
+                        </a>
+                                
+                                <a href="https://freephenix.github.io/70TrDOWqgi/" class="post-tag i-tag
+                            i-tag-warning">
+                            #面试
+                        </a>
+                                
+                                <a href="https://freephenix.github.io/go/" class="post-tag i-tag
+                            i-tag-other_4">
+                            #Go
+                        </a>
+                                
+                                <a href="https://freephenix.github.io/k1NaSbOoC/" class="post-tag i-tag
+                            i-tag-success">
+                            #LeetCode
+                        </a>
+                                
+                                <a href="https://freephenix.github.io/WucazjDbn/" class="post-tag i-tag
+                            i-tag-success">
+                            #算法
+                        </a>
+                                
+                        </div>
+                        
+                            <div class="post-feature-image" style="background-image: url('https://freephenix.github.io//post-images/eYj6HcnXC.jpeg')"></div>
+                            
+                                <div class="post-content">
+                                    <p>刷题使我快乐，满脸开心.jpg</p>
+<ul>
+<li>来源：力扣（LeetCode）</li>
+<li>链接：https://leetcode.cn/problems/largest-number/</li>
+<li>著作权归领扣网络所有。商业转载请联系官方授权，非商业转载请注明出处。</li>
+</ul>
+<!-- more -->
+<h1 id="题目">题目</h1>
+<p>给定一组非负整数 <code>nums</code>，重新排列每个数的顺序（每个数不可拆分）使之组成一个最大的整数。</p>
+<blockquote>
+<p>注意：输出结果可能非常大，所以你需要返回一个字符串而不是整数。</p>
+</blockquote>
+<p>示例 1：</p>
+<pre><code>输入：nums = [10,2]
+输出：&quot;210&quot;
+</code></pre>
+<p>示例 2：</p>
+<pre><code>输入：nums = [3,30,34,5,9]
+输出：&quot;9534330&quot;
+</code></pre>
+<p>提示：</p>
+<ul>
+<li><code>1 &lt;= nums.length &lt;= 100</code></li>
+<li><code>0 &lt;= nums[i] &lt;= 109</code></li>
+</ul>
+<h1 id="思路">思路</h1>
+<p>这道问题关键就在于弄明白如何比较两个数字的大小，然后去排序就完事儿了</p>
+<h3 id="排序">排序</h3>
+<ul>
+<li>首先是首位不同时，那么我们其实都知道，越把大的数往前放，那么最终结果越大，所以首位不同很容易比较</li>
+<li>首位相同，这里其实分两种情况
+<ul>
+<li>第一种是在后续位置上能够发现不同，比如，&quot;456&quot; 和 &quot;454&quot;，那我们依然能够用不同位越大，最终越大的原则去判断</li>
+<li>第二种是后续位置上没有能够发现不同，比如，&quot;456&quot; 和 &quot;45&quot;，&quot;453&quot; 和 &quot;45&quot;，这两种情况其实还会不同，需要分情况去讨论，但是其实我们有更便捷、心智负担更小的办法，那就是把两个数字用不同的顺序<code>拼起来</code>，这样一来，<code>拼起来</code>哪个数字更大，也就是说明哪个数字应该在前面！</li>
+</ul>
+</li>
+</ul>
+<h3 id="特殊情况">特殊情况</h3>
+<p>最后要提一下就是小心<code>&quot;0&quot;</code>这个特殊情况。虽然我们最终要返回的是字符串，但其实我们要返回的是<code>拼起来之后的数字</code>的字符串表示，所以需要避免前缀0这类情况。</p>
+<p>至此，也就没有太多可说的了，上代码。</p>
+<h1 id="代码">代码</h1>
+<pre><code class="language-golang">func largestNumber(nums []int) string {
+	numStrs := make([]string, 0, len(nums))
+	// 开始只是为了方便位比较，方便不补齐位数
+	// 后来看别人题解，发现还顺便规避了int溢出
+	for _, num := range nums {
+		numStrs = append(numStrs, strconv.Itoa(num))
+	}
+	sort.Slice(numStrs, func(i, j int) bool {
+		// 与其计算位数去补齐，不如直接拼起来看看哪个大
+		// 这样位数也肯定统一，不用考虑某一方溢出问题
+		strIJ := numStrs[i] + numStrs[j]
+		strJI := numStrs[j] + numStrs[i]
+		for k := 0; k &lt; len(strJI); k++ {
+			if strIJ[k] &gt; strJI[k] {
+				return true
+			} else if strIJ[k] &lt; strJI[k] {
+				return false
+			}
+		}
+		return false
+	})
+
+	// 兼容只有0的情况，最大的都是0了，后面指定都是0，不用拼了
+	// 其他情况都得拼起来
+	if numStrs[0] == &quot;0&quot; {
+		return &quot;0&quot;
+	}
+
+	res := &quot;&quot;
+	for _, str := range numStrs {
+		res += str
+	}
+	return res
+}
+</code></pre>
+
+                                </div>
+                    </article>
+                    <!--  -->
+                    
+                        <div class="next-post">
+                            <div class="next">下一篇</div>
+                            <a href="https://freephenix.github.io/iaAq3W3XM/">
+                                <h3 class="post-title">
+                                    LeetCode-24. 两两交换链表中的节点
+                                </h3>
+                            </a>
+                        </div>
+                        
+                            <div id="disqus_thread"></div>
+                            <div id="gitalk-container"></div>
+                </div>
+                <!-- middle -->
+                <div class="main-container-middle"></div>
+                <!-- right -->
+                <div id="sidebar" class="main-container-right">
+                    
+                        <!-- toc -->
+                        
+    <div class="toc-card i-card ">
+        <div class="toc-title i-card-title">目录</div>
+        <div class="toc-content">
+            <ul class="markdownIt-TOC">
+<li><a href="#%E9%A2%98%E7%9B%AE">题目</a></li>
+<li><a href="#%E6%80%9D%E8%B7%AF">思路</a><br>
+*
+<ul>
+<li><a href="#%E6%8E%92%E5%BA%8F">排序</a></li>
+<li><a href="#%E7%89%B9%E6%AE%8A%E6%83%85%E5%86%B5">特殊情况</a></li>
+</ul>
+</li>
+<li><a href="#%E4%BB%A3%E7%A0%81">代码</a></li>
+</ul>
+
+        </div>
+        <script>
+            function locateCatelogList() {
+                /*获取文章目录集合,可通过:header过滤器*/
+                var alis = $('.post-content :header');
+                /*获取侧边栏目录列表集合**/
+                var sidebar_alis = $('.markdownIt-TOC a');
+                /*获取滚动条到顶部的距离*/
+                var scroll_height = $(window).scrollTop();
+                for (var i = 0; i < alis.length; i++) {
+                    /*获取锚点集合中的元素分别到顶点的距离*/
+                    var a_height = $(alis[i]).offset().top;
+                    if (a_height < scroll_height) {
+                        /*高亮显示*/
+                        sidebar_alis.removeClass('on');
+                        $(sidebar_alis[i]).addClass('on');
+                    }
+                }
+            }
+            $(function() {
+                /*绑定滚动事件 */
+                $(window).bind('scroll', locateCatelogList);
+            });
+        </script>
+    </div>
+    
+                            
+
+                </div>
+
+
+
+
+            </div>
+
+
+            <div class="site-footer">
+  Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a> | 
+  <a class="rss" href="https://freephenix.github.io//atom.xml" target="_blank">RSS</a>
+</div>
+
+<script>
+  hljs.initHighlightingOnLoad()
+</script>
+
+
+    </div>
+    <script>
+        $('#sidebar').stickySidebar({
+            topSpacing: 80,
+            // bottomSpacing: 60
+        });
+    </script>
+    
+        
+            <script>
+    window.onload = function() {
+        var gitalk = new Gitalk({
+            clientID: '008503f8c8bca8787fbe',
+            clientSecret: '5f789f71e3288ff1866d17523348881053068eb4',
+            repo: 'freephenix.github.io',
+            owner: 'freephenix',
+            admin: ['freephenix'],
+            id: (location.pathname).substring(0, 49), // Ensure uniqueness and length less than 50
+            distractionFreeMode: false // Facebook-like distraction free mode
+        })
+
+        gitalk.render('gitalk-container')
+    }
+</script>
+                
+
+                    
+                                
+</body>
+
+</html>

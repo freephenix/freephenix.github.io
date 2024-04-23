@@ -1,0 +1,355 @@
+<html>
+
+<head>
+    <meta charset="utf-8" />
+<meta name="description" content="" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>
+    LeetCode-31. 下一个排列 | 半亩房顶
+</title>
+<link rel="shortcut icon" href="https://freephenix.github.io//favicon.ico?v=1713840769430">
+<!-- <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous"> -->
+<link href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+<link rel="stylesheet" href="https://freephenix.github.io//styles/main.css">
+<!-- js -->
+<script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.min.js"></script>
+<script src="https://freephenix.github.io//media/js/jquery.sticky-sidebar.min.js"></script>
+<script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
+<script src="https://cdn.bootcss.com/moment.js/2.23.0/moment.min.js"></script>
+
+
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-147240912-1"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+
+        function gtag() {
+            dataLayer.push(arguments);
+        }
+        gtag('js', new Date());
+
+        gtag('config', 'UA-147240912-1');
+    </script>
+    
+        
+            
+                <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+                <script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+                
+
+                    
+                            
+</head>
+
+<body>
+    <div class="main">
+        <div class="header">
+    <div class="nav">
+        <div class="logo">
+            <a href="https://freephenix.github.io/">
+                <img class="avatar" src="https://freephenix.github.io//images/avatar.png?v=1713840769430" alt="">
+            </a>
+            <div class="site-title">
+                <h1>
+                    半亩房顶
+                </h1>
+            </div>
+        </div>
+        <span class="menu-btn fa fa-align-justify"></span>
+        <div class="menu-container">
+            <ul>
+                
+                    
+                            <li>
+                                <a href="/" class="menu">
+                                    首页
+                                </a>
+                            </li>
+                            
+                                
+                    
+                            <li>
+                                <a href="/archives" class="menu">
+                                    归档
+                                </a>
+                            </li>
+                            
+                                
+                    
+                            <li>
+                                <a href="/tags" class="menu">
+                                    标签
+                                </a>
+                            </li>
+                            
+                                
+                    
+                            <li>
+                                <a href="https://freephenix.github.io//post/guan-yu-ban-mu-fang-ding/" class="menu">
+                                    关于
+                                </a>
+                            </li>
+                            
+                                
+            </ul>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function() {
+        $(".menu-btn").click(function() {
+            $(".menu-container").slideToggle();
+        });
+        $(window).resize(function() {
+
+            if (window.matchMedia('(min-width: 960px)').matches) {
+                $(".menu-container").css('display', 'block')
+            } else {
+                $(".menu-container").css('display', 'none')
+            }
+
+        });
+    });
+</script>
+
+            <div id="main-content" class="post-detail main-container">
+                <!-- left -->
+                <div id="content" class="main-container-left">
+                    <article class="post i-card">
+                        <h2 class="post-title">
+                            LeetCode-31. 下一个排列
+                        </h2>
+                        <div class="post-info">
+                            <time class="post-time">2023-11-23</time>
+                            
+                                <a href="https://freephenix.github.io/FRqn1m2hg/" class="post-tag i-tag
+                            i-tag-warning">
+                            #数组
+                        </a>
+                                
+                                <a href="https://freephenix.github.io/YWFpnf3Gl/" class="post-tag i-tag
+                            i-tag-primary">
+                            #刷题
+                        </a>
+                                
+                                <a href="https://freephenix.github.io/70TrDOWqgi/" class="post-tag i-tag
+                            i-tag-primary">
+                            #面试
+                        </a>
+                                
+                                <a href="https://freephenix.github.io/go/" class="post-tag i-tag
+                            i-tag-other_1">
+                            #Go
+                        </a>
+                                
+                                <a href="https://freephenix.github.io/k1NaSbOoC/" class="post-tag i-tag
+                            i-tag-other_2">
+                            #LeetCode
+                        </a>
+                                
+                                <a href="https://freephenix.github.io/WucazjDbn/" class="post-tag i-tag
+                            i-tag-">
+                            #算法
+                        </a>
+                                
+                        </div>
+                        
+                            <div class="post-feature-image" style="background-image: url('https://freephenix.github.io//post-images/884MXE8OO.jpeg')"></div>
+                            
+                                <div class="post-content">
+                                    <p>刷题使我快乐，满脸开心.jpg</p>
+<ul>
+<li>来源：力扣（LeetCode）</li>
+<li>链接：https://leetcode.cn/problems/next-permutation/</li>
+<li>著作权归领扣网络所有。商业转载请联系官方授权，非商业转载请注明出处。</li>
+</ul>
+<!-- more -->
+<h1 id="题目">题目</h1>
+<p>整数数组的一个 <code>排列</code>  就是将其所有成员以序列或线性顺序排列。</p>
+<p>例如，<code>arr = [1,2,3]</code> ，以下这些都可以视作 <code>arr</code> 的排列：<code>[1,2,3]</code>、<code>[1,3,2]</code>、<code>[3,1,2]</code>、<code>[2,3,1]</code> 。<br>
+整数数组的 <code>下一个排列</code> 是指其整数的<code>下一个字典序更大</code>的排列。更正式地，如果数组的所有排列根据其字典顺序从小到大排列在一个容器中，那么数组的 <code>下一个排列</code> 就是在这个有序容器中排在它后面的那个排列。如果不存在下一个更大的排列，那么这个数组必须重排为字典序最小的排列<code>（即，其元素按升序排列）</code>。</p>
+<p>例如，<code>arr = [1,2,3]</code> 的下一个排列是 <code>[1,3,2]</code> 。<br>
+类似地，<code>arr = [2,3,1]</code> 的下一个排列是 <code>[3,1,2]</code>。<br>
+而 <code>arr = [3,2,1]</code> 的下一个排列是 <code>[1,2,3]</code> ，因为 <code>[3,2,1]</code> 不存在一个字典序更大的排列。<br>
+给你一个整数数组 <code>nums</code> ，找出 <code>nums</code> 的下一个排列。</p>
+<p>必须 <code>原地</code> 修改，只允许使用额外<code>常数</code>空间。</p>
+<p>示例 1：</p>
+<pre><code>输入：nums = [1,2,3]
+输出：[1,3,2]
+</code></pre>
+<p>示例 2：</p>
+<pre><code>输入：nums = [3,2,1]
+输出：[1,2,3]
+</code></pre>
+<p>示例 3：</p>
+<pre><code>输入：nums = [1,1,5]
+输出：[1,5,1]
+</code></pre>
+<p>提示：</p>
+<ul>
+<li><code>1 &lt;= nums.length &lt;= 100</code></li>
+<li><code>0 &lt;= nums[i] &lt;= 100</code></li>
+</ul>
+<h1 id="思路">思路</h1>
+<p>如果要求使用额外<code>常数</code>空间，那么空间换时间的路子基本就堵死了，不过好在这道题的思路并没有那么难想。我相信大家都能想到：</p>
+<ul>
+<li>要找最靠后的升序序列，这样对于整体影响最小</li>
+<li>但显然还不够，在此基础上，找到最后的一组升序序列时，应该再往后找找（此时后面一截一定是降序排列，不然就找不到这一组了），找一个<code>最小的</code>比<code>这组升序序列中小数</code>大的值跟它交换：</li>
+</ul>
+<blockquote>
+<p>例如 <code>[1，3，4，6，5，2]</code>。最后的升序序列应该是<code>4和6</code>，但是再从<code>6</code>往后看看，其实用<code>5和4</code>交换其实影响更小，用<code>2和4</code>交换又会降低排列的字典序，所以应该选择用<code>5和4</code>交换</p>
+</blockquote>
+<ul>
+<li>但还是不够，交换完成后，其实还需要看看交换后，<code>升序序列中小数</code>之后的这一节，是不是最小的，用不用再降低下字典序（因为前面的逻辑保障，其实交换后后面一截一定是降序）。</li>
+</ul>
+<blockquote>
+<p>继续例如交换后为 <code>[1，3，5，6，4，2]</code>，此时显然，交换后字典序最小的应该是<code>[1，3，5，2，4，6]</code>，</p>
+</blockquote>
+<ul>
+<li>所以最后就是，把交换之后，<code>升序序列中小数</code>位置之后的这一截再翻转下，变成升序。</li>
+</ul>
+<p>至此，上代码。细节就放到代码注释了。</p>
+<h1 id="代码">代码</h1>
+<pre><code class="language-golang">
+func nextPermutation(nums []int) {
+	// fmt.Printf(&quot;original: %v\n&quot;, nums)
+	n := len(nums)
+	i := n - 1
+	for ; i &gt; 0; i-- {
+        // 从尾部找最靠后的升序序列
+		if nums[i] &gt; nums[i-1] {
+            // 找比升序序列中小数字 大 的 最小数
+			j := i
+			for j &lt; n &amp;&amp; nums[j] &gt; nums[i-1] {
+				j++
+			}
+            // 交换
+			nums[j-1], nums[i-1] = nums[i-1], nums[j-1]
+			break
+		}
+	}
+
+	k := n - 1
+    // 看看用不用翻转
+	if k &gt; i {
+        // 之前逻辑保证一定是降序，直接翻转就行
+		for k &gt; i {
+			nums[i], nums[k] = nums[k], nums[i]
+			i++
+			k--
+		}
+	}
+	//fmt.Printf(&quot;result: %v\n&quot;, nums)
+}
+</code></pre>
+
+                                </div>
+                    </article>
+                    <!--  -->
+                    
+                        <div class="next-post">
+                            <div class="next">下一篇</div>
+                            <a href="https://freephenix.github.io/PHQrsv8bO/">
+                                <h3 class="post-title">
+                                    LeetCode-148. 排序链表
+                                </h3>
+                            </a>
+                        </div>
+                        
+                            <div id="disqus_thread"></div>
+                            <div id="gitalk-container"></div>
+                </div>
+                <!-- middle -->
+                <div class="main-container-middle"></div>
+                <!-- right -->
+                <div id="sidebar" class="main-container-right">
+                    
+                        <!-- toc -->
+                        
+    <div class="toc-card i-card ">
+        <div class="toc-title i-card-title">目录</div>
+        <div class="toc-content">
+            <ul class="markdownIt-TOC">
+<li><a href="#%E9%A2%98%E7%9B%AE">题目</a></li>
+<li><a href="#%E6%80%9D%E8%B7%AF">思路</a></li>
+<li><a href="#%E4%BB%A3%E7%A0%81">代码</a></li>
+</ul>
+
+        </div>
+        <script>
+            function locateCatelogList() {
+                /*获取文章目录集合,可通过:header过滤器*/
+                var alis = $('.post-content :header');
+                /*获取侧边栏目录列表集合**/
+                var sidebar_alis = $('.markdownIt-TOC a');
+                /*获取滚动条到顶部的距离*/
+                var scroll_height = $(window).scrollTop();
+                for (var i = 0; i < alis.length; i++) {
+                    /*获取锚点集合中的元素分别到顶点的距离*/
+                    var a_height = $(alis[i]).offset().top;
+                    if (a_height < scroll_height) {
+                        /*高亮显示*/
+                        sidebar_alis.removeClass('on');
+                        $(sidebar_alis[i]).addClass('on');
+                    }
+                }
+            }
+            $(function() {
+                /*绑定滚动事件 */
+                $(window).bind('scroll', locateCatelogList);
+            });
+        </script>
+    </div>
+    
+                            
+
+                </div>
+
+
+
+
+            </div>
+
+
+            <div class="site-footer">
+  Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a> | 
+  <a class="rss" href="https://freephenix.github.io//atom.xml" target="_blank">RSS</a>
+</div>
+
+<script>
+  hljs.initHighlightingOnLoad()
+</script>
+
+
+    </div>
+    <script>
+        $('#sidebar').stickySidebar({
+            topSpacing: 80,
+            // bottomSpacing: 60
+        });
+    </script>
+    
+        
+            <script>
+    window.onload = function() {
+        var gitalk = new Gitalk({
+            clientID: '008503f8c8bca8787fbe',
+            clientSecret: '5f789f71e3288ff1866d17523348881053068eb4',
+            repo: 'freephenix.github.io',
+            owner: 'freephenix',
+            admin: ['freephenix'],
+            id: (location.pathname).substring(0, 49), // Ensure uniqueness and length less than 50
+            distractionFreeMode: false // Facebook-like distraction free mode
+        })
+
+        gitalk.render('gitalk-container')
+    }
+</script>
+                
+
+                    
+                                
+</body>
+
+</html>

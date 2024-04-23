@@ -1,0 +1,420 @@
+<html>
+
+<head>
+    <meta charset="utf-8" />
+<meta name="description" content="" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>
+    缓存常见问题整理 | 半亩房顶
+</title>
+<link rel="shortcut icon" href="https://freephenix.github.io//favicon.ico?v=1713840769430">
+<!-- <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous"> -->
+<link href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+<link rel="stylesheet" href="https://freephenix.github.io//styles/main.css">
+<!-- js -->
+<script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.min.js"></script>
+<script src="https://freephenix.github.io//media/js/jquery.sticky-sidebar.min.js"></script>
+<script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
+<script src="https://cdn.bootcss.com/moment.js/2.23.0/moment.min.js"></script>
+
+
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-147240912-1"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+
+        function gtag() {
+            dataLayer.push(arguments);
+        }
+        gtag('js', new Date());
+
+        gtag('config', 'UA-147240912-1');
+    </script>
+    
+        
+            
+                <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+                <script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+                
+
+                    
+                            
+</head>
+
+<body>
+    <div class="main">
+        <div class="header">
+    <div class="nav">
+        <div class="logo">
+            <a href="https://freephenix.github.io/">
+                <img class="avatar" src="https://freephenix.github.io//images/avatar.png?v=1713840769430" alt="">
+            </a>
+            <div class="site-title">
+                <h1>
+                    半亩房顶
+                </h1>
+            </div>
+        </div>
+        <span class="menu-btn fa fa-align-justify"></span>
+        <div class="menu-container">
+            <ul>
+                
+                    
+                            <li>
+                                <a href="/" class="menu">
+                                    首页
+                                </a>
+                            </li>
+                            
+                                
+                    
+                            <li>
+                                <a href="/archives" class="menu">
+                                    归档
+                                </a>
+                            </li>
+                            
+                                
+                    
+                            <li>
+                                <a href="/tags" class="menu">
+                                    标签
+                                </a>
+                            </li>
+                            
+                                
+                    
+                            <li>
+                                <a href="https://freephenix.github.io//post/guan-yu-ban-mu-fang-ding/" class="menu">
+                                    关于
+                                </a>
+                            </li>
+                            
+                                
+            </ul>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function() {
+        $(".menu-btn").click(function() {
+            $(".menu-container").slideToggle();
+        });
+        $(window).resize(function() {
+
+            if (window.matchMedia('(min-width: 960px)').matches) {
+                $(".menu-container").css('display', 'block')
+            } else {
+                $(".menu-container").css('display', 'none')
+            }
+
+        });
+    });
+</script>
+
+            <div id="main-content" class="post-detail main-container">
+                <!-- left -->
+                <div id="content" class="main-container-left">
+                    <article class="post i-card">
+                        <h2 class="post-title">
+                            缓存常见问题整理
+                        </h2>
+                        <div class="post-info">
+                            <time class="post-time">2021-05-20</time>
+                            
+                                <a href="https://freephenix.github.io/peMHSa3D2/" class="post-tag i-tag
+                            i-tag-primary">
+                            #工程
+                        </a>
+                                
+                                <a href="https://freephenix.github.io/yQozqrioz/" class="post-tag i-tag
+                            i-tag-other_4">
+                            #Redis
+                        </a>
+                                
+                        </div>
+                        
+                            <div class="post-feature-image" style="background-image: url('https://freephenix.github.io//post-images/huan-cun-chuan-tou-huan-cun-bing-fa-re-dian-huan-cun-jie-jue-fang-an.png')"></div>
+                            
+                                <div class="post-content">
+                                    <p>整理几个常见的缓存方面的问题</p>
+<!-- more -->
+<h1 id="缓存的必要性">缓存的必要性</h1>
+<ol>
+<li>增强用户体验，减少用户等待时间；</li>
+<li>降低服务器压力；</li>
+<li>降低APP客户端的网络流量消耗；</li>
+</ol>
+<p>从业务考虑，缓存更多是为了增强用户体验<br>
+从技术考虑，缓存更多是为了提高系统的响应速度<br>
+当然于此同时，我们要面临的就是引入缓存所带来的问题：<br>
+<code>缓存穿透</code>、<code>缓存击穿</code>、<code>缓存雪崩</code></p>
+<h1 id="缓存穿透">缓存穿透</h1>
+<h2 id="什么是缓存穿透">什么是缓存穿透</h2>
+<p>正常情况下，我们去查询数据都是存在。那么请求去查询一条压根儿数据库中根本就不存在的数据，也就是缓存和数据库都查询不到这条数据，但是请求每次都会打到数据库上面去。这种查询不存在数据的现象我们称为<code>缓存穿透</code>。</p>
+<h2 id="带来的问题">带来的问题</h2>
+<p>试想一下，如果有黑客会对你的系统进行攻击，拿一个不存在的id去查询数据，会产生大量的请求到数据库去查询。可能会导致你的数据库由于压力过大而宕掉。</p>
+<h2 id="如何解决">如何解决</h2>
+<ul>
+<li>参数校验<br>
+对于一部分不应该存在的参数，我们理应提前限制住，fail fast</li>
+<li>缓存空值<br>
+这种做法有点类似于一种降级策略；对于不存在的值，如果我们能够往内存中填充一个空值，那么就不会导致每次查询都打到数据库，当然，这种情况下需要设置过期时间，并且需要仔细的评估业务需要而设置过期时间</li>
+<li>布隆过滤器（BloomFilter）</li>
+</ul>
+<blockquote>
+<p>布隆过滤器适用于数据量较大时使用，如果数据量较小，那么弄一个hash表或者bit数组之类的即可</p>
+</blockquote>
+<p>布隆过滤器是<code>巴顿.布隆</code>于一九七零年提出的，核心就是一个超大的位数组和多个哈希函数，如下图：<br>
+<img src="https://freephenix.github.io//post-images/1679277788008.png" alt="" loading="lazy"><br>
+查询：需要判断一个数据w是否存在时，用多个hash函数求得w的hash值，然后在这些位上查看是否都有1，均为1则证明元素有<code>可能</code>存在，如果存在0则证明肯定不存在<br>
+添加：添加元素则将多个hash值位置上的位置为1</p>
+<p>布隆过滤器是有错误率的，不过很小，所以，只要不是<code>零错误</code>的场景，都是可以满足需求的，感兴趣可以看下这位大佬的错误率计算：<a href="https://blog.csdn.net/jiaomeng/article/details/1495500">Bloom Filter概念和原理</a></p>
+<p>使用布隆过滤器后的流程图如下：<br>
+<img src="https://freephenix.github.io//post-images/1621578074638.png" alt="" loading="lazy"></p>
+<p>这里有一个golang的代码实现<a href="https://github.com/steakknife/bloomfilter">bloomfilter</a></p>
+<pre><code>type Filter struct {
+	lock sync.RWMutex
+	bits []uint64
+	keys []uint64
+	m    uint64 // number of bits the &quot;bits&quot; field should recognize
+	n    uint64 // number of inserted elements
+}
+</code></pre>
+<h1 id="缓存击穿">缓存击穿</h1>
+<h2 id="什么是缓存击穿">什么是缓存击穿</h2>
+<p>在平常高并发的系统中，大量的请求同时查询一个key时，此时这个key正好失效了，就会导致大量的请求都打到数据库上面去。这种现象我们称为<code>缓存击穿</code>。</p>
+<h2 id="带来的问题-2">带来的问题</h2>
+<p>会造成某一时刻数据库请求量过大，压力剧增。</p>
+<h2 id="如何解决-2">如何解决</h2>
+<p>这种场景，一般我们会限制同一个key的多次数据回捞，例如使用singleflight（单飞）等工具。<br>
+单飞主要有两个重要的结构体</p>
+<pre><code>// call is an in-flight or completed singleflight.Do call
+// call 表示一个正在执行的或已完成的函数调用，存储调用的接口、报错一些标记等等，
+type call struct {
+    // 可以看到，singleflight实现中用到了WaitGroup来保证只有一个goroutinue去回捞
+	wg sync.WaitGroup
+
+	// These fields are written once before the WaitGroup is done
+	// and are only read after the WaitGroup is done.
+    // 记录结果，在WaitGroup完成之前，只会写入一次，重点在此了
+	val interface{}
+	err error
+
+	// forgotten indicates whether Forget was called with this call's key
+	// while the call was still in flight.
+    // 用来标识执行完成之后结果立马删除还是保留在singleflight中
+	forgotten bool
+
+	// These fields are read and written with the singleflight
+	// mutex held before the WaitGroup is done, and are read but
+	// not written after the WaitGroup is done.
+    // 这个字段记录执行次数，更新时机是发起请求，waitGroup执行完成‘之前’
+	dups  int
+    // 用来记录DoChan中需要返回的数据
+	chans []chan&lt;- Result
+}
+
+// Group represents a class of work and forms a namespace in
+// which units of work can be executed with duplicate suppression.
+// 用来记录已经存在的对某key的请求和对应的实际请求函数（call）的映射
+type Group struct {
+	mu sync.Mutex       // protects m 加锁保护m，并不是用锁来保证只有一个goroutinue去回捞
+	m  map[string]*call // lazily initialized  懒加载
+}
+</code></pre>
+<p>详情可以自己看下源码，或者看下我自己写的这篇文章<a href="https://freephenix.github.io/post/yuan-ma-za-huo-pu-singleflight/">源码杂货铺：singleflight</a></p>
+<h1 id="缓存雪崩">缓存雪崩</h1>
+<h2 id="什么是缓存雪崩">什么是缓存雪崩</h2>
+<p><code>缓存雪崩</code>的情况是说，当某一时刻发生大规模的缓存失效的情况，比如你的缓存服务宕机了，会有大量的请求进来直接打到DB上面。结果就是DB撑不住挂掉。</p>
+<h2 id="带来的问题-3">带来的问题</h2>
+<p>会造成某一时刻数据库请求量过大，压力剧增。</p>
+<h2 id="如何解决-3">如何解决</h2>
+<p>（1）事前：</p>
+<ul>
+<li>均匀过期：设置不同的过期时间，让缓存失效的时间尽量均匀，避免相同的过期时间导致缓存雪崩，造成大量数据库的访问。</li>
+<li>分级缓存：第一级缓存失效的基础上，访问二级缓存，每一级缓存的失效时间都不同。</li>
+<li>热点数据缓存永远不过期。</li>
+</ul>
+<blockquote>
+<p>永不过期实际包含两层意思：<br>
+物理不过期，针对热点key不设置过期时间<br>
+逻辑过期，把过期时间存在key对应的value里，如果发现要过期了，通过一个后台的异步线程进行缓存的构建</p>
+</blockquote>
+<ul>
+<li>保证Redis缓存的高可用，防止Redis宕机导致缓存雪崩的问题。可以使用 主从+ 哨兵，Redis集群来避免 Redis 全盘崩溃的情况。</li>
+</ul>
+<p>（2）事中：</p>
+<ul>
+<li>互斥锁：在缓存失效后，通过互斥锁或者队列来控制读数据写缓存的线程数量，比如某个key只允许一个线程查询数据和写缓存，其他线程等待。这种方式会阻塞其他的线程，此时系统的吞吐量会下降</li>
+<li>使用熔断机制，限流降级。当流量达到一定的阈值，直接返回“系统拥挤”之类的提示，防止过多的请求打在数据库上将数据库击垮，至少能保证一部分用户是可以正常使用，其他用户多刷新几次也能得到结果。</li>
+</ul>
+<p>（3）事后：</p>
+<ul>
+<li>开启Redis持久化机制，尽快恢复缓存数据，一旦重启，就能从磁盘上自动加载数据恢复内存中的数据。</li>
+</ul>
+<h1 id="缓存预热和缓存降级">缓存预热和缓存降级</h1>
+<p>这两个并非问题，而是两个策略，为了解决一些问题</p>
+<h2 id="什么是缓存预热">什么是缓存预热</h2>
+<p>缓存预热是指系统上线后，提前将相关的缓存数据加载到缓存系统。避免在用户请求的时候，先查询数据库，然后再将数据缓存的问题，用户直接查询事先被预热的缓存数据。<br>
+如果不进行预热，那么Redis初始状态数据为空，系统上线初期，对于高并发的流量，都会访问到数据库中， 对数据库造成流量的压力。</p>
+<h2 id="缓存预热方案">缓存预热方案：</h2>
+<ul>
+<li>数据量不大的时候，工程启动的时候进行加载缓存动作；</li>
+<li>数据量大的时候，设置一个定时任务脚本，进行缓存的刷新；</li>
+<li>数据量太大的时候，优先保证热点数据进行提前加载到缓存。</li>
+</ul>
+<h2 id="什么是缓存降级">什么是缓存降级</h2>
+<p>缓存降级是指缓存失效或缓存服务器挂掉的情况下，不去访问数据库，直接返回默认数据或访问服务的内存数据。降级一般是有损的操作，所以尽量减少降级对于业务的影响程度。</p>
+<h2 id="缓存降级方案">缓存降级方案：</h2>
+<p>在项目实战中通常会将部分热点数据缓存到服务的内存中，这样一旦缓存出现异常，可以直接使用服务的内存数据，从而避免数据库遭受巨大压力。</p>
+<h1 id="引用">引用</h1>
+<p><a href="https://zhuanlan.zhihu.com/p/74204346">缓存技术方案</a><br>
+<a href="https://www.cnblogs.com/yelongsan/p/9045782.html">缓存三种模式</a><br>
+<a href="https://www.cnblogs.com/mrcharleshu/p/13200461.html">理解与解决缓存穿透、缓存击穿、缓存雪崩、热点数据失效问题</a><br>
+<a href="https://www.jianshu.com/p/88c6ac4b38c8">布隆过滤器(Bloom Filter)的原理和实现</a><br>
+<a href="https://blog.csdn.net/jiaomeng/article/details/1495500">Bloom Filter概念和原理</a><br>
+<a href="https://www.cnblogs.com/itplay/p/10029884.html">【缓存】缓存穿透、缓存并发、热点缓存解决方案</a><br>
+<a href="https://www.jianshu.com/p/652f64f49dca">缓存穿透与热点缓存等问题的解决方案</a><br>
+<a href="https://blog.csdn.net/weixin_38055381/article/details/81161870">缓存击穿、缓存并发和缓存雪崩</a><br>
+<a href="https://blog.csdn.net/a745233700/article/details/88088669">Redis的缓存雪崩、缓存击穿、缓存穿透与缓存预热、缓存降级</a><br>
+<a href="https://segmentfault.com/a/1190000039393736">面试Redis——缓存并发 缓存雪崩 缓存穿透</a></p>
+
+                                </div>
+                    </article>
+                    <!--  -->
+                    
+                        <div class="next-post">
+                            <div class="next">下一篇</div>
+                            <a href="https://freephenix.github.io/fen-bu-shi-suo/">
+                                <h3 class="post-title">
+                                    学习下分布式锁
+                                </h3>
+                            </a>
+                        </div>
+                        
+                            <div id="disqus_thread"></div>
+                            <div id="gitalk-container"></div>
+                </div>
+                <!-- middle -->
+                <div class="main-container-middle"></div>
+                <!-- right -->
+                <div id="sidebar" class="main-container-right">
+                    
+                        <!-- toc -->
+                        
+    <div class="toc-card i-card ">
+        <div class="toc-title i-card-title">目录</div>
+        <div class="toc-content">
+            <ul class="markdownIt-TOC">
+<li><a href="#%E7%BC%93%E5%AD%98%E7%9A%84%E5%BF%85%E8%A6%81%E6%80%A7">缓存的必要性</a></li>
+<li><a href="#%E7%BC%93%E5%AD%98%E7%A9%BF%E9%80%8F">缓存穿透</a>
+<ul>
+<li><a href="#%E4%BB%80%E4%B9%88%E6%98%AF%E7%BC%93%E5%AD%98%E7%A9%BF%E9%80%8F">什么是缓存穿透</a></li>
+<li><a href="#%E5%B8%A6%E6%9D%A5%E7%9A%84%E9%97%AE%E9%A2%98">带来的问题</a></li>
+<li><a href="#%E5%A6%82%E4%BD%95%E8%A7%A3%E5%86%B3">如何解决</a></li>
+</ul>
+</li>
+<li><a href="#%E7%BC%93%E5%AD%98%E5%87%BB%E7%A9%BF">缓存击穿</a>
+<ul>
+<li><a href="#%E4%BB%80%E4%B9%88%E6%98%AF%E7%BC%93%E5%AD%98%E5%87%BB%E7%A9%BF">什么是缓存击穿</a></li>
+<li><a href="#%E5%B8%A6%E6%9D%A5%E7%9A%84%E9%97%AE%E9%A2%98-2">带来的问题</a></li>
+<li><a href="#%E5%A6%82%E4%BD%95%E8%A7%A3%E5%86%B3-2">如何解决</a></li>
+</ul>
+</li>
+<li><a href="#%E7%BC%93%E5%AD%98%E9%9B%AA%E5%B4%A9">缓存雪崩</a>
+<ul>
+<li><a href="#%E4%BB%80%E4%B9%88%E6%98%AF%E7%BC%93%E5%AD%98%E9%9B%AA%E5%B4%A9">什么是缓存雪崩</a></li>
+<li><a href="#%E5%B8%A6%E6%9D%A5%E7%9A%84%E9%97%AE%E9%A2%98-3">带来的问题</a></li>
+<li><a href="#%E5%A6%82%E4%BD%95%E8%A7%A3%E5%86%B3-3">如何解决</a></li>
+</ul>
+</li>
+<li><a href="#%E7%BC%93%E5%AD%98%E9%A2%84%E7%83%AD%E5%92%8C%E7%BC%93%E5%AD%98%E9%99%8D%E7%BA%A7">缓存预热和缓存降级</a>
+<ul>
+<li><a href="#%E4%BB%80%E4%B9%88%E6%98%AF%E7%BC%93%E5%AD%98%E9%A2%84%E7%83%AD">什么是缓存预热</a></li>
+<li><a href="#%E7%BC%93%E5%AD%98%E9%A2%84%E7%83%AD%E6%96%B9%E6%A1%88">缓存预热方案：</a></li>
+<li><a href="#%E4%BB%80%E4%B9%88%E6%98%AF%E7%BC%93%E5%AD%98%E9%99%8D%E7%BA%A7">什么是缓存降级</a></li>
+<li><a href="#%E7%BC%93%E5%AD%98%E9%99%8D%E7%BA%A7%E6%96%B9%E6%A1%88">缓存降级方案：</a></li>
+</ul>
+</li>
+<li><a href="#%E5%BC%95%E7%94%A8">引用</a></li>
+</ul>
+
+        </div>
+        <script>
+            function locateCatelogList() {
+                /*获取文章目录集合,可通过:header过滤器*/
+                var alis = $('.post-content :header');
+                /*获取侧边栏目录列表集合**/
+                var sidebar_alis = $('.markdownIt-TOC a');
+                /*获取滚动条到顶部的距离*/
+                var scroll_height = $(window).scrollTop();
+                for (var i = 0; i < alis.length; i++) {
+                    /*获取锚点集合中的元素分别到顶点的距离*/
+                    var a_height = $(alis[i]).offset().top;
+                    if (a_height < scroll_height) {
+                        /*高亮显示*/
+                        sidebar_alis.removeClass('on');
+                        $(sidebar_alis[i]).addClass('on');
+                    }
+                }
+            }
+            $(function() {
+                /*绑定滚动事件 */
+                $(window).bind('scroll', locateCatelogList);
+            });
+        </script>
+    </div>
+    
+                            
+
+                </div>
+
+
+
+
+            </div>
+
+
+            <div class="site-footer">
+  Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a> | 
+  <a class="rss" href="https://freephenix.github.io//atom.xml" target="_blank">RSS</a>
+</div>
+
+<script>
+  hljs.initHighlightingOnLoad()
+</script>
+
+
+    </div>
+    <script>
+        $('#sidebar').stickySidebar({
+            topSpacing: 80,
+            // bottomSpacing: 60
+        });
+    </script>
+    
+        
+            <script>
+    window.onload = function() {
+        var gitalk = new Gitalk({
+            clientID: '008503f8c8bca8787fbe',
+            clientSecret: '5f789f71e3288ff1866d17523348881053068eb4',
+            repo: 'freephenix.github.io',
+            owner: 'freephenix',
+            admin: ['freephenix'],
+            id: (location.pathname).substring(0, 49), // Ensure uniqueness and length less than 50
+            distractionFreeMode: false // Facebook-like distraction free mode
+        })
+
+        gitalk.render('gitalk-container')
+    }
+</script>
+                
+
+                    
+                                
+</body>
+
+</html>

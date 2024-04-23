@@ -1,0 +1,355 @@
+<html>
+
+<head>
+    <meta charset="utf-8" />
+<meta name="description" content="" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>
+    LeetCode-560. 和为 K 的子数组 | 半亩房顶
+</title>
+<link rel="shortcut icon" href="https://freephenix.github.io//favicon.ico?v=1713840769430">
+<!-- <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous"> -->
+<link href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+<link rel="stylesheet" href="https://freephenix.github.io//styles/main.css">
+<!-- js -->
+<script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.min.js"></script>
+<script src="https://freephenix.github.io//media/js/jquery.sticky-sidebar.min.js"></script>
+<script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
+<script src="https://cdn.bootcss.com/moment.js/2.23.0/moment.min.js"></script>
+
+
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-147240912-1"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+
+        function gtag() {
+            dataLayer.push(arguments);
+        }
+        gtag('js', new Date());
+
+        gtag('config', 'UA-147240912-1');
+    </script>
+    
+        
+            
+                <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+                <script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+                
+
+                    
+                            
+</head>
+
+<body>
+    <div class="main">
+        <div class="header">
+    <div class="nav">
+        <div class="logo">
+            <a href="https://freephenix.github.io/">
+                <img class="avatar" src="https://freephenix.github.io//images/avatar.png?v=1713840769430" alt="">
+            </a>
+            <div class="site-title">
+                <h1>
+                    半亩房顶
+                </h1>
+            </div>
+        </div>
+        <span class="menu-btn fa fa-align-justify"></span>
+        <div class="menu-container">
+            <ul>
+                
+                    
+                            <li>
+                                <a href="/" class="menu">
+                                    首页
+                                </a>
+                            </li>
+                            
+                                
+                    
+                            <li>
+                                <a href="/archives" class="menu">
+                                    归档
+                                </a>
+                            </li>
+                            
+                                
+                    
+                            <li>
+                                <a href="/tags" class="menu">
+                                    标签
+                                </a>
+                            </li>
+                            
+                                
+                    
+                            <li>
+                                <a href="https://freephenix.github.io//post/guan-yu-ban-mu-fang-ding/" class="menu">
+                                    关于
+                                </a>
+                            </li>
+                            
+                                
+            </ul>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function() {
+        $(".menu-btn").click(function() {
+            $(".menu-container").slideToggle();
+        });
+        $(window).resize(function() {
+
+            if (window.matchMedia('(min-width: 960px)').matches) {
+                $(".menu-container").css('display', 'block')
+            } else {
+                $(".menu-container").css('display', 'none')
+            }
+
+        });
+    });
+</script>
+
+            <div id="main-content" class="post-detail main-container">
+                <!-- left -->
+                <div id="content" class="main-container-left">
+                    <article class="post i-card">
+                        <h2 class="post-title">
+                            LeetCode-560. 和为 K 的子数组
+                        </h2>
+                        <div class="post-info">
+                            <time class="post-time">2024-01-16</time>
+                            
+                                <a href="https://freephenix.github.io/ljP7hfPEt/" class="post-tag i-tag
+                            i-tag-other_2">
+                            #前缀和
+                        </a>
+                                
+                                <a href="https://freephenix.github.io/FRqn1m2hg/" class="post-tag i-tag
+                            i-tag-other_3">
+                            #数组
+                        </a>
+                                
+                                <a href="https://freephenix.github.io/Dk8e7aTYjU/" class="post-tag i-tag
+                            i-tag-primary">
+                            #哈希表
+                        </a>
+                                
+                                <a href="https://freephenix.github.io/YWFpnf3Gl/" class="post-tag i-tag
+                            i-tag-info">
+                            #刷题
+                        </a>
+                                
+                                <a href="https://freephenix.github.io/70TrDOWqgi/" class="post-tag i-tag
+                            i-tag-success">
+                            #面试
+                        </a>
+                                
+                                <a href="https://freephenix.github.io/go/" class="post-tag i-tag
+                            i-tag-banana">
+                            #Go
+                        </a>
+                                
+                                <a href="https://freephenix.github.io/k1NaSbOoC/" class="post-tag i-tag
+                            i-tag-info">
+                            #LeetCode
+                        </a>
+                                
+                                <a href="https://freephenix.github.io/WucazjDbn/" class="post-tag i-tag
+                            i-tag-success">
+                            #算法
+                        </a>
+                                
+                        </div>
+                        
+                            <div class="post-feature-image" style="background-image: url('https://freephenix.github.io//post-images/zB-J_5qHI.jpeg')"></div>
+                            
+                                <div class="post-content">
+                                    <p>刷题使我快乐，满脸开心.jpg</p>
+<ul>
+<li>来源：力扣（LeetCode）</li>
+<li>链接：https://leetcode.cn/problems/subarray-sum-equals-k/</li>
+<li>著作权归领扣网络所有。商业转载请联系官方授权，非商业转载请注明出处。</li>
+</ul>
+<!-- more -->
+<h1 id="题目">题目</h1>
+<p>给你一个整数数组 <code>nums</code> 和一个整数 <code>k</code> ，请你统计并返回 该数组中和为 <code>k</code> 的子数组的个数 。</p>
+<blockquote>
+<p>子数组是数组中元素的连续非空序列。</p>
+</blockquote>
+<p>示例 1：</p>
+<pre><code>输入：nums = [1,1,1], k = 2
+输出：2
+</code></pre>
+<p>示例 2：</p>
+<pre><code>输入：nums = [1,2,3], k = 3
+输出：2
+</code></pre>
+<p>提示：</p>
+<ul>
+<li><code>1 &lt;= nums.length &lt;= 2 * 104</code></li>
+<li><code>-1000 &lt;= nums[i] &lt;= 1000</code></li>
+<li><code>-107 &lt;= k &lt;= 107</code></li>
+</ul>
+<h1 id="思路">思路</h1>
+<p>暴力可破，关键就在于怎么优化了。</p>
+<h3 id="前缀和">前缀和</h3>
+<ul>
+<li>对于这类连续数组求和的场景，前缀和是个很不错的思路。</li>
+</ul>
+<blockquote>
+<p>即用一个连续累计加和的数组做辅助，以各个累计和之间的间隙差值来尝试匹配结果</p>
+</blockquote>
+<h3 id="哈希表">哈希表</h3>
+<ul>
+<li>而对于<code>匹配间隙</code>来说，我们就需要一个方式来进行搜索，这里可以考虑哈希表，搜索匹配更快。</li>
+<li>因为有<code>负数</code>和<code>0</code>存在，所以很有可能会出现累加和出现重复，所以哈希表需要记录数量，而不是单单记录是否存在。</li>
+<li>不过哈希表也有一个弊端，那就是累加和需要的是<code>有序</code>，但对于是否存在这个结果上，哈希表是无序的，所以在代码编排上，我们就需要从前往后搜索匹配，保证结果的正确性。</li>
+</ul>
+<p>至此，也就没有太多可说的了，细节在代码注释了。</p>
+<h1 id="代码">代码</h1>
+<pre><code class="language-golang">func subarraySum(nums []int, k int) int {
+	// 求前缀和数组
+	sums := make([]int, len(nums)+1)
+	for i := range nums {
+		sums[i+1] = sums[i] + nums[i]
+	}
+
+	// map缓存前缀和
+	sumMap := make(map[int]int, len(nums))
+	// 初始化
+    sumMap[0] = 1
+	res := 0
+	// nums[0] 没有'前缀'，所以 sums[0] 无实际意义，需从 sums[1] 开始
+	for i := 1; i &lt; len(sums); i++ {
+		if _, ok := sumMap[sums[i]-k]; ok {
+			// 如果多次进入，说明有多个起点可以累加至 i 位置满足情况
+			res += sumMap[sums[i]-k]
+		}
+		// 对累加过来的结果进行 +1，后续有相同累加结果时再 +1
+		// 后续再出现 sums[i]-k == 0 时，说明有两个位置可以累加至此满足情况
+		// 确实应该 +2，所以不用担心正确性
+		sumMap[sums[i]] += 1
+	}
+	return res
+}
+</code></pre>
+
+                                </div>
+                    </article>
+                    <!--  -->
+                    
+                        <div class="next-post">
+                            <div class="next">下一篇</div>
+                            <a href="https://freephenix.github.io/eYj6HcnXC/">
+                                <h3 class="post-title">
+                                    LeetCode-179. 最大数
+                                </h3>
+                            </a>
+                        </div>
+                        
+                            <div id="disqus_thread"></div>
+                            <div id="gitalk-container"></div>
+                </div>
+                <!-- middle -->
+                <div class="main-container-middle"></div>
+                <!-- right -->
+                <div id="sidebar" class="main-container-right">
+                    
+                        <!-- toc -->
+                        
+    <div class="toc-card i-card ">
+        <div class="toc-title i-card-title">目录</div>
+        <div class="toc-content">
+            <ul class="markdownIt-TOC">
+<li><a href="#%E9%A2%98%E7%9B%AE">题目</a></li>
+<li><a href="#%E6%80%9D%E8%B7%AF">思路</a><br>
+*
+<ul>
+<li><a href="#%E5%89%8D%E7%BC%80%E5%92%8C">前缀和</a></li>
+<li><a href="#%E5%93%88%E5%B8%8C%E8%A1%A8">哈希表</a></li>
+</ul>
+</li>
+<li><a href="#%E4%BB%A3%E7%A0%81">代码</a></li>
+</ul>
+
+        </div>
+        <script>
+            function locateCatelogList() {
+                /*获取文章目录集合,可通过:header过滤器*/
+                var alis = $('.post-content :header');
+                /*获取侧边栏目录列表集合**/
+                var sidebar_alis = $('.markdownIt-TOC a');
+                /*获取滚动条到顶部的距离*/
+                var scroll_height = $(window).scrollTop();
+                for (var i = 0; i < alis.length; i++) {
+                    /*获取锚点集合中的元素分别到顶点的距离*/
+                    var a_height = $(alis[i]).offset().top;
+                    if (a_height < scroll_height) {
+                        /*高亮显示*/
+                        sidebar_alis.removeClass('on');
+                        $(sidebar_alis[i]).addClass('on');
+                    }
+                }
+            }
+            $(function() {
+                /*绑定滚动事件 */
+                $(window).bind('scroll', locateCatelogList);
+            });
+        </script>
+    </div>
+    
+                            
+
+                </div>
+
+
+
+
+            </div>
+
+
+            <div class="site-footer">
+  Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a> | 
+  <a class="rss" href="https://freephenix.github.io//atom.xml" target="_blank">RSS</a>
+</div>
+
+<script>
+  hljs.initHighlightingOnLoad()
+</script>
+
+
+    </div>
+    <script>
+        $('#sidebar').stickySidebar({
+            topSpacing: 80,
+            // bottomSpacing: 60
+        });
+    </script>
+    
+        
+            <script>
+    window.onload = function() {
+        var gitalk = new Gitalk({
+            clientID: '008503f8c8bca8787fbe',
+            clientSecret: '5f789f71e3288ff1866d17523348881053068eb4',
+            repo: 'freephenix.github.io',
+            owner: 'freephenix',
+            admin: ['freephenix'],
+            id: (location.pathname).substring(0, 49), // Ensure uniqueness and length less than 50
+            distractionFreeMode: false // Facebook-like distraction free mode
+        })
+
+        gitalk.render('gitalk-container')
+    }
+</script>
+                
+
+                    
+                                
+</body>
+
+</html>

@@ -1,0 +1,776 @@
+<html>
+
+<head>
+    <meta charset="utf-8" />
+<meta name="description" content="" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>
+    源码杂货铺：Map与sync.Map | 半亩房顶
+</title>
+<link rel="shortcut icon" href="https://freephenix.github.io//favicon.ico?v=1713840769430">
+<!-- <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous"> -->
+<link href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+<link rel="stylesheet" href="https://freephenix.github.io//styles/main.css">
+<!-- js -->
+<script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.min.js"></script>
+<script src="https://freephenix.github.io//media/js/jquery.sticky-sidebar.min.js"></script>
+<script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
+<script src="https://cdn.bootcss.com/moment.js/2.23.0/moment.min.js"></script>
+
+
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-147240912-1"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+
+        function gtag() {
+            dataLayer.push(arguments);
+        }
+        gtag('js', new Date());
+
+        gtag('config', 'UA-147240912-1');
+    </script>
+    
+        
+            
+                <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+                <script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+                
+
+                    
+                            
+</head>
+
+<body>
+    <div class="main">
+        <div class="header">
+    <div class="nav">
+        <div class="logo">
+            <a href="https://freephenix.github.io/">
+                <img class="avatar" src="https://freephenix.github.io//images/avatar.png?v=1713840769430" alt="">
+            </a>
+            <div class="site-title">
+                <h1>
+                    半亩房顶
+                </h1>
+            </div>
+        </div>
+        <span class="menu-btn fa fa-align-justify"></span>
+        <div class="menu-container">
+            <ul>
+                
+                    
+                            <li>
+                                <a href="/" class="menu">
+                                    首页
+                                </a>
+                            </li>
+                            
+                                
+                    
+                            <li>
+                                <a href="/archives" class="menu">
+                                    归档
+                                </a>
+                            </li>
+                            
+                                
+                    
+                            <li>
+                                <a href="/tags" class="menu">
+                                    标签
+                                </a>
+                            </li>
+                            
+                                
+                    
+                            <li>
+                                <a href="https://freephenix.github.io//post/guan-yu-ban-mu-fang-ding/" class="menu">
+                                    关于
+                                </a>
+                            </li>
+                            
+                                
+            </ul>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function() {
+        $(".menu-btn").click(function() {
+            $(".menu-container").slideToggle();
+        });
+        $(window).resize(function() {
+
+            if (window.matchMedia('(min-width: 960px)').matches) {
+                $(".menu-container").css('display', 'block')
+            } else {
+                $(".menu-container").css('display', 'none')
+            }
+
+        });
+    });
+</script>
+
+            <div id="main-content" class="post-detail main-container">
+                <!-- left -->
+                <div id="content" class="main-container-left">
+                    <article class="post i-card">
+                        <h2 class="post-title">
+                            源码杂货铺：Map与sync.Map
+                        </h2>
+                        <div class="post-info">
+                            <time class="post-time">2021-05-20</time>
+                            
+                                <a href="https://freephenix.github.io/go/" class="post-tag i-tag
+                            i-tag-error">
+                            #Go
+                        </a>
+                                
+                                <a href="https://freephenix.github.io/k_l-BPxc0/" class="post-tag i-tag
+                            i-tag-success">
+                            #源码
+                        </a>
+                                
+                        </div>
+                        
+                            <div class="post-feature-image" style="background-image: url('https://freephenix.github.io//post-images/yuan-ma-za-huo-pu-syncmap.jpeg')"></div>
+                            
+                                <div class="post-content">
+                                    <p>map是我们开发过程中常常会使用到的数据结构，那么<br>
+map是如何实现的？<br>
+map是否线程安全？<br>
+map有哪些需要注意的地方？</p>
+<!-- more -->
+<h1 id="map">map</h1>
+<p>首先，如果要学习map的细节，推荐移步曹大的文章：<br>
+<a href="https://github.com/cch123/golang-notes/blob/master/map.md">golang-notes/map.md</a></p>
+<p>这里不会详细讨论map的各种实现细节，只是简单的挑一些点来赘述下（基本都是参考于曹大的这篇文章，侵删）<br>
+map数据结构：</p>
+<pre><code>const (
+    // 一个 bucket 最多能放的元素数
+    bucketCntBits = 3
+    bucketCnt     = 1 &lt;&lt; bucketCntBits
+
+    // load factor = 13/2
+    loadFactorNum = 13
+    loadFactorDen = 2
+
+    // 超过这两个 size 的对应对象，会被转为指针
+    maxKeySize   = 128
+    maxValueSize = 128
+
+    // data offset should be the size of the bmap struct, but needs to be
+    // aligned correctly. For amd64p32 this means 64-bit alignment
+    // even though pointers are 32 bit.
+    dataOffset = unsafe.Offsetof(struct {
+        b bmap
+        v int64
+    }{}.v)
+
+    // tophash 除了放正常的高 8 位的 hash 值
+    // 还会在空闲、迁移时存储一些特征的状态值
+    // 所以合法的 tophash(指计算出来的那种)，最小也应该是 4
+    // 小于 4 的表示的都是我们自己定义的状态值
+    empty          = 0 // cell is empty
+    evacuatedEmpty = 1 // cell is empty, bucket is evacuated.
+    evacuatedX     = 2 // key/value is valid.  Entry has been evacuated to first half of larger table.
+    evacuatedY     = 3 // same as above, but evacuated to second half of larger table.
+    minTopHash     = 4 // minimum tophash for a normal filled cell.
+
+    // flags
+    iterator     = 1 // there may be an iterator using buckets
+    oldIterator  = 2 // there may be an iterator using oldbuckets
+    hashWriting  = 4 // a goroutine is writing to the map
+    sameSizeGrow = 8 // the current map growth is to a new map of the same size
+
+    // sentinel bucket ID for iterator checks
+    noCheck = 1&lt;&lt;(8*sys.PtrSize) - 1
+)
+
+// A header for a Go map.
+type hmap struct {
+    count     int // map 中的元素个数，必须放在 struct 的第一个位置，因为 内置的 len 函数会从这里读取
+    flags     uint8
+    B         uint8  // log_2 of # of buckets (最多可以放 loadFactor * 2^B 个元素，再多就要 hashGrow 了)
+    noverflow uint16 // overflow 的 bucket 的近似数
+    hash0     uint32 // hash seed
+
+    buckets    unsafe.Pointer // 2^B 大小的数组，如果 count == 0 的话，可能是 nil
+    oldbuckets unsafe.Pointer // 一半大小的之前的 bucket 数组，只有在 growing 过程中是非 nil
+    nevacuate  uintptr        // progress counter for evacuation (buckets less than this have been evacuated)
+
+    extra *mapextra // 当 key 和 value 都可以 inline 的时候，就会用这个字段
+}
+
+type mapextra struct {
+    // 如果 key 和 value 都不包含指针，并且可以被 inline(&lt;=128 字节)
+    // 使用 extra 来存储 overflow bucket，这样可以避免 GC 扫描整个 map
+    // 然而 bmap.overflow 也是个指针。这时候我们只能把这些 overflow 的指针
+    // 都放在 hmap.extra.overflow 和 hmap.extra.oldoverflow 中了
+    // overflow 包含的是 hmap.buckets 的 overflow 的 bucket
+    // oldoverflow 包含扩容时的 hmap.oldbuckets 的 overflow 的 bucket
+    overflow    *[]*bmap
+    oldoverflow *[]*bmap
+
+    // 指向空闲的 overflow bucket 的指针
+    nextOverflow *bmap
+}
+
+// bucket 本体
+type bmap struct {
+    // tophash 是 hash 值的高 8 位
+    tophash [bucketCnt]uint8
+    // keys
+    // values
+    // overflow pointer
+}
+</code></pre>
+<h2 id="map的初始化">map的初始化</h2>
+<p>map的使用很简单，初始化的代码为：<code>make(map[k]v, size)</code> 或者 <code>make(map[k]v)</code><br>
+一般情况下，这里size &lt; 8时，map的初始化就会使用<code>makemap_small</code>，否则使用<code>makemap</code>当然最终的结果会受逃逸分析影响，这里感兴趣的童鞋可以自行研究下</p>
+<pre><code>// 文件路径src/runtime/map.go
+// makemap_small implements Go map creation for make(map[k]v) and
+// make(map[k]v, hint) when hint is known to be at most bucketCnt
+// at compile time and the map needs to be allocated on the heap.
+// 小于等于8个元素时，可能就会使用这个函数，直接new一个hmap
+func makemap_small() *hmap {
+	h := new(hmap)
+	h.hash0 = fastrand()
+	return h
+}
+...
+// make(map[k]v, hint)
+// 如果编译器认为 map 和第一个 bucket 可以直接创建在栈上，h 和 bucket 可能都是非空
+// h != nil，可以直接在 h 内创建 map
+// 如果 h.buckets != nil，其指向的 bucket 可以作为第一个 bucket 来使用
+func makemap(t *maptype, hint int, h *hmap) *hmap {
+    // 在 64 位系统上 hmap 结构体大小为 48 字节
+    // 32 位系统上是 28 字节
+    if sz := unsafe.Sizeof(hmap{}); sz != 8+5*sys.PtrSize {
+        println(&quot;runtime: sizeof(hmap) =&quot;, sz, &quot;, t.hmap.size =&quot;, t.hmap.size)
+        throw(&quot;bad hmap size&quot;)
+    }
+
+    if hint &lt; 0 || hint &gt; int(maxSliceCap(t.bucket.size)) {
+        hint = 0
+    }
+
+    // 初始化 hmap
+    if h == nil {
+        // runtime.newobject 在堆上分配内存
+        h = (*hmap)(newobject(t.hmap))
+    }
+    h.hash0 = fastrand()
+
+    // 按照提供的元素个数，找一个可以放得下这么多元素的 B 值
+    B := uint8(0)
+    for overLoadFactor(hint, B) {
+        B++
+    }
+    h.B = B
+
+    // 分配初始的 hash table
+    // 如果 B == 0，buckets 字段会由 mapassign 来 lazily 分配
+    // 因为如果 hint 很大的话，对这部分内存归零会花比较长时间
+    if h.B != 0 {
+        var nextOverflow *bmap
+        h.buckets, nextOverflow = makeBucketArray(t, h.B)
+        if nextOverflow != nil {
+            h.extra = new(mapextra)
+            h.extra.nextOverflow = nextOverflow
+        }
+    }
+
+    return h
+}
+</code></pre>
+<p>可以看到初始分配内存是根据是否传入hint决定，而频繁扩容向来是一个我们不希望看到的开销，所以如果能提前确定size，请一定要传入</p>
+<h2 id="map的元素访问">map的元素访问</h2>
+<p>访问过程在曹大的文章中有图解，可以前往观看，我这边简单描述下，hash计算后，会利用低5位确定数据属于哪个bucket，高8位用来确定bucket中元素的位置</p>
+<pre><code>func mapaccess2(t *maptype, h *hmap, key unsafe.Pointer) (unsafe.Pointer, bool) {
+    // map 为空，或者元素数为 0，直接返回未找到
+    if h == nil || h.count == 0 {
+        return unsafe.Pointer(&amp;zeroVal[0]), false
+    }
+    if h.flags&amp;hashWriting != 0 {
+        throw(&quot;concurrent map read and map write&quot;)
+    }
+    alg := t.key.alg
+    // 不同类型的 key，所用的 hash 算法是不一样的
+    // 具体可以参考 algarray
+    hash := alg.hash(key, uintptr(h.hash0))
+    // 如果 B = 3，那么结果用二进制表示就是 111
+    // 如果 B = 4，那么结果用二进制表示就是 1111
+    m := bucketMask(h.B)
+    // 按位 &amp;，可以 select 出对应的 bucket
+    b := (*bmap)(unsafe.Pointer(uintptr(h.buckets) + (hash&amp;m)*uintptr(t.bucketsize)))
+    // 会用到 h.oldbuckets 时，说明 map 发生了扩容
+    // 这时候，新的 buckets 里可能还没有老的内容
+    // 所以一定要在老的里面找，否则有可能发生“消失”的诡异现象
+    if c := h.oldbuckets; c != nil {
+        if !h.sameSizeGrow() {
+            // 说明之前只有一半的 bucket，需要除 2
+            m &gt;&gt;= 1
+        }
+        oldb := (*bmap)(unsafe.Pointer(uintptr(c) + (hash&amp;m)*uintptr(t.bucketsize)))
+        if !evacuated(oldb) {
+            b = oldb
+        }
+    }
+    // tophash 取其高 8bit 的值
+    top := tophash(hash)
+    for ; b != nil; b = b.overflow(t) {
+        // 一个 bucket 在存储满 8 个元素后，就再也放不下了
+        // 这时候会创建新的 bucket
+        // 挂在原来的 bucket 的 overflow 指针成员上
+        for i := uintptr(0); i &lt; bucketCnt; i++ {
+            // 循环对比 bucket 中的 tophash 数组
+            // 如果找到了相等的 tophash，那说明就是这个 bucket 了
+            if b.tophash[i] != top {
+                continue
+            }
+            k := add(unsafe.Pointer(b), dataOffset+i*uintptr(t.keysize))
+            if t.indirectkey {
+                k = *((*unsafe.Pointer)(k))
+            }
+            if alg.equal(key, k) {
+                v := add(unsafe.Pointer(b), dataOffset+bucketCnt*uintptr(t.keysize)+i*uintptr(t.valuesize))
+                if t.indirectvalue {
+                    v = *((*unsafe.Pointer)(v))
+                }
+                return v, true
+            }
+        }
+    }
+
+    // 所有 bucket 都没有找到，返回零值和 false
+    return unsafe.Pointer(&amp;zeroVal[0]), false
+}
+</code></pre>
+<p>这里有几点可能会比较重要</p>
+<ul>
+<li>这里是读取操作，这时会根据<code>hashWriting</code>标识判断是否发生了并发读写</li>
+<li><code>oldbuckets</code>是扩容前老map的地址，需要从中查询数据，防止扩容尚未完成时获取不到数据</li>
+<li><code>overflow</code>可能会有多个，需要遍历查询数据是否在其中</li>
+</ul>
+<h2 id="map的扩缩容过程">map的扩缩容过程</h2>
+<h3 id="震惊golang-map不会缩容">震惊！golang map不会缩容！</h3>
+<h3 id="扩容">扩容</h3>
+<p>这里具体流程代码较多，不粘贴了，大家可以去曹大文章看下<br>
+先说一下触发扩容函数<code>hashGrow</code>的两个触发点</p>
+<ul>
+<li>桶快满了：元素个数 &gt;= 桶个数 * 6.5</li>
+<li>桶太多了：bucket 总数 &lt; 2 ^ 15 时，如果 overflow 的 bucket 总数 &gt;= bucket 的总数<br>
+第一种，会去对bucket数组扩容一倍<br>
+第二种，会触发移动数据，使bucket数据紧凑，并不会增多bucket</li>
+</ul>
+<p>这里简述下流程：</p>
+<ul>
+<li>是否需要真的扩容，置局部变量<code>bigger</code>，决定元素数量是否扩张（加到<code>B</code>上） 和 常量<code>flags</code>，看是否保持size</li>
+<li>扩容时需要将当前buckets放到<code>oldbuckets</code>，并将<code>nevacuate</code> 和 <code>noverflow</code>标志位置为0，意指此map需要移动数据，含义参见上面数据结构</li>
+</ul>
+<h2 id="map的注意点">map的注意点</h2>
+<p>还有一些注意点我们需要了解</p>
+<ul>
+<li>无论键还是值，如果size 大于 128字节时，会转为指针</li>
+<li>对nil的map赋值，会panic</li>
+<li>map线程不安全（并发读写会有不可recover的错误</li>
+<li>map的键需要是可比较的类型</li>
+</ul>
+<h1 id="syncmap">sync.Map</h1>
+<p>那么下面我们先看看sync.Map的数据结构</p>
+<h2 id="数据结构">数据结构</h2>
+<pre><code>type Map struct {
+    // 互斥锁，用于锁定dirty map
+    mu Mutex
+
+    // 优先读map,支持原子操作，注释中有readOnly不是说read是只读，而是它在面对存储的元素时只读
+    // read实际上在需要升级dirty的情况下也写的操作
+    read atomic.Value
+    
+    // dirty是一个当前最新的map，允许读写
+    dirty map[interface{}]*entry
+    
+    // 主要记录read读取不到数据加锁读取read map以及dirty map的次数，
+    // 当misses等于dirty的长度时，会将dirty复制到read
+    misses int 
+}
+
+type readOnly struct {
+    m       map[interface{}]*entry
+    // 如果数据在dirty中但没有在read中，该值为true,作为修改标识
+    amended bool 
+}
+
+type entry struct {
+    // 1、nil: 表示为被删除，调用Delete()可以将read map中的元素置为nil
+    // 2、expunged: 也是表示被删除，但是该键只在read而没有在dirty中，
+    // 这种情况出现在将read复制到dirty中，即复制的过程会先将nil标记为expunged，
+    // 然后不将其复制到dirty
+    // 3、其他: 表示存着真正的数据
+    // *interface{}
+    p unsafe.Pointer 
+}
+</code></pre>
+<p>为了更直观，可以看下这个图<br>
+<img src="https://freephenix.github.io//post-images/1623057106699.png" alt="" loading="lazy"></p>
+<h2 id="load函数">Load函数</h2>
+<pre><code>func (m *Map) Load(key interface{}) (value interface{}, ok bool) {
+    // 第一次检测元素是否存在
+    read, _ := m.read.Load().(readOnly)
+    e, ok := read.m[key]
+    if !ok &amp;&amp; read.amended {
+        // 为dirty map 加锁
+        m.mu.Lock()
+        // 第二次检测元素是否存在，主要防止在加锁的过程中,dirty map转换成read map,从而导致读取不到数据
+        read, _ = m.read.Load().(readOnly)
+        e, ok = read.m[key]
+        if !ok &amp;&amp; read.amended {
+            // 从dirty map中获取是为了应对read map中不存在的新元素
+            e, ok = m.dirty[key]
+            // 不论元素是否存在，均需要记录miss数，以便dirty map升级为read map
+            // 为什么可以无视read中是否可以存在的数据，关键在于read.amended字段的控制，详情可以看 Store 函数中 dirtyLocked 函数。
+            m.missLocked()
+        }
+        // 解锁
+        m.mu.Unlock()
+    }
+    // 元素不存在直接返回
+    if !ok {
+        return nil, false
+    }
+    return e.load()
+}
+
+func (m *Map) missLocked() {
+    // misses自增1
+    m.misses++
+    // 判断dirty map是否可以升级为read map
+    if m.misses &lt; len(m.dirty) {
+        return
+    }
+    // dirty map升级为read map
+    m.read.Store(readOnly{m: m.dirty})
+    // dirty map 清空
+    m.dirty = nil
+    // misses重置为0
+    m.misses = 0
+}
+
+func (e *entry) load() (value interface{}, ok bool) {
+    p := atomic.LoadPointer(&amp;e.p)
+    // 元素不存在或者被删除，则直接返回
+    if p == nil || p == expunged {
+        return nil, false
+    }
+    return *(*interface{})(p), true
+}
+</code></pre>
+<p>为了便于理解，我们来个流程图看看<br>
+<img src="https://freephenix.github.io//post-images/1623063845394.png" alt="" loading="lazy"><br>
+可以看出流程上在尽力的避免加锁，尽可能的优化访问速度</p>
+<h2 id="store函数">Store函数</h2>
+<pre><code>func (m *Map) Store(key, value interface{}) {
+    // 如果read存在这个键，并且这个entry没有被标记删除，尝试直接写入,写入成功，则结束
+    // 第一次检测
+    read, _ := m.read.Load().(readOnly)
+    if e, ok := read.m[key]; ok &amp;&amp; e.tryStore(&amp;value) {
+        return
+    }
+    // dirty map锁
+    m.mu.Lock()
+    // 第二次检测
+    read, _ = m.read.Load().(readOnly)
+    if e, ok := read.m[key]; ok {
+        // unexpungelocc确保元素没有被标记为删除
+        // 判断元素被标识为删除
+        if e.unexpungeLocked() {
+            // 这个元素之前被删除了，这意味着有一个非nil的dirty，这个元素不在里面.
+            m.dirty[key] = e
+        }
+        // 更新read map 元素值
+        e.storeLocked(&amp;value)
+    } else if e, ok := m.dirty[key]; ok {
+        // 此时read map没有该元素，但是dirty map有该元素，并需修改dirty map元素值为最新值
+        e.storeLocked(&amp;value)
+    } else {
+        // read.amended==false, 说明 刚初始化 或者 dirty 升级过了，此时需要将 read 中元素 复制一份到dirty， 保证新的 read 是 dirty 的子集，这样 dirty 才能无所顾忌的升级为 read
+        // 当有 read 中不存在的新值插入时，才会触发此处逻辑
+        // dirtyLocked 函数把 read 中元素往 dirty 复制了一份，并把 read.amended 置为了true，表明 dirty 中存在了 read 中不存在的元素，并且 dirty 已经完全覆盖了 read 中的元素，方便其他地方做判断
+        if !read.amended {
+            m.dirtyLocked()
+            // 设置read.amended==true，说明dirty map有数据
+            m.read.Store(readOnly{m: read.m, amended: true})
+        }
+        // 设置元素进入dirty map，此时dirty map拥有read map和最新设置的元素
+        m.dirty[key] = newEntry(value)
+    }
+    // 解锁，有人认为锁的范围有点大，假设read map数据很大，那么执行m.dirtyLocked()会耗费花时间较多，完全可以在操作dirty map时才加锁，这样的想法是不对的，因为m.dirtyLocked()中有写入操作
+    m.mu.Unlock()
+}
+
+func (e *entry) tryStore(i *interface{}) bool {
+    // 获取对应Key的元素，判断是否标识为删除
+    p := atomic.LoadPointer(&amp;e.p)
+    if p == expunged {
+        return false
+    }
+    for {
+        // cas尝试写入新元素值
+        if atomic.CompareAndSwapPointer(&amp;e.p, p, unsafe.Pointer(i)) {
+            return true
+        }
+        // 判断是否标识为删除
+        p = atomic.LoadPointer(&amp;e.p)
+        if p == expunged {
+            return false
+        }
+    }
+}
+
+func (e *entry) unexpungeLocked() (wasExpunged bool) {
+    return atomic.CompareAndSwapPointer(&amp;e.p, expunged, nil)
+}
+
+func (m *Map) dirtyLocked() {
+    if m.dirty != nil {
+        return
+    }
+
+    read, _ := m.read.Load().(readOnly)
+    m.dirty = make(map[interface{}]*entry, len(read.m))
+    for k, e := range read.m {
+        // 如果标记为nil或者expunged，则不复制到dirty map
+        if !e.tryExpungeLocked() {
+            m.dirty[k] = e
+        }
+    }
+}
+</code></pre>
+<figure data-type="image" tabindex="1"><img src="https://freephenix.github.io//post-images/1623065022765.png" alt="" loading="lazy"></figure>
+<h2 id="delete函数">Delete函数</h2>
+<pre><code>func (m *Map) Delete(key interface{}) {
+    // 第一次检测
+    read, _ := m.read.Load().(readOnly)
+    e, ok := read.m[key]
+    if !ok &amp;&amp; read.amended {
+        m.mu.Lock()
+        // 第二次检测
+        read, _ = m.read.Load().(readOnly)
+        e, ok = read.m[key]
+        if !ok &amp;&amp; read.amended {
+            // 不论dirty map是否存在该元素，都会执行删除
+            delete(m.dirty, key)
+        }
+        m.mu.Unlock()
+    }
+    if ok {
+        // 如果在read中，则将其标记为删除（nil）
+        e.delete()
+    }
+}
+
+func (e *entry) delete() (hadValue bool) {
+    for {
+        p := atomic.LoadPointer(&amp;e.p)
+        if p == nil || p == expunged {
+            return false
+        }
+        if atomic.CompareAndSwapPointer(&amp;e.p, p, nil) {
+            return true
+        }
+    }
+}
+</code></pre>
+<p>这里需要注意的是，read中删除时会将元素置为nil，而不是像dirty中直接删除，这个是为了避免后续访问此元素时不需要再去dirty中查询，那样会需要加锁，成本较高</p>
+<h2 id="range函数">Range函数</h2>
+<pre><code>func (m *Map) Range(f func(key, value interface{}) bool) {
+    // 第一检测
+    read, _ := m.read.Load().(readOnly)
+    // read.amended=true,说明dirty map包含所有有效的元素（含新加，不含被删除的），使用dirty map
+    if read.amended {
+        // 第二检测
+        m.mu.Lock()
+        read, _ = m.read.Load().(readOnly)
+        if read.amended {
+            // 使用dirty map并且升级为read map
+            read = readOnly{m: m.dirty}
+            m.read.Store(read)
+            m.dirty = nil
+            m.misses = 0
+        }
+        m.mu.Unlock()
+    }
+    // 一贯原则，使用read map作为读
+    for k, e := range read.m {
+        v, ok := e.load()
+        // 被删除的不计入
+        if !ok {
+            continue
+        }
+        // 函数返回false，终止
+        if !f(k, v) {
+            break
+        }
+    }
+}
+</code></pre>
+<p>可以看到，range中会有将dirty升级为read的操作，这个也是为了range函数的结果尽量的正确，当然，这里并不是一开始就加锁，所以依然会存在并发问题</p>
+<h2 id="注意点">注意点</h2>
+<h3 id="1-double-check">1、double-check</h3>
+<p>double-check技术是lock free编程中常用的手法, 更详细的内容可以参考 Wiki: Double-checked locking。<br>
+尤其Load这段代码中, double-check是必须的, 原因是并发执行下, dirty 会被提升为 read (发生在而在 !ok&amp;&amp;read.amended 代码之间), 从而在dirty中访问不到, 但read中访问到。</p>
+<h3 id="2-mmisslocked">2、m.missLocked()</h3>
+<p>这个函数会在<code>misses == len(dirty)</code>时，将dirty升级为read，从而让读取数据的流程变短，提高效率</p>
+<h3 id="3-空间换时间">3、空间换时间</h3>
+<p>通过冗余的两个数据结构(read、dirty)，read为只读数据，避免了读写冲突，减少加锁对性能的影响</p>
+<h3 id="4-延迟删除">4、延迟删除</h3>
+<p>删除一个键值只是打标记，只有在提升dirty的时候才清理删除的数据，也是为了减少性能影响</p>
+<h1 id="引用">引用</h1>
+<p><a href="https://golang.org/src/runtime/map.go">src/runtime/map.go</a><br>
+<a href="https://github.com/cch123/golang-notes/blob/master/map.md">golang-notes/map.md</a><br>
+<a href="https://studygolang.com/articles/23184?fr=sidebar">golang-map是线程安全的吗？</a><br>
+<a href="https://blog.csdn.net/jiankunking/article/details/78808978">Go 1.9 sync Map 源码阅读笔记</a><br>
+<a href="https://segmentfault.com/a/1190000015242373">你不得不知道的sync.Map源码分析</a><br>
+<a href="https://www.jianshu.com/p/5449ebba9385">Sync.Map 源码分析</a><br>
+<a href="https://en.wikipedia.org/wiki/Double-checked_locking">Wiki: Double-checked locking</a></p>
+
+                                </div>
+                    </article>
+                    <!--  -->
+                    
+                        <div class="next-post">
+                            <div class="next">下一篇</div>
+                            <a href="https://freephenix.github.io/huan-cun-chuan-tou-huan-cun-bing-fa-re-dian-huan-cun-jie-jue-fang-an/">
+                                <h3 class="post-title">
+                                    缓存常见问题整理
+                                </h3>
+                            </a>
+                        </div>
+                        
+                            <div id="disqus_thread"></div>
+                            <div id="gitalk-container"></div>
+                </div>
+                <!-- middle -->
+                <div class="main-container-middle"></div>
+                <!-- right -->
+                <div id="sidebar" class="main-container-right">
+                    
+                        <!-- toc -->
+                        
+    <div class="toc-card i-card ">
+        <div class="toc-title i-card-title">目录</div>
+        <div class="toc-content">
+            <ul class="markdownIt-TOC">
+<li><a href="#map">map</a>
+<ul>
+<li><a href="#map%E7%9A%84%E5%88%9D%E5%A7%8B%E5%8C%96">map的初始化</a></li>
+<li><a href="#map%E7%9A%84%E5%85%83%E7%B4%A0%E8%AE%BF%E9%97%AE">map的元素访问</a></li>
+<li><a href="#map%E7%9A%84%E6%89%A9%E7%BC%A9%E5%AE%B9%E8%BF%87%E7%A8%8B">map的扩缩容过程</a>
+<ul>
+<li><a href="#%E9%9C%87%E6%83%8Agolang-map%E4%B8%8D%E4%BC%9A%E7%BC%A9%E5%AE%B9">震惊！golang map不会缩容！</a></li>
+<li><a href="#%E6%89%A9%E5%AE%B9">扩容</a></li>
+</ul>
+</li>
+<li><a href="#map%E7%9A%84%E6%B3%A8%E6%84%8F%E7%82%B9">map的注意点</a></li>
+</ul>
+</li>
+<li><a href="#syncmap">sync.Map</a>
+<ul>
+<li><a href="#%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84">数据结构</a></li>
+<li><a href="#load%E5%87%BD%E6%95%B0">Load函数</a></li>
+<li><a href="#store%E5%87%BD%E6%95%B0">Store函数</a></li>
+<li><a href="#delete%E5%87%BD%E6%95%B0">Delete函数</a></li>
+<li><a href="#range%E5%87%BD%E6%95%B0">Range函数</a></li>
+<li><a href="#%E6%B3%A8%E6%84%8F%E7%82%B9">注意点</a>
+<ul>
+<li><a href="#1-double-check">1、double-check</a></li>
+<li><a href="#2-mmisslocked">2、m.missLocked()</a></li>
+<li><a href="#3-%E7%A9%BA%E9%97%B4%E6%8D%A2%E6%97%B6%E9%97%B4">3、空间换时间</a></li>
+<li><a href="#4-%E5%BB%B6%E8%BF%9F%E5%88%A0%E9%99%A4">4、延迟删除</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#%E5%BC%95%E7%94%A8">引用</a></li>
+</ul>
+
+        </div>
+        <script>
+            function locateCatelogList() {
+                /*获取文章目录集合,可通过:header过滤器*/
+                var alis = $('.post-content :header');
+                /*获取侧边栏目录列表集合**/
+                var sidebar_alis = $('.markdownIt-TOC a');
+                /*获取滚动条到顶部的距离*/
+                var scroll_height = $(window).scrollTop();
+                for (var i = 0; i < alis.length; i++) {
+                    /*获取锚点集合中的元素分别到顶点的距离*/
+                    var a_height = $(alis[i]).offset().top;
+                    if (a_height < scroll_height) {
+                        /*高亮显示*/
+                        sidebar_alis.removeClass('on');
+                        $(sidebar_alis[i]).addClass('on');
+                    }
+                }
+            }
+            $(function() {
+                /*绑定滚动事件 */
+                $(window).bind('scroll', locateCatelogList);
+            });
+        </script>
+    </div>
+    
+                            
+
+                </div>
+
+
+
+
+            </div>
+
+
+            <div class="site-footer">
+  Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a> | 
+  <a class="rss" href="https://freephenix.github.io//atom.xml" target="_blank">RSS</a>
+</div>
+
+<script>
+  hljs.initHighlightingOnLoad()
+</script>
+
+
+    </div>
+    <script>
+        $('#sidebar').stickySidebar({
+            topSpacing: 80,
+            // bottomSpacing: 60
+        });
+    </script>
+    
+        
+            <script>
+    window.onload = function() {
+        var gitalk = new Gitalk({
+            clientID: '008503f8c8bca8787fbe',
+            clientSecret: '5f789f71e3288ff1866d17523348881053068eb4',
+            repo: 'freephenix.github.io',
+            owner: 'freephenix',
+            admin: ['freephenix'],
+            id: (location.pathname).substring(0, 49), // Ensure uniqueness and length less than 50
+            distractionFreeMode: false // Facebook-like distraction free mode
+        })
+
+        gitalk.render('gitalk-container')
+    }
+</script>
+                
+
+                    
+                                
+</body>
+
+</html>

@@ -1,0 +1,362 @@
+<html>
+
+<head>
+    <meta charset="utf-8" />
+<meta name="description" content="" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>
+    LeetCode-162. 寻找峰值 | 半亩房顶
+</title>
+<link rel="shortcut icon" href="https://freephenix.github.io//favicon.ico?v=1713840769430">
+<!-- <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous"> -->
+<link href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+<link rel="stylesheet" href="https://freephenix.github.io//styles/main.css">
+<!-- js -->
+<script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.min.js"></script>
+<script src="https://freephenix.github.io//media/js/jquery.sticky-sidebar.min.js"></script>
+<script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
+<script src="https://cdn.bootcss.com/moment.js/2.23.0/moment.min.js"></script>
+
+
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-147240912-1"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+
+        function gtag() {
+            dataLayer.push(arguments);
+        }
+        gtag('js', new Date());
+
+        gtag('config', 'UA-147240912-1');
+    </script>
+    
+        
+            
+                <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+                <script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+                
+
+                    
+                            
+</head>
+
+<body>
+    <div class="main">
+        <div class="header">
+    <div class="nav">
+        <div class="logo">
+            <a href="https://freephenix.github.io/">
+                <img class="avatar" src="https://freephenix.github.io//images/avatar.png?v=1713840769430" alt="">
+            </a>
+            <div class="site-title">
+                <h1>
+                    半亩房顶
+                </h1>
+            </div>
+        </div>
+        <span class="menu-btn fa fa-align-justify"></span>
+        <div class="menu-container">
+            <ul>
+                
+                    
+                            <li>
+                                <a href="/" class="menu">
+                                    首页
+                                </a>
+                            </li>
+                            
+                                
+                    
+                            <li>
+                                <a href="/archives" class="menu">
+                                    归档
+                                </a>
+                            </li>
+                            
+                                
+                    
+                            <li>
+                                <a href="/tags" class="menu">
+                                    标签
+                                </a>
+                            </li>
+                            
+                                
+                    
+                            <li>
+                                <a href="https://freephenix.github.io//post/guan-yu-ban-mu-fang-ding/" class="menu">
+                                    关于
+                                </a>
+                            </li>
+                            
+                                
+            </ul>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function() {
+        $(".menu-btn").click(function() {
+            $(".menu-container").slideToggle();
+        });
+        $(window).resize(function() {
+
+            if (window.matchMedia('(min-width: 960px)').matches) {
+                $(".menu-container").css('display', 'block')
+            } else {
+                $(".menu-container").css('display', 'none')
+            }
+
+        });
+    });
+</script>
+
+            <div id="main-content" class="post-detail main-container">
+                <!-- left -->
+                <div id="content" class="main-container-left">
+                    <article class="post i-card">
+                        <h2 class="post-title">
+                            LeetCode-162. 寻找峰值
+                        </h2>
+                        <div class="post-info">
+                            <time class="post-time">2023-12-21</time>
+                            
+                                <a href="https://freephenix.github.io/wyRQgsI7m/" class="post-tag i-tag
+                            i-tag-other_2">
+                            #搜索
+                        </a>
+                                
+                                <a href="https://freephenix.github.io/FRqn1m2hg/" class="post-tag i-tag
+                            i-tag-other_1">
+                            #数组
+                        </a>
+                                
+                                <a href="https://freephenix.github.io/HSYiuvxzO/" class="post-tag i-tag
+                            i-tag-other_1">
+                            #分治
+                        </a>
+                                
+                                <a href="https://freephenix.github.io/YWFpnf3Gl/" class="post-tag i-tag
+                            i-tag-other_1">
+                            #刷题
+                        </a>
+                                
+                                <a href="https://freephenix.github.io/70TrDOWqgi/" class="post-tag i-tag
+                            i-tag-banana">
+                            #面试
+                        </a>
+                                
+                                <a href="https://freephenix.github.io/go/" class="post-tag i-tag
+                            i-tag-other_2">
+                            #Go
+                        </a>
+                                
+                                <a href="https://freephenix.github.io/k1NaSbOoC/" class="post-tag i-tag
+                            i-tag-banana">
+                            #LeetCode
+                        </a>
+                                
+                                <a href="https://freephenix.github.io/WucazjDbn/" class="post-tag i-tag
+                            i-tag-info">
+                            #算法
+                        </a>
+                                
+                        </div>
+                        
+                            <div class="post-feature-image" style="background-image: url('https://freephenix.github.io//post-images/bgwkGVl_5.jpeg')"></div>
+                            
+                                <div class="post-content">
+                                    <p>刷题使我快乐，满脸开心.jpg</p>
+<ul>
+<li>来源：力扣（LeetCode）</li>
+<li>链接：https://leetcode.cn/problems/find-peak-element/</li>
+<li>著作权归领扣网络所有。商业转载请联系官方授权，非商业转载请注明出处。</li>
+</ul>
+<!-- more -->
+<h1 id="题目">题目</h1>
+<p><strong>峰值</strong>元素是指其值严格大于左右相邻值的元素。</p>
+<p>给你一个整数数组 <code>nums</code>，找到峰值元素并返回其索引。数组可能包含多个峰值，在这种情况下，返回 <code>任何一个峰值</code> 所在位置即可。</p>
+<p>你可以假设 <code>nums[-1]</code> = <code>nums[n]</code> = <code>-∞</code> 。</p>
+<p>你必须实现时间复杂度为 <code>O(log n)</code> 的算法来解决此问题。</p>
+<p>示例 1：</p>
+<pre><code>输入：nums = [1,2,3,1]
+输出：2
+解释：3 是峰值元素，你的函数应该返回其索引 2。
+</code></pre>
+<p>示例 2：</p>
+<pre><code>输入：nums = [1,2,1,3,5,6,4]
+输出：1 或 5 
+解释：你的函数可以返回索引 1，其峰值元素为 2；
+     或者返回索引 5， 其峰值元素为 6。
+</code></pre>
+<p>提示：</p>
+<ul>
+<li><code>1 &lt;= nums.length &lt;= 1000</code></li>
+<li><code>-231 &lt;= nums[i] &lt;= 231 - 1</code></li>
+<li>对于所有有效的 <code>i</code> 都有 <code>nums[i]</code> != <code>nums[i + 1]</code></li>
+</ul>
+<h1 id="思路">思路</h1>
+<p>感觉碰到好几次了，时间复杂度要求给出提示之类的。<br>
+不过有个问题需要解决，那就是二分之后该选哪边？需要找到一种能够确定哪边<code>一定有峰值</code>的方法来，所以我画了个图，尝试分析：</p>
+<h3 id="用-left-和-right-的值判断往那边走这个思路是错的这里只是为了说明思路">用 <code>left</code> 和 <code>right</code> 的值判断往那边走（这个思路是错的，这里只是为了说明思路）</h3>
+<p><img src="https://freephenix.github.io//post-images/1703144005653.png" alt="" loading="lazy"><br>
+开始我是想用 <code>left</code> 和 <code>right</code> 的值（与<code>mid</code>的比较）来判断应该往那边走，因为如图所示，如果 <code>right</code> 值 <code>5</code> 比 <code>mid</code> 值 <code>3</code> 大，那么<strong>在右边就一定存在一个峰值，要么在中途，要么在 <code>right</code> 位置上</strong><br>
+但是很快就发现一个极端反例: <strong>如果两边都跟 <code>mid</code> 值相等，那么就<code>不一定</code>存在峰值了</strong></p>
+<h3 id="用-mid-相邻值判断往那边走">用 <code>mid</code> 相邻值判断往那边走</h3>
+<p>虽然上面的思路不通，但是总觉得<code>往高处走</code>这个想法是正确的，然后就有了如图这个思路：<br>
+<img src="https://freephenix.github.io//post-images/1703144312455.png" alt="" loading="lazy"><br>
+如果 <code>mid + 1</code> 比 <code>mid</code> 值大，那么在往右半边走的时候，会是一个上升的趋势，而在<code>不会有相邻值相等</code>的限制条件下就意味着:</p>
+<ul>
+<li>要么右半边一直上升，<code>right</code>位置是峰值</li>
+<li>要么右半边会有那么一个位置，<code>从上升趋势变成下降趋势</code>，也就是所谓的<strong>峰值</strong>了！</li>
+</ul>
+<blockquote>
+<p>所以：如果 mid 相邻的值中存在比mid大的值，那么在这半边一定存在峰值</p>
+</blockquote>
+<p>至此，上代码</p>
+<h1 id="代码">代码</h1>
+<pre><code class="language-golang">func findPeakElement(nums []int) int {
+    // 先判断第一个和最后一个元素
+    n := len(nums)
+    if n == 1 || nums[0] &gt; nums[1] {
+        return 0
+    } else if nums[n-1] &gt; nums[n-2] {
+        return n - 1
+    }
+
+    // 二分法，判断mid元素
+    left, right, mid := 0, n-1, 0
+    for left &lt;= right {
+        mid = (left + right) / 2
+        // 0 和 n-1 之前已经判断了，不用单独处理了，只要防止越界就好
+        if mid != 0 &amp;&amp; mid != n-1 &amp;&amp; nums[mid] &gt; nums[mid-1] &amp;&amp; nums[mid] &gt; nums[mid+1] {
+            return mid
+        }
+        // 往上坡走一定有峰值，往下坡走不一定有峰值
+        if mid != n-1 &amp;&amp; nums[mid] &lt; nums[mid+1] {
+            left = mid + 1
+        } else {
+            right = mid - 1
+        }
+    }
+    return -1
+}
+</code></pre>
+
+                                </div>
+                    </article>
+                    <!--  -->
+                    
+                        <div class="next-post">
+                            <div class="next">下一篇</div>
+                            <a href="https://freephenix.github.io/yfiXHrNXm/">
+                                <h3 class="post-title">
+                                    LeetCode-240. 搜索二维矩阵 II
+                                </h3>
+                            </a>
+                        </div>
+                        
+                            <div id="disqus_thread"></div>
+                            <div id="gitalk-container"></div>
+                </div>
+                <!-- middle -->
+                <div class="main-container-middle"></div>
+                <!-- right -->
+                <div id="sidebar" class="main-container-right">
+                    
+                        <!-- toc -->
+                        
+    <div class="toc-card i-card ">
+        <div class="toc-title i-card-title">目录</div>
+        <div class="toc-content">
+            <ul class="markdownIt-TOC">
+<li><a href="#%E9%A2%98%E7%9B%AE">题目</a></li>
+<li><a href="#%E6%80%9D%E8%B7%AF">思路</a><br>
+*
+<ul>
+<li><a href="#%E7%94%A8-left-%E5%92%8C-right-%E7%9A%84%E5%80%BC%E5%88%A4%E6%96%AD%E5%BE%80%E9%82%A3%E8%BE%B9%E8%B5%B0%E8%BF%99%E4%B8%AA%E6%80%9D%E8%B7%AF%E6%98%AF%E9%94%99%E7%9A%84%E8%BF%99%E9%87%8C%E5%8F%AA%E6%98%AF%E4%B8%BA%E4%BA%86%E8%AF%B4%E6%98%8E%E6%80%9D%E8%B7%AF">用 <code>left</code> 和 <code>right</code> 的值判断往那边走（这个思路是错的，这里只是为了说明思路）</a></li>
+<li><a href="#%E7%94%A8-mid-%E7%9B%B8%E9%82%BB%E5%80%BC%E5%88%A4%E6%96%AD%E5%BE%80%E9%82%A3%E8%BE%B9%E8%B5%B0">用 <code>mid</code> 相邻值判断往那边走</a></li>
+</ul>
+</li>
+<li><a href="#%E4%BB%A3%E7%A0%81">代码</a></li>
+</ul>
+
+        </div>
+        <script>
+            function locateCatelogList() {
+                /*获取文章目录集合,可通过:header过滤器*/
+                var alis = $('.post-content :header');
+                /*获取侧边栏目录列表集合**/
+                var sidebar_alis = $('.markdownIt-TOC a');
+                /*获取滚动条到顶部的距离*/
+                var scroll_height = $(window).scrollTop();
+                for (var i = 0; i < alis.length; i++) {
+                    /*获取锚点集合中的元素分别到顶点的距离*/
+                    var a_height = $(alis[i]).offset().top;
+                    if (a_height < scroll_height) {
+                        /*高亮显示*/
+                        sidebar_alis.removeClass('on');
+                        $(sidebar_alis[i]).addClass('on');
+                    }
+                }
+            }
+            $(function() {
+                /*绑定滚动事件 */
+                $(window).bind('scroll', locateCatelogList);
+            });
+        </script>
+    </div>
+    
+                            
+
+                </div>
+
+
+
+
+            </div>
+
+
+            <div class="site-footer">
+  Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a> | 
+  <a class="rss" href="https://freephenix.github.io//atom.xml" target="_blank">RSS</a>
+</div>
+
+<script>
+  hljs.initHighlightingOnLoad()
+</script>
+
+
+    </div>
+    <script>
+        $('#sidebar').stickySidebar({
+            topSpacing: 80,
+            // bottomSpacing: 60
+        });
+    </script>
+    
+        
+            <script>
+    window.onload = function() {
+        var gitalk = new Gitalk({
+            clientID: '008503f8c8bca8787fbe',
+            clientSecret: '5f789f71e3288ff1866d17523348881053068eb4',
+            repo: 'freephenix.github.io',
+            owner: 'freephenix',
+            admin: ['freephenix'],
+            id: (location.pathname).substring(0, 49), // Ensure uniqueness and length less than 50
+            distractionFreeMode: false // Facebook-like distraction free mode
+        })
+
+        gitalk.render('gitalk-container')
+    }
+</script>
+                
+
+                    
+                                
+</body>
+
+</html>

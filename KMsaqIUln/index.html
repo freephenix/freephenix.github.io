@@ -1,0 +1,384 @@
+<html>
+
+<head>
+    <meta charset="utf-8" />
+<meta name="description" content="" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>
+    LeetCode-207. 课程表 | 半亩房顶
+</title>
+<link rel="shortcut icon" href="https://freephenix.github.io//favicon.ico?v=1713840769430">
+<!-- <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous"> -->
+<link href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+<link rel="stylesheet" href="https://freephenix.github.io//styles/main.css">
+<!-- js -->
+<script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.min.js"></script>
+<script src="https://freephenix.github.io//media/js/jquery.sticky-sidebar.min.js"></script>
+<script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
+<script src="https://cdn.bootcss.com/moment.js/2.23.0/moment.min.js"></script>
+
+
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-147240912-1"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+
+        function gtag() {
+            dataLayer.push(arguments);
+        }
+        gtag('js', new Date());
+
+        gtag('config', 'UA-147240912-1');
+    </script>
+    
+        
+            
+                <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+                <script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+                
+
+                    
+                            
+</head>
+
+<body>
+    <div class="main">
+        <div class="header">
+    <div class="nav">
+        <div class="logo">
+            <a href="https://freephenix.github.io/">
+                <img class="avatar" src="https://freephenix.github.io//images/avatar.png?v=1713840769430" alt="">
+            </a>
+            <div class="site-title">
+                <h1>
+                    半亩房顶
+                </h1>
+            </div>
+        </div>
+        <span class="menu-btn fa fa-align-justify"></span>
+        <div class="menu-container">
+            <ul>
+                
+                    
+                            <li>
+                                <a href="/" class="menu">
+                                    首页
+                                </a>
+                            </li>
+                            
+                                
+                    
+                            <li>
+                                <a href="/archives" class="menu">
+                                    归档
+                                </a>
+                            </li>
+                            
+                                
+                    
+                            <li>
+                                <a href="/tags" class="menu">
+                                    标签
+                                </a>
+                            </li>
+                            
+                                
+                    
+                            <li>
+                                <a href="https://freephenix.github.io//post/guan-yu-ban-mu-fang-ding/" class="menu">
+                                    关于
+                                </a>
+                            </li>
+                            
+                                
+            </ul>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function() {
+        $(".menu-btn").click(function() {
+            $(".menu-container").slideToggle();
+        });
+        $(window).resize(function() {
+
+            if (window.matchMedia('(min-width: 960px)').matches) {
+                $(".menu-container").css('display', 'block')
+            } else {
+                $(".menu-container").css('display', 'none')
+            }
+
+        });
+    });
+</script>
+
+            <div id="main-content" class="post-detail main-container">
+                <!-- left -->
+                <div id="content" class="main-container-left">
+                    <article class="post i-card">
+                        <h2 class="post-title">
+                            LeetCode-207. 课程表
+                        </h2>
+                        <div class="post-info">
+                            <time class="post-time">2024-01-26</time>
+                            
+                                <a href="https://freephenix.github.io/wyRQgsI7m/" class="post-tag i-tag
+                            i-tag-success">
+                            #搜索
+                        </a>
+                                
+                                <a href="https://freephenix.github.io/MmUDRZ-4m/" class="post-tag i-tag
+                            i-tag-other_1">
+                            #DFS
+                        </a>
+                                
+                                <a href="https://freephenix.github.io/pmpFiM9Po/" class="post-tag i-tag
+                            i-tag-other_3">
+                            #图
+                        </a>
+                                
+                                <a href="https://freephenix.github.io/7lj5nkO_Z/" class="post-tag i-tag
+                            i-tag-warning">
+                            #回溯
+                        </a>
+                                
+                                <a href="https://freephenix.github.io/YWFpnf3Gl/" class="post-tag i-tag
+                            i-tag-error">
+                            #刷题
+                        </a>
+                                
+                                <a href="https://freephenix.github.io/70TrDOWqgi/" class="post-tag i-tag
+                            i-tag-other_4">
+                            #面试
+                        </a>
+                                
+                                <a href="https://freephenix.github.io/go/" class="post-tag i-tag
+                            i-tag-success">
+                            #Go
+                        </a>
+                                
+                                <a href="https://freephenix.github.io/k1NaSbOoC/" class="post-tag i-tag
+                            i-tag-other_4">
+                            #LeetCode
+                        </a>
+                                
+                                <a href="https://freephenix.github.io/WucazjDbn/" class="post-tag i-tag
+                            i-tag-">
+                            #算法
+                        </a>
+                                
+                        </div>
+                        
+                            <div class="post-feature-image" style="background-image: url('https://freephenix.github.io//post-images/KMsaqIUln.jpeg')"></div>
+                            
+                                <div class="post-content">
+                                    <p>刷题使我快乐，满脸开心.jpg</p>
+<ul>
+<li>来源：力扣（LeetCode）</li>
+<li>链接：https://leetcode.cn/problems/course-schedule/</li>
+<li>著作权归领扣网络所有。商业转载请联系官方授权，非商业转载请注明出处。</li>
+</ul>
+<!-- more -->
+<h1 id="题目">题目</h1>
+<p>你这个学期必须选修 <code>numCourses</code> 门课程，记为 <code>0</code> 到 <code>numCourses - 1</code> 。</p>
+<p>在选修某些课程之前需要一些先修课程。 先修课程按数组 <code>prerequisites</code> 给出，其中 <code>prerequisites[i] = [ai, bi]</code> ，表示如果要学习课程 <code>ai</code> 则 <code>必须</code> 先学习课程  <code>bi</code> 。</p>
+<p>例如，先修课程对 <code>[0, 1]</code> 表示：想要学习课程 <code>0</code> ，你需要先完成课程 <code>1</code> 。<br>
+请你判断是否可能完成所有课程的学习？如果可以，返回 <code>true</code> ；否则，返回 <code>false</code> 。</p>
+<p>示例 1：</p>
+<pre><code>输入：numCourses = 2, prerequisites = [[1,0]]
+输出：true
+解释：总共有 2 门课程。学习课程 1 之前，你需要完成课程 0 。这是可能的。
+</code></pre>
+<p>示例 2：</p>
+<pre><code>输入：numCourses = 2, prerequisites = [[1,0],[0,1]]
+输出：false
+解释：总共有 2 门课程。学习课程 1 之前，你需要先完成​课程 0 ；并且学习课程 0 之前，你还应先完成课程 1 。这是不可能的。
+</code></pre>
+<p>提示：</p>
+<ul>
+<li><code>1 &lt;= numCourses &lt;= 2000</code></li>
+<li><code>0 &lt;= prerequisites.length &lt;= 5000</code></li>
+<li><code>prerequisites[i].length == 2</code></li>
+<li><code>0 &lt;= ai, bi &lt; numCourses</code></li>
+<li><code>prerequisites[i]</code> 中的所有课程对 <strong>互不相同</strong></li>
+</ul>
+<h1 id="思路">思路</h1>
+<h3 id="翻译">翻译</h3>
+<p>首先其实是题目理解</p>
+<ul>
+<li>最基本的，能不能完成其实就是看是不是会有循环依赖</li>
+<li>这道题里并没有成本等等的限制，所以少了一层考虑</li>
+<li>提示第四条，告知了课程和前置课程都是已知的</li>
+</ul>
+<p>综上，那么其实我们只需要考虑是否有循环依赖即可了</p>
+<h3 id="是否有环">是否有环</h3>
+<p>或者再抽象下，如果把一个个课程看做点，依赖看做边</p>
+<blockquote>
+<p>那么就是看形成的这个图中，是否存在环</p>
+</blockquote>
+<h3 id="遍历图">遍历图</h3>
+<p>那就涉及到遍历，<code>DFS</code> 和 <code>BFS</code> 均可，<code>DFS</code>代码好些一些，所以我用了这个</p>
+<p>遍历时，还有一个注意点，那就是<code>记忆化</code>，防止重复遍历，减少时间消耗，所以需要一个记录数组，不过这里有些复杂就是，我们需要区分出来<code>未遍历</code>、<code>正在遍历</code>、<code>已经遍历完</code>这三种状态</p>
+<p>因为只有<code>正在遍历</code>时走到了相同位置，才算是形成了环，所以需要单独拿出来区分</p>
+<p>OK，基本思路就是这些，直接上代码，细节在注释</p>
+<h1 id="代码">代码</h1>
+<pre><code class="language-golang">func canFinish(numCourses int, prerequisites [][]int) bool {
+    // 记录出发点能够到达的目的地，这里含义是依赖路径
+	routes := make([][]int, numCourses)
+	for _, prerequisite := range prerequisites {
+		routes[prerequisite[0]] = append(routes[prerequisite[0]], prerequisite[1])
+	}
+
+	res := true
+    // 记录是否走过的数组
+	visited := make(map[int]int, numCourses)
+
+	var dfs func(int)
+	dfs = func(u int) {
+        // 表明正在遍历
+		visited[u] = 1
+		for _, to := range routes[u] {
+            // 发现环
+			if visited[to] == 1 {
+				res = false
+			} else if visited[to] == 0 {
+                // DFS，发现新的点，继续往下走
+				dfs(to)
+			}
+            // 不用再走了，退出
+			if !res {
+				return
+			}
+		}
+        // 表明已经遍历完
+		visited[u] = -1
+	}
+	for i := 0; i &lt; numCourses &amp;&amp; res; i++ {
+        // 已经遍历完的就不看了
+        // 在这一层，要么发现环了
+        // 要么点都是未遍历 和 已经遍历完 两个状态
+		if visited[i] == 0 {
+			dfs(i)
+		}
+	}
+	return res
+}
+</code></pre>
+
+                                </div>
+                    </article>
+                    <!--  -->
+                    
+                        <div class="next-post">
+                            <div class="next">下一篇</div>
+                            <a href="https://freephenix.github.io/30HJu_3kb/">
+                                <h3 class="post-title">
+                                    LeetCode-739. 每日温度
+                                </h3>
+                            </a>
+                        </div>
+                        
+                            <div id="disqus_thread"></div>
+                            <div id="gitalk-container"></div>
+                </div>
+                <!-- middle -->
+                <div class="main-container-middle"></div>
+                <!-- right -->
+                <div id="sidebar" class="main-container-right">
+                    
+                        <!-- toc -->
+                        
+    <div class="toc-card i-card ">
+        <div class="toc-title i-card-title">目录</div>
+        <div class="toc-content">
+            <ul class="markdownIt-TOC">
+<li><a href="#%E9%A2%98%E7%9B%AE">题目</a></li>
+<li><a href="#%E6%80%9D%E8%B7%AF">思路</a><br>
+*
+<ul>
+<li><a href="#%E7%BF%BB%E8%AF%91">翻译</a></li>
+<li><a href="#%E6%98%AF%E5%90%A6%E6%9C%89%E7%8E%AF">是否有环</a></li>
+<li><a href="#%E9%81%8D%E5%8E%86%E5%9B%BE">遍历图</a></li>
+</ul>
+</li>
+<li><a href="#%E4%BB%A3%E7%A0%81">代码</a></li>
+</ul>
+
+        </div>
+        <script>
+            function locateCatelogList() {
+                /*获取文章目录集合,可通过:header过滤器*/
+                var alis = $('.post-content :header');
+                /*获取侧边栏目录列表集合**/
+                var sidebar_alis = $('.markdownIt-TOC a');
+                /*获取滚动条到顶部的距离*/
+                var scroll_height = $(window).scrollTop();
+                for (var i = 0; i < alis.length; i++) {
+                    /*获取锚点集合中的元素分别到顶点的距离*/
+                    var a_height = $(alis[i]).offset().top;
+                    if (a_height < scroll_height) {
+                        /*高亮显示*/
+                        sidebar_alis.removeClass('on');
+                        $(sidebar_alis[i]).addClass('on');
+                    }
+                }
+            }
+            $(function() {
+                /*绑定滚动事件 */
+                $(window).bind('scroll', locateCatelogList);
+            });
+        </script>
+    </div>
+    
+                            
+
+                </div>
+
+
+
+
+            </div>
+
+
+            <div class="site-footer">
+  Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a> | 
+  <a class="rss" href="https://freephenix.github.io//atom.xml" target="_blank">RSS</a>
+</div>
+
+<script>
+  hljs.initHighlightingOnLoad()
+</script>
+
+
+    </div>
+    <script>
+        $('#sidebar').stickySidebar({
+            topSpacing: 80,
+            // bottomSpacing: 60
+        });
+    </script>
+    
+        
+            <script>
+    window.onload = function() {
+        var gitalk = new Gitalk({
+            clientID: '008503f8c8bca8787fbe',
+            clientSecret: '5f789f71e3288ff1866d17523348881053068eb4',
+            repo: 'freephenix.github.io',
+            owner: 'freephenix',
+            admin: ['freephenix'],
+            id: (location.pathname).substring(0, 49), // Ensure uniqueness and length less than 50
+            distractionFreeMode: false // Facebook-like distraction free mode
+        })
+
+        gitalk.render('gitalk-container')
+    }
+</script>
+                
+
+                    
+                                
+</body>
+
+</html>

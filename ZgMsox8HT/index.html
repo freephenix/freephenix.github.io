@@ -1,0 +1,354 @@
+<html>
+
+<head>
+    <meta charset="utf-8" />
+<meta name="description" content="" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>
+    MVCC | 半亩房顶
+</title>
+<link rel="shortcut icon" href="https://freephenix.github.io//favicon.ico?v=1713840769430">
+<!-- <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous"> -->
+<link href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+<link rel="stylesheet" href="https://freephenix.github.io//styles/main.css">
+<!-- js -->
+<script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.min.js"></script>
+<script src="https://freephenix.github.io//media/js/jquery.sticky-sidebar.min.js"></script>
+<script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
+<script src="https://cdn.bootcss.com/moment.js/2.23.0/moment.min.js"></script>
+
+
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-147240912-1"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+
+        function gtag() {
+            dataLayer.push(arguments);
+        }
+        gtag('js', new Date());
+
+        gtag('config', 'UA-147240912-1');
+    </script>
+    
+        
+            
+                <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+                <script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+                
+
+                    
+                            
+</head>
+
+<body>
+    <div class="main">
+        <div class="header">
+    <div class="nav">
+        <div class="logo">
+            <a href="https://freephenix.github.io/">
+                <img class="avatar" src="https://freephenix.github.io//images/avatar.png?v=1713840769430" alt="">
+            </a>
+            <div class="site-title">
+                <h1>
+                    半亩房顶
+                </h1>
+            </div>
+        </div>
+        <span class="menu-btn fa fa-align-justify"></span>
+        <div class="menu-container">
+            <ul>
+                
+                    
+                            <li>
+                                <a href="/" class="menu">
+                                    首页
+                                </a>
+                            </li>
+                            
+                                
+                    
+                            <li>
+                                <a href="/archives" class="menu">
+                                    归档
+                                </a>
+                            </li>
+                            
+                                
+                    
+                            <li>
+                                <a href="/tags" class="menu">
+                                    标签
+                                </a>
+                            </li>
+                            
+                                
+                    
+                            <li>
+                                <a href="https://freephenix.github.io//post/guan-yu-ban-mu-fang-ding/" class="menu">
+                                    关于
+                                </a>
+                            </li>
+                            
+                                
+            </ul>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function() {
+        $(".menu-btn").click(function() {
+            $(".menu-container").slideToggle();
+        });
+        $(window).resize(function() {
+
+            if (window.matchMedia('(min-width: 960px)').matches) {
+                $(".menu-container").css('display', 'block')
+            } else {
+                $(".menu-container").css('display', 'none')
+            }
+
+        });
+    });
+</script>
+
+            <div id="main-content" class="post-detail main-container">
+                <!-- left -->
+                <div id="content" class="main-container-left">
+                    <article class="post i-card">
+                        <h2 class="post-title">
+                            MVCC
+                        </h2>
+                        <div class="post-info">
+                            <time class="post-time">2022-06-23</time>
+                            
+                                <a href="https://freephenix.github.io/wNbvE8pQD/" class="post-tag i-tag
+                            i-tag-banana">
+                            #MySQL
+                        </a>
+                                
+                        </div>
+                        
+                            <div class="post-feature-image" style="background-image: url('https://freephenix.github.io//post-images/ZgMsox8HT.png')"></div>
+                            
+                                <div class="post-content">
+                                    <p>为什么需要MVCC？<br>
+什么情况下才会用到MVCC？<br>
+MVCC是如何实现的？</p>
+<!-- more -->
+<h1 id="背景">背景</h1>
+<pre><code>MVCC，英文全称是 Multiversion Concurrency Control，翻译过来就是多版本并发控制。
+</code></pre>
+<p>提到并发，那么出发点基本上都是效率问题，MVCC也不例外，其目的就是为了提高读写效率。<br>
+我们知道，数据库通常使用锁来实现隔离性，也就是说锁住资源之后会禁止其他线程访问该资源，但是一般情况下都是读多写少的场景，这也就催生了读写锁，因为往往读与读之间没有必要互斥，但是读写锁的效率依然不能满足大家日益增长的效率需求，能不能让读和写也不冲突呢？能！<code>MVCC</code>做到了</p>
+<h1 id="机制">机制</h1>
+<p><code>MVCC</code>将数据添加了版本的概念，每一个事务，将只会看到符合自己“权限”的特定版本的数据，通过这种方式，读与写也可以做到不冲突了。<br>
+这个所谓的“权限”，就是判断事务可见哪个数据版本的判断逻辑，这个逻辑在不同的隔离级别下也会有差异。<br>
+比如写入事务内的读取操作将能看到最新写入的版本的数据，但是其他事务只能看到之前版本的“快照”数据。</p>
+<pre><code>我们常听到的“快照读”和“当前读”，就是指读取快照数据 和 读取最新已提交数据。
+</code></pre>
+<p>不仅是<code>MySQL</code>，包括<code>Oracle</code>、<code>PostgreSQL</code>等其他数据库系统也都实现了<code>MVCC</code>，但各自的实现机制不尽相同，因为<code>MVCC</code>没有一个统一的实现标准，典型的有乐观（optimistic）并发控制和悲观（pessimistic）并发控制。<br>
+我们这里讨论的是<code>MySQL</code>中<code>InnoDB</code>的<code>MVCC</code></p>
+<h1 id="实现原理">实现原理</h1>
+<h2 id="如何存储">如何存储</h2>
+<p><code>InnoDB</code>中的每个数据行，其实不只是我们自己定义的字段，还有一些隐藏的字段，而用以实现<code>MVCC</code>的就是三个隐藏字段：<br>
+<code>DB_TRX_ID</code>：6 byte，是最近修改(修改/插入)事务 ID，记录创建这条记录/最后一次修改该记录的事务 ID。也就是上面所谓的“版本号”。<br>
+<code>DB_ROLL_PTR</code>：7 byte，回滚指针，指向这条记录的上一个版本，即<code>undolog</code>中的回滚记录。<br>
+<code>DB_ROW_ID</code>：6 byte，隐含的自增 ID（隐藏主键），如果数据表没有主键，InnoDB 会自动以此ID产生一个聚簇索引。</p>
+<figure data-type="image" tabindex="1"><img src="https://freephenix.github.io//post-images/1661334425108.png" alt="" loading="lazy"></figure>
+<ul>
+<li>在Insert操作时，只会记入当前事务ID，因为是新插入，所以不会有回滚地址。</li>
+<li>在update操作时，旧数据行不变，会复制一个新的行，记入当前事务ID，并将回滚地址中填入本数据行上一个版本的undolog日志的地址，便于寻找上一个版本的数据。</li>
+<li>在delete操作时，与update操作类似，此时不会真正删除数据，只是用另一个隐藏字段记录删除状态。</li>
+<li>select操作只是读取相应的数据，不会产生数据副本。</li>
+</ul>
+<p>而之前所说的“版本”的概念，就是用事务ID来标识的，用事务ID当做版本号，来决定哪些事务可以看到哪个版本的数据。而这每个版本的数据就是复用undolog来存储的。每个事务查看数据的可见性的过程，也就是选择可见版本的过程。</p>
+<h2 id="如何工作">如何工作</h2>
+<p>说到<code>MVCC</code>具体如何工作，还需要引入一个概念，<code>Read View</code> 读视图。<br>
+<code>ReadView</code>中主要就是有个列表来存储我们系统中当前活跃着的读写事务，也就是begin了还未提交的事务。通过这个列表来判断记录的某个版本是否对当前事务可见。其中最主要的与可见性相关的属性如下：</p>
+<p><img src="https://freephenix.github.io//post-images/1661397832407.png" alt="" loading="lazy"><br>
+<code>up_limit_id</code>：The read should see all trx ids which are strictly smaller (&lt;) than this value. In other words, this is the low water mark&quot;.<br>
+当前已经提交的事务号 + 1，事务号 &lt; <code>up_limit_id</code> ，对于当前<code>Read View</code>都是可见的。理解起来就是创建<code>Read View</code>视图的时候，之前已经提交的事务对于该事务肯定是可见的。</p>
+<p><code>low_limit_id</code>：The read should not see any transaction with trx id &gt;= this value.<br>
+In other words, this is the &quot;high water mark&quot;.<br>
+当前最大的事务号 + 1，事务号 &gt;= <code>low_limit_id</code>，对于当前<code>Read View</code>都是不可见的。理解起来就是在创建<code>Read View</code>视图之后创建的事务对于该事务肯定是不可见的。</p>
+<p><code>trx_ids</code>：Set of RW transactions that was active when this snapshot was taken.<br>
+活跃事务id列表，即<code>Read View</code>初始化时当前未提交的事务列表。所以当进行RR读的时候，<code>trx_ids</code>中的事务对于本事务是不可见的（除了自身事务，自身事务对于表的修改对于自己当然是可见的）。理解起来就是创建RV时，将当前活跃事务ID记录下来，后续即使他们提交对于本事务也是不可见的。</p>
+<p>举个栗子，说明下工作过程：<br>
+假设，此时，1、2事务已经提交，3事务尚未提交<br>
+此时如果有一个事务4来访问此字段，那么此时，事务4的<code>Read View</code>中，事务3还未提交，在<code>trx_ids</code>中，属于不可见事务，而事务1、2均已提交，小于<code>up_limit_id</code>，则属于可见范围，所以能够看到value是222<br>
+<img src="https://freephenix.github.io//post-images/1661334425108.png" alt="" loading="lazy"></p>
+<p>再假如说，此时事务3提交了，又有一个事务5来更新此字段value为555，那么此时事务4的第二次查询行为将会看到什么呢？这里就会体现出不同隔离级别下的不同行为：</p>
+<ul>
+<li>假如隔离级别为<strong>可重复读</strong>，那么<code>Read View</code>只会在第一次查询时生成，且在整个事务中只会生成这一次，所以依然只能读取到value为222</li>
+<li>假如隔离解蔽为<strong>已提交读</strong>，那么<code>Read View</code>会在再次查询时重新生成，所以此时将会能够看到value已经变成了333</li>
+</ul>
+<p>而根据上面的描述，我们能够明白<code>MVCC</code>的另外一个特性：<br>
+<code>MVCC</code>只会在<strong>已提交读</strong>和<strong>可重复读</strong>下生效</p>
+<ul>
+<li>对于<strong>未提交读</strong>的事务来说，由于可以读到未提交事务修改过的记录，所以直接读取记录的最新版本即可</li>
+<li>对于<strong>可串行化</strong>的事务来说，select语句也需要使用加锁的方式来访问记录，所以根本不需要`MVCC</li>
+</ul>
+<h1 id="意义">意义</h1>
+<h2 id="1-读写之间阻塞的问题">1. 读写之间阻塞的问题</h2>
+<p>通过<code>MVCC</code>可以让读写互相不阻塞，即读不阻塞写，写不阻塞读，这样就可以提升事务并发处理能力。</p>
+<blockquote>
+<p>提高并发的演进思路：</p>
+<ul>
+<li>普通锁，只能串行执行；</li>
+<li>读写锁，可以实现读读并发；</li>
+<li>数据多版本并发控制，可以实现读写并发。</li>
+</ul>
+</blockquote>
+<h2 id="2-降低了死锁的概率">2. 降低了死锁的概率</h2>
+<p>因为<code>InnoDB</code>的<code>MVCC</code>采用了乐观锁的方式，读取数据时并不需要加锁，对于写操作，也只锁定必要的行</p>
+<h2 id="3-解决一致性读的问题">3. 解决一致性读的问题</h2>
+<p>一致性读也被称为“快照读”，当我们查询数据库在某个时间点的快照时，只能看到这个时间点之前事务提交更新的结果，而不能看到这个时间点之后事务提交的更新结果。</p>
+<h1 id="引申讨论-innodb的rr级别是否解决了幻读">引申讨论 - InnoDB的RR级别是否解决了幻读？</h1>
+<p>InnoDB的RR级别下的情况是，在“快照读”下，因为<code>MVCC</code>和间隙锁的存在，确实不再会出现幻读的情况，但是如果是“当前读”下，幻读情况将会是依然存在的。<br>
+这个问题确实很有意思，相比之下，结果并不是那么重要，大家了解到原理就好~</p>
+<blockquote>
+<p>相关文章<br>
+https://github.com/Yhzhtk/note/issues/42<br>
+http://mysql.taobao.org/monthly/2017/06/07/<br>
+https://tech.meituan.com/2014/08/20/innodb-lock.html</p>
+</blockquote>
+<h1 id="引用">引用</h1>
+<ul>
+<li>https://github.com/zhangyachen/zhangyachen.github.io/issues/68</li>
+<li>https://baijiahao.baidu.com/s?id=1629409989970483292&amp;wfr=spider&amp;for=pc</li>
+<li>https://zhuanlan.zhihu.com/p/66791480</li>
+<li>https://blog.csdn.net/qq_35190492/article/details/109044141</li>
+<li>https://blog.csdn.net/SnailMann/article/details/94724197</li>
+<li>https://segmentfault.com/a/1190000037557620</li>
+<li>https://zhuanlan.zhihu.com/p/377162929</li>
+<li>https://github.com/hanchuanchuan/bingo2sql</li>
+<li>https://zhuanlan.zhihu.com/p/35574452</li>
+<li>https://www.modb.pro/db/75331</li>
+<li>https://juejin.cn/post/7001357238648438821</li>
+</ul>
+
+                                </div>
+                    </article>
+                    <!--  -->
+                    
+                        <div class="next-post">
+                            <div class="next">下一篇</div>
+                            <a href="https://freephenix.github.io/3ZX7voYTM/">
+                                <h3 class="post-title">
+                                    源码杂货铺：sync.Mutex
+                                </h3>
+                            </a>
+                        </div>
+                        
+                            <div id="disqus_thread"></div>
+                            <div id="gitalk-container"></div>
+                </div>
+                <!-- middle -->
+                <div class="main-container-middle"></div>
+                <!-- right -->
+                <div id="sidebar" class="main-container-right">
+                    
+                        <!-- toc -->
+                        
+    <div class="toc-card i-card ">
+        <div class="toc-title i-card-title">目录</div>
+        <div class="toc-content">
+            <ul class="markdownIt-TOC">
+<li><a href="#%E8%83%8C%E6%99%AF">背景</a></li>
+<li><a href="#%E6%9C%BA%E5%88%B6">机制</a></li>
+<li><a href="#%E5%AE%9E%E7%8E%B0%E5%8E%9F%E7%90%86">实现原理</a>
+<ul>
+<li><a href="#%E5%A6%82%E4%BD%95%E5%AD%98%E5%82%A8">如何存储</a></li>
+<li><a href="#%E5%A6%82%E4%BD%95%E5%B7%A5%E4%BD%9C">如何工作</a></li>
+</ul>
+</li>
+<li><a href="#%E6%84%8F%E4%B9%89">意义</a>
+<ul>
+<li><a href="#1-%E8%AF%BB%E5%86%99%E4%B9%8B%E9%97%B4%E9%98%BB%E5%A1%9E%E7%9A%84%E9%97%AE%E9%A2%98">1. 读写之间阻塞的问题</a></li>
+<li><a href="#2-%E9%99%8D%E4%BD%8E%E4%BA%86%E6%AD%BB%E9%94%81%E7%9A%84%E6%A6%82%E7%8E%87">2. 降低了死锁的概率</a></li>
+<li><a href="#3-%E8%A7%A3%E5%86%B3%E4%B8%80%E8%87%B4%E6%80%A7%E8%AF%BB%E7%9A%84%E9%97%AE%E9%A2%98">3. 解决一致性读的问题</a></li>
+</ul>
+</li>
+<li><a href="#%E5%BC%95%E7%94%B3%E8%AE%A8%E8%AE%BA-innodb%E7%9A%84rr%E7%BA%A7%E5%88%AB%E6%98%AF%E5%90%A6%E8%A7%A3%E5%86%B3%E4%BA%86%E5%B9%BB%E8%AF%BB">引申讨论 - InnoDB的RR级别是否解决了幻读？</a></li>
+<li><a href="#%E5%BC%95%E7%94%A8">引用</a></li>
+</ul>
+
+        </div>
+        <script>
+            function locateCatelogList() {
+                /*获取文章目录集合,可通过:header过滤器*/
+                var alis = $('.post-content :header');
+                /*获取侧边栏目录列表集合**/
+                var sidebar_alis = $('.markdownIt-TOC a');
+                /*获取滚动条到顶部的距离*/
+                var scroll_height = $(window).scrollTop();
+                for (var i = 0; i < alis.length; i++) {
+                    /*获取锚点集合中的元素分别到顶点的距离*/
+                    var a_height = $(alis[i]).offset().top;
+                    if (a_height < scroll_height) {
+                        /*高亮显示*/
+                        sidebar_alis.removeClass('on');
+                        $(sidebar_alis[i]).addClass('on');
+                    }
+                }
+            }
+            $(function() {
+                /*绑定滚动事件 */
+                $(window).bind('scroll', locateCatelogList);
+            });
+        </script>
+    </div>
+    
+                            
+
+                </div>
+
+
+
+
+            </div>
+
+
+            <div class="site-footer">
+  Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a> | 
+  <a class="rss" href="https://freephenix.github.io//atom.xml" target="_blank">RSS</a>
+</div>
+
+<script>
+  hljs.initHighlightingOnLoad()
+</script>
+
+
+    </div>
+    <script>
+        $('#sidebar').stickySidebar({
+            topSpacing: 80,
+            // bottomSpacing: 60
+        });
+    </script>
+    
+        
+            <script>
+    window.onload = function() {
+        var gitalk = new Gitalk({
+            clientID: '008503f8c8bca8787fbe',
+            clientSecret: '5f789f71e3288ff1866d17523348881053068eb4',
+            repo: 'freephenix.github.io',
+            owner: 'freephenix',
+            admin: ['freephenix'],
+            id: (location.pathname).substring(0, 49), // Ensure uniqueness and length less than 50
+            distractionFreeMode: false // Facebook-like distraction free mode
+        })
+
+        gitalk.render('gitalk-container')
+    }
+</script>
+                
+
+                    
+                                
+</body>
+
+</html>

@@ -1,0 +1,440 @@
+<html>
+
+<head>
+    <meta charset="utf-8" />
+<meta name="description" content="" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>
+    LeetCode-295. 数据流的中位数 | 半亩房顶
+</title>
+<link rel="shortcut icon" href="https://freephenix.github.io//favicon.ico?v=1713840769430">
+<!-- <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous"> -->
+<link href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+<link rel="stylesheet" href="https://freephenix.github.io//styles/main.css">
+<!-- js -->
+<script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.min.js"></script>
+<script src="https://freephenix.github.io//media/js/jquery.sticky-sidebar.min.js"></script>
+<script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
+<script src="https://cdn.bootcss.com/moment.js/2.23.0/moment.min.js"></script>
+
+
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-147240912-1"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+
+        function gtag() {
+            dataLayer.push(arguments);
+        }
+        gtag('js', new Date());
+
+        gtag('config', 'UA-147240912-1');
+    </script>
+    
+        
+            
+                <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+                <script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+                
+
+                    
+                            
+</head>
+
+<body>
+    <div class="main">
+        <div class="header">
+    <div class="nav">
+        <div class="logo">
+            <a href="https://freephenix.github.io/">
+                <img class="avatar" src="https://freephenix.github.io//images/avatar.png?v=1713840769430" alt="">
+            </a>
+            <div class="site-title">
+                <h1>
+                    半亩房顶
+                </h1>
+            </div>
+        </div>
+        <span class="menu-btn fa fa-align-justify"></span>
+        <div class="menu-container">
+            <ul>
+                
+                    
+                            <li>
+                                <a href="/" class="menu">
+                                    首页
+                                </a>
+                            </li>
+                            
+                                
+                    
+                            <li>
+                                <a href="/archives" class="menu">
+                                    归档
+                                </a>
+                            </li>
+                            
+                                
+                    
+                            <li>
+                                <a href="/tags" class="menu">
+                                    标签
+                                </a>
+                            </li>
+                            
+                                
+                    
+                            <li>
+                                <a href="https://freephenix.github.io//post/guan-yu-ban-mu-fang-ding/" class="menu">
+                                    关于
+                                </a>
+                            </li>
+                            
+                                
+            </ul>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function() {
+        $(".menu-btn").click(function() {
+            $(".menu-container").slideToggle();
+        });
+        $(window).resize(function() {
+
+            if (window.matchMedia('(min-width: 960px)').matches) {
+                $(".menu-container").css('display', 'block')
+            } else {
+                $(".menu-container").css('display', 'none')
+            }
+
+        });
+    });
+</script>
+
+            <div id="main-content" class="post-detail main-container">
+                <!-- left -->
+                <div id="content" class="main-container-left">
+                    <article class="post i-card">
+                        <h2 class="post-title">
+                            LeetCode-295. 数据流的中位数
+                        </h2>
+                        <div class="post-info">
+                            <time class="post-time">2024-03-15</time>
+                            
+                                <a href="https://freephenix.github.io/rGlV8RhRY/" class="post-tag i-tag
+                            i-tag-">
+                            #排序
+                        </a>
+                                
+                                <a href="https://freephenix.github.io/x0-DpCpVh/" class="post-tag i-tag
+                            i-tag-success">
+                            #堆排序
+                        </a>
+                                
+                                <a href="https://freephenix.github.io/YWFpnf3Gl/" class="post-tag i-tag
+                            i-tag-primary">
+                            #刷题
+                        </a>
+                                
+                                <a href="https://freephenix.github.io/70TrDOWqgi/" class="post-tag i-tag
+                            i-tag-other_1">
+                            #面试
+                        </a>
+                                
+                                <a href="https://freephenix.github.io/go/" class="post-tag i-tag
+                            i-tag-">
+                            #Go
+                        </a>
+                                
+                                <a href="https://freephenix.github.io/k1NaSbOoC/" class="post-tag i-tag
+                            i-tag-warning">
+                            #LeetCode
+                        </a>
+                                
+                                <a href="https://freephenix.github.io/WucazjDbn/" class="post-tag i-tag
+                            i-tag-other_4">
+                            #算法
+                        </a>
+                                
+                        </div>
+                        
+                            <div class="post-feature-image" style="background-image: url('https://freephenix.github.io//post-images/6jjI_Fh-1.jpeg')"></div>
+                            
+                                <div class="post-content">
+                                    <p>刷题使我快乐，满脸开心.jpg</p>
+<ul>
+<li>来源：力扣（LeetCode）</li>
+<li>链接：https://leetcode.cn/problems/find-median-from-data-stream/</li>
+<li>著作权归领扣网络所有。商业转载请联系官方授权，非商业转载请注明出处。</li>
+</ul>
+<!-- more -->
+<h1 id="题目">题目</h1>
+<p>中位数是有序整数列表中的中间值。如果列表的大小是偶数，则没有中间值，中位数是两个中间值的平均值。</p>
+<p>例如 <code>arr = [2,3,4]</code> 的中位数是 <code>3</code> 。<br>
+例如 <code>arr = [2,3]</code> 的中位数是 <code>(2 + 3) / 2 = 2.5</code> 。<br>
+实现 <code>MedianFinder</code> 类:</p>
+<p><code>MedianFinder()</code> 初始化 <code>MedianFinder</code> 对象。</p>
+<p><code>void addNum(int num)</code> 将数据流中的整数 <code>num</code> 添加到数据结构中。</p>
+<p><code>double findMedian()</code> 返回到目前为止所有元素的中位数。与实际答案相差 <code>10^-5</code> 以内的答案将被接受。</p>
+<p>示例 1：</p>
+<pre><code>输入
+[&quot;MedianFinder&quot;, &quot;addNum&quot;, &quot;addNum&quot;, &quot;findMedian&quot;, &quot;addNum&quot;, &quot;findMedian&quot;]
+[[], [1], [2], [], [3], []]
+输出
+[null, null, null, 1.5, null, 2.0]
+
+解释
+MedianFinder medianFinder = new MedianFinder();
+medianFinder.addNum(1);    // arr = [1]
+medianFinder.addNum(2);    // arr = [1, 2]
+medianFinder.findMedian(); // 返回 1.5 ((1 + 2) / 2)
+medianFinder.addNum(3);    // arr[1, 2, 3]
+medianFinder.findMedian(); // return 2.0
+</code></pre>
+<p>提示:</p>
+<ul>
+<li><code>-10^5 &lt;= num &lt;= 10^5</code></li>
+<li>在调用 <code>findMedian</code> 之前，数据结构中至少有一个元素</li>
+<li>最多 <code>5 * 10^4</code> 次调用 <code>addNum</code> 和 <code>findMedian</code></li>
+</ul>
+<h1 id="思路">思路</h1>
+<blockquote>
+<p>首先堵个路，全排序，然后找中间数字会超时，别问我为啥知道。。。</p>
+</blockquote>
+<p>那转换下思路，既然排序不行，但是显然需要类似排序的思路，再找中位数会比较方便，于是会有两个想法</p>
+<ul>
+<li>堆，堆的插入和弹出时间为 <code>O(n)</code> , 我们可以利用这一点，既然中位数是中间位置的数，或者两数平均，那么我们就用两个堆
+<ul>
+<li>小顶堆存较大元素，堆顶就是中间位置较大的数</li>
+<li>大顶堆存较小元素，堆顶就是中间位置较小的数</li>
+<li>至于中间一个数的场景，选择一个可以存比对方多一个数字即可</li>
+</ul>
+</li>
+<li>既然后排序不行，那就从开始插入时就一个个按位置放好。
+<ul>
+<li>放入数字时用二分法插入，然后找中间位置，算中位数</li>
+<li>这个方法听起来其实简单很多，但是时间上其实比第一算法要差些, 二分 <code>O(n)</code>，堆插入 <code>O(logn)</code></li>
+</ul>
+</li>
+</ul>
+<h3 id="双堆">双堆</h3>
+<p>这里我用的第一个办法，下面就是具体实现了</p>
+<h6 id="addnum">AddNum()</h6>
+<p>这个函数的目的就是把数字放好，并保证<code>两个堆的堆顶恰好是中间位置</code>的数字<br>
+假设我想让<code>小根堆</code>（放较大数字）可以多一个元素</p>
+<ul>
+<li>那就开始没有元素直接放<code>小根堆</code></li>
+<li>如果两个堆<code>元素数相同</code>，那就<code>应该是往小根堆放</code>，但是新的数字不一定是中间位置的数字，所以需要<code>先放入大根堆</code>，然后把<code>较小元素中最大的那一个</code>放入<code>小根堆</code></li>
+<li>同理，如果两个堆<code>元素数不同</code>，那就<code>先放小根堆</code>，然后把<code>较大元素中最小的</code>放入<code>大根堆</code></li>
+</ul>
+<h6 id="findmedian">FindMedian()</h6>
+<p>在 <code>AddNum()</code> 函数已经完成了中位数寻找的前提下，这里只需要看两个堆<code>元素数是否相同</code>即可</p>
+<ul>
+<li>相同则两个<code>堆顶直接求平均</code></li>
+<li>不同则直接拿<code>小根堆堆顶</code>（前提是在<code>小根堆</code>多放一个元素）</li>
+</ul>
+<p>二分法相对实现简单，就不搞了，上代码</p>
+<blockquote>
+<p>话说<code>go</code>的堆实现真麻烦哦，看看别人家语言<br>
+不过堆排也确实是比较常考的，建议还是会手撸比较好<br>
+MySQL limit 实现中，会用到堆排序</p>
+</blockquote>
+<h1 id="代码">代码</h1>
+<pre><code class="language-golang">type MinHeap []int
+
+func (hp MinHeap) Len() int           { return len(hp) }
+func (hp MinHeap) Less(i, j int) bool { return hp[i] &lt; hp[j] }
+func (hp MinHeap) Swap(i, j int)      { hp[i], hp[j] = hp[j], hp[i] }
+
+func (hp *MinHeap) Push(x interface{}) {
+	*hp = append(*hp, x.(int))
+}
+
+func (hp *MinHeap) Pop() interface{} {
+	n := len(*hp)
+	x := (*hp)[n-1]
+	*hp = (*hp)[:n-1]
+	return x
+}
+
+type MaxHeap []int
+
+func (hp MaxHeap) Len() int           { return len(hp) }
+func (hp MaxHeap) Less(i, j int) bool { return hp[i] &gt; hp[j] }
+func (hp MaxHeap) Swap(i, j int)      { hp[i], hp[j] = hp[j], hp[i] }
+
+func (hp *MaxHeap) Push(x interface{}) {
+	*hp = append(*hp, x.(int))
+}
+
+func (hp *MaxHeap) Pop() interface{} {
+	n := len(*hp)
+	x := (*hp)[n-1]
+	*hp = (*hp)[:n-1]
+	return x
+}
+
+type MedianFinder struct {
+	// 小根堆维护较大元素
+	minhp *MinHeap
+	// 大根堆维护较小元素
+	maxhp *MaxHeap
+	// 这样设置，缩小了每个堆的处理时间，并且使得中位数很容易取得
+	// 我们不妨让小根堆保持比大根堆多一个元素，或者元素个数相等，
+	// 那么
+	// 如果最终小根堆数量多1，也就是小根堆堆顶就是中位数
+	// 如果最终小根堆与大根堆元素数相同，那么中位数就是两个堆的堆顶的平均数
+}
+
+func Constructor() MedianFinder {
+	return MedianFinder{&amp;MinHeap{}, &amp;MaxHeap{}}
+}
+
+func (this *MedianFinder) AddNum(num int) {
+	// 如果是空的直接往小根堆放（存放较大元素）
+	if this.minhp.Len() == 0 {
+		heap.Push(this.minhp, num)
+		return
+	}
+	// 小根堆数量多，需要往大根堆放一个，那就将小根堆的堆顶放过去
+	// 才能保证大根堆只放较小元素
+	if this.minhp.Len() &gt; this.maxhp.Len() {
+		heap.Push(this.minhp, num)
+		heap.Push(this.maxhp, heap.Pop(this.minhp).(int))
+	} else {
+		// 一样多时应往小根堆放，但是需要将大根堆堆顶放过去
+		// 才能保证小根堆只放较大元素
+		heap.Push(this.maxhp, num)
+		heap.Push(this.minhp, heap.Pop(this.maxhp).(int))
+	}
+}
+
+func (this *MedianFinder) FindMedian() float64 {
+	if this.minhp.Len() &gt; this.maxhp.Len() {
+		return float64((*this.minhp)[0])
+	} else {
+		return float64((*this.minhp)[0]+(*this.maxhp)[0]) / 2
+	}
+}
+</code></pre>
+
+                                </div>
+                    </article>
+                    <!--  -->
+                    
+                        <div class="next-post">
+                            <div class="next">下一篇</div>
+                            <a href="https://freephenix.github.io/5QCZejIIn/">
+                                <h3 class="post-title">
+                                    LeetCode-16. 最接近的三数之和
+                                </h3>
+                            </a>
+                        </div>
+                        
+                            <div id="disqus_thread"></div>
+                            <div id="gitalk-container"></div>
+                </div>
+                <!-- middle -->
+                <div class="main-container-middle"></div>
+                <!-- right -->
+                <div id="sidebar" class="main-container-right">
+                    
+                        <!-- toc -->
+                        
+    <div class="toc-card i-card ">
+        <div class="toc-title i-card-title">目录</div>
+        <div class="toc-content">
+            <ul class="markdownIt-TOC">
+<li><a href="#%E9%A2%98%E7%9B%AE">题目</a></li>
+<li><a href="#%E6%80%9D%E8%B7%AF">思路</a><br>
+*
+<ul>
+<li><a href="#%E5%8F%8C%E5%A0%86">双堆</a><br>
+*<br>
+*<br>
+* <a href="#addnum">AddNum()</a><br>
+* <a href="#findmedian">FindMedian()</a></li>
+</ul>
+</li>
+<li><a href="#%E4%BB%A3%E7%A0%81">代码</a></li>
+</ul>
+
+        </div>
+        <script>
+            function locateCatelogList() {
+                /*获取文章目录集合,可通过:header过滤器*/
+                var alis = $('.post-content :header');
+                /*获取侧边栏目录列表集合**/
+                var sidebar_alis = $('.markdownIt-TOC a');
+                /*获取滚动条到顶部的距离*/
+                var scroll_height = $(window).scrollTop();
+                for (var i = 0; i < alis.length; i++) {
+                    /*获取锚点集合中的元素分别到顶点的距离*/
+                    var a_height = $(alis[i]).offset().top;
+                    if (a_height < scroll_height) {
+                        /*高亮显示*/
+                        sidebar_alis.removeClass('on');
+                        $(sidebar_alis[i]).addClass('on');
+                    }
+                }
+            }
+            $(function() {
+                /*绑定滚动事件 */
+                $(window).bind('scroll', locateCatelogList);
+            });
+        </script>
+    </div>
+    
+                            
+
+                </div>
+
+
+
+
+            </div>
+
+
+            <div class="site-footer">
+  Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a> | 
+  <a class="rss" href="https://freephenix.github.io//atom.xml" target="_blank">RSS</a>
+</div>
+
+<script>
+  hljs.initHighlightingOnLoad()
+</script>
+
+
+    </div>
+    <script>
+        $('#sidebar').stickySidebar({
+            topSpacing: 80,
+            // bottomSpacing: 60
+        });
+    </script>
+    
+        
+            <script>
+    window.onload = function() {
+        var gitalk = new Gitalk({
+            clientID: '008503f8c8bca8787fbe',
+            clientSecret: '5f789f71e3288ff1866d17523348881053068eb4',
+            repo: 'freephenix.github.io',
+            owner: 'freephenix',
+            admin: ['freephenix'],
+            id: (location.pathname).substring(0, 49), // Ensure uniqueness and length less than 50
+            distractionFreeMode: false // Facebook-like distraction free mode
+        })
+
+        gitalk.render('gitalk-container')
+    }
+</script>
+                
+
+                    
+                                
+</body>
+
+</html>

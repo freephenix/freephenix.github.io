@@ -1,0 +1,384 @@
+<html>
+
+<head>
+    <meta charset="utf-8" />
+<meta name="description" content="" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>
+    LeetCode-13 罗马数字转整数 | 半亩房顶
+</title>
+<link rel="shortcut icon" href="https://freephenix.github.io//favicon.ico?v=1713840769430">
+<!-- <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous"> -->
+<link href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+<link rel="stylesheet" href="https://freephenix.github.io//styles/main.css">
+<!-- js -->
+<script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.min.js"></script>
+<script src="https://freephenix.github.io//media/js/jquery.sticky-sidebar.min.js"></script>
+<script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
+<script src="https://cdn.bootcss.com/moment.js/2.23.0/moment.min.js"></script>
+
+
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-147240912-1"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+
+        function gtag() {
+            dataLayer.push(arguments);
+        }
+        gtag('js', new Date());
+
+        gtag('config', 'UA-147240912-1');
+    </script>
+    
+        
+            
+                <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+                <script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+                
+
+                    
+                            
+</head>
+
+<body>
+    <div class="main">
+        <div class="header">
+    <div class="nav">
+        <div class="logo">
+            <a href="https://freephenix.github.io/">
+                <img class="avatar" src="https://freephenix.github.io//images/avatar.png?v=1713840769430" alt="">
+            </a>
+            <div class="site-title">
+                <h1>
+                    半亩房顶
+                </h1>
+            </div>
+        </div>
+        <span class="menu-btn fa fa-align-justify"></span>
+        <div class="menu-container">
+            <ul>
+                
+                    
+                            <li>
+                                <a href="/" class="menu">
+                                    首页
+                                </a>
+                            </li>
+                            
+                                
+                    
+                            <li>
+                                <a href="/archives" class="menu">
+                                    归档
+                                </a>
+                            </li>
+                            
+                                
+                    
+                            <li>
+                                <a href="/tags" class="menu">
+                                    标签
+                                </a>
+                            </li>
+                            
+                                
+                    
+                            <li>
+                                <a href="https://freephenix.github.io//post/guan-yu-ban-mu-fang-ding/" class="menu">
+                                    关于
+                                </a>
+                            </li>
+                            
+                                
+            </ul>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function() {
+        $(".menu-btn").click(function() {
+            $(".menu-container").slideToggle();
+        });
+        $(window).resize(function() {
+
+            if (window.matchMedia('(min-width: 960px)').matches) {
+                $(".menu-container").css('display', 'block')
+            } else {
+                $(".menu-container").css('display', 'none')
+            }
+
+        });
+    });
+</script>
+
+            <div id="main-content" class="post-detail main-container">
+                <!-- left -->
+                <div id="content" class="main-container-left">
+                    <article class="post i-card">
+                        <h2 class="post-title">
+                            LeetCode-13 罗马数字转整数
+                        </h2>
+                        <div class="post-info">
+                            <time class="post-time">2023-03-17</time>
+                            
+                                <a href="https://freephenix.github.io/k1NaSbOoC/" class="post-tag i-tag
+                            i-tag-other_1">
+                            #LeetCode
+                        </a>
+                                
+                                <a href="https://freephenix.github.io/WucazjDbn/" class="post-tag i-tag
+                            i-tag-primary">
+                            #算法
+                        </a>
+                                
+                        </div>
+                        
+                            <div class="post-feature-image" style="background-image: url('https://freephenix.github.io//post-images/eBmYMdQCU.jpeg')"></div>
+                            
+                                <div class="post-content">
+                                    <p>刷题使我快乐，满脸开心.jpg</p>
+<p>来源：力扣（LeetCode）<br>
+链接：https://leetcode.cn/problems/roman-to-integer/<br>
+著作权归领扣网络所有。商业转载请联系官方授权，非商业转载请注明出处。</p>
+<!-- more -->
+<h1 id="题目">题目</h1>
+<p>罗马数字包含以下七种字符: I， V， X， L，C，D 和 M。</p>
+<pre><code>字符    数值
+I      1
+V      5
+X      10
+L      50
+C      100
+D      500
+M      1000
+</code></pre>
+<p>例如， 罗马数字 2 写做 II ，即为两个并列的 1 。12 写做 XII ，即为 X + II 。 27 写做  XXVII, 即为 XX + V + II 。</p>
+<p>通常情况下，罗马数字中小的数字在大的数字的右边。但也存在特例，例如 4 不写做 IIII，而是 IV。数字 1 在数字 5 的左边，所表示的数等于大数 5 减小数 1 得到的数值 4 。同样地，数字 9 表示为 IX。这个特殊的规则只适用于以下六种情况：</p>
+<ul>
+<li>I 可以放在 V (5) 和 X (10) 的左边，来表示 4 和 9。</li>
+<li>X 可以放在 L (50) 和 C (100) 的左边，来表示 40 和 90。</li>
+<li>C 可以放在 D (500) 和 M (1000) 的左边，来表示 400 和 900。<br>
+给定一个罗马数字，将其转换成整数。</li>
+</ul>
+<p>示例 1:</p>
+<pre><code>输入: s = &quot;III&quot;
+输出: 3
+</code></pre>
+<p>示例 2:</p>
+<pre><code>输入: s = &quot;IV&quot;
+输出: 4
+</code></pre>
+<p>示例 3:</p>
+<pre><code>输入: s = &quot;IX&quot;
+输出: 9
+</code></pre>
+<p>示例 4:</p>
+<pre><code>输入: s = &quot;LVIII&quot;
+输出: 58
+解释: L = 50, V= 5, III = 3.
+</code></pre>
+<p>示例 5:</p>
+<pre><code>输入: s = &quot;MCMXCIV&quot;
+输出: 1994
+解释: M = 1000, CM = 900, XC = 90, IV = 4.
+</code></pre>
+<p>提示：</p>
+<ul>
+<li>1 &lt;= s.length &lt;= 15</li>
+<li>s 仅含字符 ('I', 'V', 'X', 'L', 'C', 'D', 'M')</li>
+<li>题目数据保证 s 是一个有效的罗马数字，且表示整数在范围 [1, 3999] 内</li>
+<li>题目所给测试用例皆符合罗马数字书写规则，不会出现跨位等情况。</li>
+<li>IL 和 IM 这样的例子并不符合题目要求，49 应该写作 XLIX，999 应该写作 CMXCIX 。</li>
+<li>关于罗马数字的详尽书写规则，可以参考 罗马数字 - Mathematics 。</li>
+</ul>
+<h1 id="思路">思路</h1>
+<p>这个是个简单题目哈，扫了下题解，思路基本是转map，做计算，唯一一个小点区别可能主要在于，你是一个算上了特殊情况的map还是一个基础map，把特殊情况用计算逻辑代替，这里还可以说是有一点数学思维在里面。<br>
+开始我很直接的就用了暴力的map，然后发现首先是大map太丑了，其次是计算逻辑有些冗杂，需要简化下。所以转换了下思路，写了第二种。</p>
+<h1 id="代码">代码</h1>
+<h3 id="暴力map法">暴力map法</h3>
+<pre><code class="language-golang">func romanToInt(s string) int {
+	numMap := map[string]int{
+		&quot;M&quot;:  1000,
+		&quot;D&quot;:  500,
+		&quot;C&quot;:  100,
+		&quot;L&quot;:  50,
+		&quot;X&quot;:  10,
+		&quot;V&quot;:  5,
+		&quot;I&quot;:  1,
+		&quot;IV&quot;: 4,
+		&quot;IX&quot;: 9,
+		&quot;XL&quot;: 40,
+		&quot;XC&quot;: 90,
+		&quot;CD&quot;: 400,
+		&quot;CM&quot;: 900,
+	}
+	num := int(0)
+	maxLen := len(s)
+	sSlice := strings.Split(s, &quot;&quot;)
+	skip := 0
+	for k, str := range sSlice {
+		if skip == 1 {
+			skip = 0
+			continue
+		}
+		if k == maxLen-1 {
+			num += numMap[str]
+		} else if k &lt; maxLen-1 {
+			newKey := str + sSlice[k+1]
+			if temp, ok := numMap[newKey]; ok {
+				num += temp
+				skip = 1
+			} else {
+				num += numMap[str]
+			}
+		} else {
+			break
+		}
+	}
+	return num
+}
+</code></pre>
+<h3 id="基础map法">基础map法</h3>
+<pre><code class="language-golang">func romanToInt(s string) int {
+	numMap := map[string]int{
+		&quot;M&quot;: 1000,
+		&quot;D&quot;: 500,
+		&quot;C&quot;: 100,
+		&quot;L&quot;: 50,
+		&quot;X&quot;: 10,
+		&quot;V&quot;: 5,
+		&quot;I&quot;: 1,
+	}
+	num := 0
+	nowNum := 0
+	preNum := 0
+	sSlice := strings.Split(s, &quot;&quot;)
+	for _, str := range sSlice {
+		nowNum = numMap[str]
+		num += nowNum
+		if preNum &lt; nowNum {
+			num -= 2 * preNum
+		}
+		preNum = nowNum
+	}
+	return num
+}
+</code></pre>
+
+                                </div>
+                    </article>
+                    <!--  -->
+                    
+                        <div class="next-post">
+                            <div class="next">下一篇</div>
+                            <a href="https://freephenix.github.io/75MNp-YDB/">
+                                <h3 class="post-title">
+                                    源码杂货铺：Sync.Pool
+                                </h3>
+                            </a>
+                        </div>
+                        
+                            <div id="disqus_thread"></div>
+                            <div id="gitalk-container"></div>
+                </div>
+                <!-- middle -->
+                <div class="main-container-middle"></div>
+                <!-- right -->
+                <div id="sidebar" class="main-container-right">
+                    
+                        <!-- toc -->
+                        
+    <div class="toc-card i-card ">
+        <div class="toc-title i-card-title">目录</div>
+        <div class="toc-content">
+            <ul class="markdownIt-TOC">
+<li><a href="#%E9%A2%98%E7%9B%AE">题目</a></li>
+<li><a href="#%E6%80%9D%E8%B7%AF">思路</a></li>
+<li><a href="#%E4%BB%A3%E7%A0%81">代码</a><br>
+*
+<ul>
+<li><a href="#%E6%9A%B4%E5%8A%9Bmap%E6%B3%95">暴力map法</a></li>
+<li><a href="#%E5%9F%BA%E7%A1%80map%E6%B3%95">基础map法</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+        <script>
+            function locateCatelogList() {
+                /*获取文章目录集合,可通过:header过滤器*/
+                var alis = $('.post-content :header');
+                /*获取侧边栏目录列表集合**/
+                var sidebar_alis = $('.markdownIt-TOC a');
+                /*获取滚动条到顶部的距离*/
+                var scroll_height = $(window).scrollTop();
+                for (var i = 0; i < alis.length; i++) {
+                    /*获取锚点集合中的元素分别到顶点的距离*/
+                    var a_height = $(alis[i]).offset().top;
+                    if (a_height < scroll_height) {
+                        /*高亮显示*/
+                        sidebar_alis.removeClass('on');
+                        $(sidebar_alis[i]).addClass('on');
+                    }
+                }
+            }
+            $(function() {
+                /*绑定滚动事件 */
+                $(window).bind('scroll', locateCatelogList);
+            });
+        </script>
+    </div>
+    
+                            
+
+                </div>
+
+
+
+
+            </div>
+
+
+            <div class="site-footer">
+  Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a> | 
+  <a class="rss" href="https://freephenix.github.io//atom.xml" target="_blank">RSS</a>
+</div>
+
+<script>
+  hljs.initHighlightingOnLoad()
+</script>
+
+
+    </div>
+    <script>
+        $('#sidebar').stickySidebar({
+            topSpacing: 80,
+            // bottomSpacing: 60
+        });
+    </script>
+    
+        
+            <script>
+    window.onload = function() {
+        var gitalk = new Gitalk({
+            clientID: '008503f8c8bca8787fbe',
+            clientSecret: '5f789f71e3288ff1866d17523348881053068eb4',
+            repo: 'freephenix.github.io',
+            owner: 'freephenix',
+            admin: ['freephenix'],
+            id: (location.pathname).substring(0, 49), // Ensure uniqueness and length less than 50
+            distractionFreeMode: false // Facebook-like distraction free mode
+        })
+
+        gitalk.render('gitalk-container')
+    }
+</script>
+                
+
+                    
+                                
+</body>
+
+</html>

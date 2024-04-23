@@ -1,0 +1,1053 @@
+<html>
+
+<head>
+    <meta charset="utf-8" />
+<meta name="description" content="" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>
+    源码杂货铺：Opentracing &amp; jaeger | 半亩房顶
+</title>
+<link rel="shortcut icon" href="https://freephenix.github.io//favicon.ico?v=1713840769430">
+<!-- <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous"> -->
+<link href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+<link rel="stylesheet" href="https://freephenix.github.io//styles/main.css">
+<!-- js -->
+<script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.min.js"></script>
+<script src="https://freephenix.github.io//media/js/jquery.sticky-sidebar.min.js"></script>
+<script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
+<script src="https://cdn.bootcss.com/moment.js/2.23.0/moment.min.js"></script>
+
+
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-147240912-1"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+
+        function gtag() {
+            dataLayer.push(arguments);
+        }
+        gtag('js', new Date());
+
+        gtag('config', 'UA-147240912-1');
+    </script>
+    
+        
+            
+                <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+                <script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+                
+
+                    
+                            
+</head>
+
+<body>
+    <div class="main">
+        <div class="header">
+    <div class="nav">
+        <div class="logo">
+            <a href="https://freephenix.github.io/">
+                <img class="avatar" src="https://freephenix.github.io//images/avatar.png?v=1713840769430" alt="">
+            </a>
+            <div class="site-title">
+                <h1>
+                    半亩房顶
+                </h1>
+            </div>
+        </div>
+        <span class="menu-btn fa fa-align-justify"></span>
+        <div class="menu-container">
+            <ul>
+                
+                    
+                            <li>
+                                <a href="/" class="menu">
+                                    首页
+                                </a>
+                            </li>
+                            
+                                
+                    
+                            <li>
+                                <a href="/archives" class="menu">
+                                    归档
+                                </a>
+                            </li>
+                            
+                                
+                    
+                            <li>
+                                <a href="/tags" class="menu">
+                                    标签
+                                </a>
+                            </li>
+                            
+                                
+                    
+                            <li>
+                                <a href="https://freephenix.github.io//post/guan-yu-ban-mu-fang-ding/" class="menu">
+                                    关于
+                                </a>
+                            </li>
+                            
+                                
+            </ul>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function() {
+        $(".menu-btn").click(function() {
+            $(".menu-container").slideToggle();
+        });
+        $(window).resize(function() {
+
+            if (window.matchMedia('(min-width: 960px)').matches) {
+                $(".menu-container").css('display', 'block')
+            } else {
+                $(".menu-container").css('display', 'none')
+            }
+
+        });
+    });
+</script>
+
+            <div id="main-content" class="post-detail main-container">
+                <!-- left -->
+                <div id="content" class="main-container-left">
+                    <article class="post i-card">
+                        <h2 class="post-title">
+                            源码杂货铺：Opentracing &amp; jaeger
+                        </h2>
+                        <div class="post-info">
+                            <time class="post-time">2021-08-13</time>
+                            
+                                <a href="https://freephenix.github.io/opentracing/" class="post-tag i-tag
+                            i-tag-other_3">
+                            #Opentracing
+                        </a>
+                                
+                                <a href="https://freephenix.github.io/jaeger/" class="post-tag i-tag
+                            i-tag-other_4">
+                            #Jaeger
+                        </a>
+                                
+                                <a href="https://freephenix.github.io/go/" class="post-tag i-tag
+                            i-tag-info">
+                            #Go
+                        </a>
+                                
+                        </div>
+                        
+                            <div class="post-feature-image" style="background-image: url('https://freephenix.github.io//post-images/jaegeropentracing-yuan-ma-xue-xi.png')"></div>
+                            
+                                <div class="post-content">
+                                    <p>分布式链路追踪相信大家都不陌生，很好用，可以帮我们观察系统结构，清晰调用链路，快速定位排查问题等等。分布式追踪有多种实现方案，我熟悉的是jaeger，那jaeger是如何实现的呢？我们一起深入学习下吧</p>
+<!-- more -->
+<h1 id="背景">背景</h1>
+<p>随着微服务的发展，我们的系统变得越来越复杂，越来越庞大，这个时候，分布式追踪应运而生，旨在解决跨进程事务的描述和分析。这里不得不提下<a href="https://bigbully.github.io/Dapper-translation/">Google Dapper</a>这篇论文，这篇论文各种Tracer的基础，大家可以看下打个基础。</p>
+<h1 id="opentracing-协议数据模型">Opentracing 协议数据模型</h1>
+<figure data-type="image" tabindex="1"><img src="https://freephenix.github.io//post-images/1629278104861.png" alt="" loading="lazy"></figure>
+<p>这张图想必了解过Opentracing的都会比较熟悉。Span相当于是Trace基础数据单元，Trace相当于一个或多个span的有向无环图，而spanContext则是Span中的重要元素，承担起串联零个或者多个有关联的Span的职责</p>
+<p>这就是Opentracing标准中三个重要类型的关联关系<br>
+<img src="https://freephenix.github.io//post-images/1629861333897.png" alt="" loading="lazy"></p>
+<h3 id="tracer">Tracer</h3>
+<p>Tracer接口用来创建Span，以及处理如何处理<code>Inject</code>(serialize) 和 <code>Extract</code> (deserialize)，用于跨进程边界传递，它可以创建span，提取、注入spanContext<br>
+接口定义如下，这是实现一个Tracer的最小子集了</p>
+<pre><code class="language-go">type Tracer interface{
+    // 用于新开一个Span，名称不多说；上下级context关系在于StartSpanOption这个参数集合中的
+    // `SpanReference`, 用于表明Span之间的关系
+	StartSpan(operationName string, opts ...StartSpanOption) Span
+	// 将SpanContext 用预定的 format 格式，注入到 carrier 中
+	Inject(sm SpanContext, format interface{}, carrier interface{}) error
+	// 将SpanContext 用预定的 format 格式，从 carrier 中提取出来
+	Extract(format interface{}, carrier interface{}) (SpanContext, error)
+}
+</code></pre>
+<p>另外会有两个比较重要的特殊Tracer，<code>globaltracer</code> 和 <code>NoopTracer</code></p>
+<ul>
+<li>globaltracer<br>
+工程项目中，会有一个<code>globaltracer</code>，统一的确定服务中的Tracer，防止链路追踪因多个Tracer不兼容等问题无法生效</li>
+<li>NoopTracer<br>
+如果我们没有对Tracer进行初始化，则默认情况下，采用opentracing-go底层标准下的默认空Tracer——NoopTracer，这个是在实现OpenTracing标准API库时，必须要做的。NoopTracer可以被用作控制或者测试时，进行无害的inject注入等。</li>
+</ul>
+<pre><code>1、noopSpanContext是在SpanReference中使用，它代表SpanContext上下文传输tracer时的span获取。并携带Baggage信息；ForeachBaggageItem(func(k, v string) bool){}
+2、noopSpan实现了Span interface。方法实现全部为空；
+3、noopTracer实现了Tracer interface，包括StartSpan、Inject和Extract三个方法；全部为空实现；
+</code></pre>
+<h3 id="span">Span</h3>
+<p>当Span结束后(span.finish())，除了通过Span获取SpanContext外，下列其他所有方法都不允许被调用。包含功能如下：</p>
+<ul>
+<li>获取Span的SpanContext</li>
+<li>结束Span</li>
+<li>为Span设置Tag</li>
+<li>Log结构化数据</li>
+<li>设置baggage（随行数据）元素</li>
+<li>获取baggage</li>
+</ul>
+<pre><code class="language-go">type Span interface{
+	// Span执行单元结束
+	Finish()
+	// 带结束时间和日志记录列表信息，Span执行单元结束；也就是说结束时间可以业务指定; 日志列表也可以直接添加； 目前还不知道这个的使用场景；
+	FinishWithOptions(opts FinishOptions)
+	// 把Span的Baggage封装成SpanContext
+	Context() SpanContext
+	// 设置Span的操作名称
+	SetOperationName(operationName string) Span
+	// 设置Span Tag
+	SetTag(key string, value interface{}) Span
+	// 设置Span的log.Field列表；
+	// span.LogFields(
+	// 		log.String(&quot;event&quot;, &quot;soft error&quot;),
+	// )
+	LogFields(fields ...log.Field) 
+	// key-value列表={&quot;event&quot;: &quot;soft error&quot;, &quot;type&quot;: &quot;cache timeout&quot;, &quot;waited.millis&quot;:1500}
+	LogKV(alternatingKeyValues ...interface{})
+	// LogFields与LogKV类似，只是前者已封装好；
+	
+	// 设置span的Baggage：key-value， 用于跨进程上下文传输
+	SetBaggageItem(restrictedKey, value string) Span
+	// 通过key获取value；
+	BaggageItem(restrictedKey string) string
+	// 获取Span所在的调用链tracer
+	Tracer() Tracer
+	// 废弃，改用LogFields 或者 LogKV
+	LogEvent(event string)
+	// 同上
+	LogEventWithPayload(event string, payload interface{})；
+	// 同上
+	Log(data LogData)
+}
+</code></pre>
+<h5 id="exttags">ext/tags</h5>
+<p>OpenTracing APIs中已经定义了很多<a href="https://opentracing.io/specification/conventions/">常见的tag</a>，而在Span的定义中只有写入Tag的方法<code>SetTag</code>，应该是想让实现协议的Tracer自己写读方法吧。<br>
+<code>SetTag(key string, value interface{}) Span</code></p>
+<h3 id="spancontext">SpanContext</h3>
+<p>相对于OpenTracing中其他的功能，SpanContext更多的是一个“概念”。也就是说，OpenTracing实现中，需要重点考虑，并提供一套自己的API。 OpenTracing的使用者仅仅需要在创建Span、向传输协议Inject（注入）和从传输协议中Extract（提取）时使用SpanContext</p>
+<pre><code class="language-go">// Span之间跨进程调用时，会使用SpanContext传输Baggage携带信息。通过context标准库实现
+type contextKey struct{}
+
+var activeSpanKey = contextKey{}
+
+// 封装span到context中
+func ContextWithSpan(ctx context.Context, span Span) context{
+	return context.WithValue(ctx, activeSpanKey, span)
+}
+
+// 从ctx中通过activeSpanKey取出Span，这里可以看到不同服务的activeSpanKey值，是相同的，上面的DEMO可以说明。
+func SpanFromContext(ctx context.Context) Span{
+	val:=ctx.Value(activeSpanKey)
+	if sp, ok := val.(Span); ok{
+		return sp
+	}
+	return nil
+}
+
+
+// 通过context上下文的activeSpanKey，我们可以获得Span，并创建新的span
+func startSpanFormContextWithTracer(ctx context.Context, tracer Tracer, operationName string, opts ...StartSpanOption) (Span, context.Context){
+	// 首先从上下文看是否能够获取到span，如果获取不到，再创建tracer和span；
+	if parentSpan:= SpanFromContext(ctx); parentSpan !=nil {
+		opts = append(opts, ChildOf(parentSpan.Context()))
+	}
+	
+	span := tracer.StartSpan(operationName, opts...)
+	return span, ContextWithSpan(ctx, span)
+}
+</code></pre>
+<h5 id="baggage读写">Baggage读写</h5>
+<p>之前提到的baggage读写，实现上就是在所谓的<code>Carrier</code>中存放kv。目前三种Key，分别对应byte流，TextMap 和 httpHeader。而Carrier就是对应于Key代表类型的一个&quot;运输者&quot;<br>
+定义：<br>
+byte流直接使用io.Writer 和 io.Reader即可，而后两种类型，需要实现下面的接口</p>
+<pre><code class="language-go">type TextMapWriter interface {
+	Set(key, val string)
+}
+
+type TextMapReader interface {
+	ForeachKey(handler func(key, value string) error) error
+}
+</code></pre>
+<p>baggage实现如下：</p>
+<pre><code class="language-go">// TextMap
+type TextMapCarrier map[string]string
+
+func (c TextMapCarrier) ForeachKey(handler func(key, val string) error) error{
+	for k, v := range c{
+		if err := handler(k, v); err!=nil{
+			return err
+		}
+	}
+	return nil
+}
+
+func (c TextMapCarrier) Set(key, val string){
+	c[key] = val
+}
+
+
+// Http.Header
+type HTTPHeadersCarrier http.Header
+
+func (c HTTPHeadersCarrier) Set(key, val string){
+	h:= http.Header(c)
+	h.Add(key, val)
+}
+
+func (c HTTPHeadersCarrier) ForeachKey(handler func(key, value string) error) error{
+	for k, vals:= range c{
+		for _, v := range vals{
+			if err:= handler(k, v); err !=nil{
+				return errr
+			}
+		}
+	}
+	return nil
+}
+</code></pre>
+<p>以上就是Opentracing中做出的主要约定，具体的实现则需要各个tracer各显神通了，下面我们来看看jaeger的实现。</p>
+<h1 id="jaeger">Jaeger</h1>
+<p>了解了Opentracing，我们来看jaeger的实现。</p>
+<p>先看一张架构图：<br>
+<img src="https://freephenix.github.io//post-images/1629278154559.png" alt="" loading="lazy"></p>
+<p>这里DB只是一个代指，默认没有存储时，Jaeger的数据就会放在内存中，掉电就没了，还是比较危险的，比如我们项目中使用的是ES，可以看下加入ES之后的图：<br>
+<img src="https://freephenix.github.io//post-images/1629278150006.png" alt="" loading="lazy"></p>
+<p>通常做法，我们会在服务中集成一个jaeger的client，这个用来处理Tracer，上报上下文链路信息；agent作为一个代理，帮助服务整合、发送信息到collector；collector则负责收集、汇总、整理数据；这里如果有ES或其他组件做存储，则再插入一个环节，collector汇总数据，放入es存储；query负责去存储中查询数据，没有es等存储，则collector会直接将数据放入内存中，供query查询。</p>
+<h3 id="client">Client</h3>
+<p>我们用的是<a href="https://github.com/jaegertracing/jaeger-client-go">jaeger-client-go</a>，下面我们主要从注入、提取、上报三块看下源码</p>
+<h5 id="注入">注入</h5>
+<p>可以看到，这里主要就是把我们上面提到的Baggage中的参数放到了Carrier中，而这个Carrier上面也提到了，是根据Value类型而定的，所以这里定义是interface{}</p>
+<pre><code class="language-go">// 以TextMap类型的value为例
+// Inject implements Injector of TextMapPropagator
+func (p *TextMapPropagator) Inject(
+	sc SpanContext,
+	abstractCarrier interface{},
+) error {
+	textMapWriter, ok := abstractCarrier.(opentracing.TextMapWriter)
+	if !ok {
+		return opentracing.ErrInvalidCarrier
+	}
+
+	// Do not encode the string with trace context to avoid accidental double-encoding
+    // 不需要额外编码，防止混乱
+	// if people are using opentracing &lt; 0.10.0. Our colon-separated representation
+	// of the trace context is already safe for HTTP headers.
+    // 0.10.0版本之前，冒号分隔的参数，对HTTP头是安全的
+	textMapWriter.Set(p.headerKeys.TraceContextHeaderName, sc.String())
+	for k, v := range sc.baggage {
+        // 用添加一个前缀
+		safeKey := p.addBaggageKeyPrefix(k)
+		safeVal := p.encodeValue(v)
+		textMapWriter.Set(safeKey, safeVal)
+	}
+	return nil
+}
+</code></pre>
+<h5 id="提取">提取</h5>
+<p>相对应的，提取过程主要就是把Carrier中的数据放回到Baggage中，同样根据Value类型有三个种类的Extract函数</p>
+<pre><code class="language-go">// Extract implements Extractor of TextMapPropagator
+func (p *TextMapPropagator) Extract(abstractCarrier interface{}) (SpanContext, error) {
+	textMapReader, ok := abstractCarrier.(opentracing.TextMapReader)
+	if !ok {
+		return emptyContext, opentracing.ErrInvalidCarrier
+	}
+	var ctx SpanContext
+	var baggage map[string]string
+	err := textMapReader.ForeachKey(func(rawKey, value string) error {
+        // 这里会有一个处理，需要注意，避开小坑
+		key := strings.ToLower(rawKey) // TODO not necessary for plain TextMap
+        // 初始化Tracer时可以给出一些headers的配置
+        // 可以决定这里是否会有一些特定key的特殊处理
+		if key == p.headerKeys.TraceContextHeaderName {
+			var err error
+			safeVal := p.decodeValue(value)
+			if ctx, err = ContextFromString(safeVal); err != nil {
+				return err
+			}
+		} else if key == p.headerKeys.JaegerDebugHeader {
+			ctx.debugID = p.decodeValue(value)
+		} else if key == p.headerKeys.JaegerBaggageHeader {
+			if baggage == nil {
+				baggage = make(map[string]string)
+			}
+			for k, v := range p.parseCommaSeparatedMap(value) {
+				baggage[k] = v
+			}
+		} else if strings.HasPrefix(key, p.headerKeys.TraceBaggageHeaderPrefix) {
+			if baggage == nil {
+				baggage = make(map[string]string)
+			}
+			safeKey := p.removeBaggageKeyPrefix(key)
+			safeVal := p.decodeValue(value)
+			baggage[safeKey] = safeVal
+		}
+		return nil
+	})
+	if err != nil {
+        // 自定义metrics指标 底层用的atomic包
+		p.metrics.DecodingErrors.Inc(1)
+		return emptyContext, err
+	}
+	if !ctx.traceID.IsValid() &amp;&amp; ctx.debugID == &quot;&quot; &amp;&amp; len(baggage) == 0 {
+		return emptyContext, opentracing.ErrSpanContextNotFound
+	}
+    // 数据塞到baggage中
+	ctx.baggage = baggage
+	return ctx, nil
+}
+</code></pre>
+<h5 id="上报">上报</h5>
+<p>每个Span都有它自己的生命周期，而在span执行Finish方法时候，才会触发上报，上代码</p>
+<pre><code class="language-go">// Finish implements opentracing.Span API
+// After finishing the Span object it returns back to the allocator unless the reporter retains it again,
+// so after that, the Span object should no longer be used because it won't be valid anymore.
+func (s *Span) Finish() {
+	s.FinishWithOptions(opentracing.FinishOptions{})
+}
+
+// FinishWithOptions implements opentracing.Span API
+func (s *Span) FinishWithOptions(options opentracing.FinishOptions) {
+	if options.FinishTime.IsZero() {
+		options.FinishTime = s.tracer.timeNow()
+	}
+    // 可以通过函数参数处理 FinishTime、LogRecords、BulkLogData（deprecated）
+	s.observer.OnFinish(options)
+    // 加锁算时长
+	s.Lock()
+	s.duration = options.FinishTime.Sub(s.startTime)
+	ctx := s.context
+	s.Unlock()
+    // 取样器是否完工
+	if !ctx.isSamplingFinalized() {
+		decision := s.tracer.sampler.OnFinishSpan(s)
+		s.applySamplingDecision(decision, true)
+	}
+    // IsSampled returns whether this trace was chosen for permanent storage
+    // by the sampling mechanism of the tracer.
+    // 上面是这个方法的原注释，意思比较清楚了，看是不是选择了需要持久化存储
+	if ctx.IsSampled() {
+		s.Lock()
+		s.fixLogsIfDropped()
+		if len(options.LogRecords) &gt; 0 || len(options.BulkLogData) &gt; 0 {
+			// Note: bulk logs are not subject to maxLogsPerSpan limit
+			if options.LogRecords != nil {
+				s.logs = append(s.logs, options.LogRecords...)
+			}
+			for _, ld := range options.BulkLogData {
+				s.logs = append(s.logs, ld.ToLogRecord())
+			}
+		}
+		s.Unlock()
+	}
+	// call reportSpan even for non-sampled traces, to return span to the pool
+	// and update metrics counter
+    // 调用上报Span的方法
+	s.tracer.reportSpan(s)
+}
+
+// IsSampled returns whether this trace was chosen for permanent storage
+// by the sampling mechanism of the tracer.
+func (c SpanContext) IsSampled() bool {
+	return c.samplingState.isSampled()
+}
+</code></pre>
+<p>下面是真正的上报的代码了，也是一个基于chan的实现<br>
+数据填入时机有调用report和close时<br>
+数据真正的通过udp（通常都是用udp）发送是定时的</p>
+<pre><code class="language-go">const (
+    // 默认队列长度
+    defaultQueueSize           = 100
+    // 默认发送udp间隔
+	defaultBufferFlushInterval = 1 * time.Second
+)
+
+...
+
+// NewRemoteReporter creates a new reporter that sends spans out of process by means of Sender.
+// Calls to Report(Span) return immediately (side effect: if internal buffer is full the span is dropped).
+// Periodically the transport buffer is flushed even if it hasn't reached max packet size.
+// Calls to Close() block until all spans reported prior to the call to Close are flushed.
+func NewRemoteReporter(sender Transport, opts ...ReporterOption) Reporter {
+	options := reporterOptions{}
+	for _, option := range opts {
+		option(&amp;options)
+	}
+    // 初始化刷数据间隔
+	if options.bufferFlushInterval &lt;= 0 {
+		options.bufferFlushInterval = defaultBufferFlushInterval
+	}
+	if options.logger == nil {
+		options.logger = log.NullLogger
+	}
+	if options.metrics == nil {
+		options.metrics = NewNullMetrics()
+	}
+    // 初始化队列长度
+	if options.queueSize &lt;= 0 {
+		options.queueSize = defaultQueueSize
+	}
+	reporter := &amp;remoteReporter{
+		reporterOptions: options,
+		sender:          sender,
+		queue:           make(chan reporterQueueItem, options.queueSize),
+		reporterStats:   new(reporterStats),
+	}
+	if receiver, ok := sender.(reporterstats.Receiver); ok {
+		receiver.SetReporterStats(reporter.reporterStats)
+	}
+    // go出去的协程，处理队列
+	go reporter.processQueue()
+	return reporter
+}
+
+// Report implements Report() method of Reporter.
+// It passes the span to a background go-routine for submission to Jaeger backend.
+// If the internal queue is full, the span is dropped and metrics.ReporterDropped counter is incremented.
+// If Report() is called after the reporter has been Close()-ed, the additional spans will not be
+// sent to the backend, but the metrics.ReporterDropped counter may not reflect them correctly,
+// because some of them may still be successfully added to the queue.
+// 主动调用上报处，select实现阻塞发送
+func (r *remoteReporter) Report(span *Span) {
+	select {
+	// Need to retain the span otherwise it will be released
+	case r.queue &lt;- reporterQueueItem{itemType: reporterQueueItemSpan, span: span.Retain()}:
+		atomic.AddInt64(&amp;r.queueLength, 1)
+	default:
+		r.metrics.ReporterDropped.Inc(1)
+		r.reporterStats.incDroppedCount()
+	}
+}
+
+// Close implements Close() method of Reporter by waiting for the queue to be drained.
+// Span关闭被动上报处
+func (r *remoteReporter) Close() {
+	r.logger.Debugf(&quot;closing reporter&quot;)
+	if swapped := atomic.CompareAndSwapInt64(&amp;r.closed, 0, 1); !swapped {
+		r.logger.Error(&quot;Repeated attempt to close the reporter is ignored&quot;)
+		return
+	}
+	r.sendCloseEvent()
+	_ = r.sender.Close()
+}
+// waitGroup实现的阻塞发送
+func (r *remoteReporter) sendCloseEvent() {
+	wg := &amp;sync.WaitGroup{}
+	wg.Add(1)
+	item := reporterQueueItem{itemType: reporterQueueItemClose, close: wg}
+
+	r.queue &lt;- item // if the queue is full we will block until there is space
+	atomic.AddInt64(&amp;r.queueLength, 1)
+	wg.Wait()
+}
+
+// processQueue reads spans from the queue, converts them to Thrift, and stores them in an internal buffer.
+// When the buffer length reaches batchSize, it is flushed by submitting the accumulated spans to Jaeger.
+// Buffer also gets flushed automatically every batchFlushInterval seconds, just in case the tracer stopped
+// reporting new spans.
+func (r *remoteReporter) processQueue() {
+	// flush causes the Sender to flush its accumulated spans and clear the buffer
+    // 包了一个处理函数，感觉没啥必要？
+	flush := func() {
+		if flushed, err := r.sender.Flush(); err != nil {
+			r.metrics.ReporterFailure.Inc(int64(flushed))
+			r.logger.Error(fmt.Sprintf(&quot;failed to flush Jaeger spans to server: %s&quot;, err.Error()))
+		} else if flushed &gt; 0 {
+			r.metrics.ReporterSuccess.Inc(int64(flushed))
+		}
+	}
+
+	timer := time.NewTicker(r.bufferFlushInterval)
+	for {
+		select {
+        // 定时刷数据
+		case &lt;-timer.C:
+			flush()
+        // 预处理待发送数据
+		case item := &lt;-r.queue:
+			atomic.AddInt64(&amp;r.queueLength, -1)
+			switch item.itemType {
+			case reporterQueueItemSpan:
+				span := item.span
+				if flushed, err := r.sender.Append(span); err != nil {
+					r.metrics.ReporterFailure.Inc(int64(flushed))
+					r.logger.Error(fmt.Sprintf(&quot;error reporting Jaeger span %q: %s&quot;, span.OperationName(), err.Error()))
+				} else if flushed &gt; 0 {
+					r.metrics.ReporterSuccess.Inc(int64(flushed))
+					// to reduce the number of gauge stats, we only emit queue length on flush
+					r.metrics.ReporterQueueLength.Update(atomic.LoadInt64(&amp;r.queueLength))
+					r.logger.Debugf(&quot;flushed %d spans&quot;, flushed)
+				}
+                // 按引用层级，没有引用时候就是表明当前位置是自己所在层级了
+				span.Release()
+            // chan关闭，清理，注意资源释放，细节
+			case reporterQueueItemClose:
+				timer.Stop()
+				flush()
+				item.close.Done()
+				return
+			}
+		}
+	}
+}
+</code></pre>
+<h3 id="agent">Agent</h3>
+<p>agent的功能是收集client发出的数据，简单处理后发送给collector，完成数据上报</p>
+<h5 id="端口">端口</h5>
+<p>agent默认会监听三个端口</p>
+<ul>
+<li>处理zipkin的compact格式udp端口</li>
+<li>处理jaeger的compact格式udp端口</li>
+<li>处理jaeger的binary格式udp端口<br>
+均会用thrift协议传输数据</li>
+</ul>
+<pre><code class="language-go">var defaultProcessors = []struct {
+	model    Model
+	protocol Protocol
+	port     int
+}{
+	{model: &quot;zipkin&quot;, protocol: &quot;compact&quot;, port: ports.AgentZipkinThriftCompactUDP},
+	{model: &quot;jaeger&quot;, protocol: &quot;compact&quot;, port: ports.AgentJaegerThriftCompactUDP},
+	{model: &quot;jaeger&quot;, protocol: &quot;binary&quot;, port: ports.AgentJaegerThriftBinaryUDP},
+}
+</code></pre>
+<h5 id="接收">接收</h5>
+<p>从agent的run函数中可以追踪到，数据是放在了<code>chan *ReadBuf</code>类型的dataChan中</p>
+<p>这里有一个细节，<strong>Agent的服务队列是有长度限制的（default 1000），如果堆积超过1000个，Agent就会毫不怜悯的把数据丢掉，这个做法是在这种场景下的一种很明智的做法，舍小顾大</strong></p>
+<pre><code class="language-go">// TBufferedServer is a custom thrift server that reads traffic using the transport provided
+// and places messages into a buffered channel to be processed by the processor provided
+type TBufferedServer struct {
+	// NB. queueLength HAS to be at the top of the struct or it will SIGSEV for certain architectures.
+	// See https://github.com/golang/go/issues/13868
+	queueSize     int64
+    // 接收数据的接口
+	dataChan      chan *ReadBuf
+	maxPacketSize int
+	maxQueueSize  int
+	serving       uint32
+	transport     ThriftTransport
+	readBufPool   *sync.Pool
+	metrics       struct {
+		// Size of the current server queue
+		QueueSize metrics.Gauge `metric:&quot;thrift.udp.server.queue_size&quot;`
+
+		// Size (in bytes) of packets received by server
+		PacketSize metrics.Gauge `metric:&quot;thrift.udp.server.packet_size&quot;`
+
+		// Number of packets dropped by server
+		PacketsDropped metrics.Counter `metric:&quot;thrift.udp.server.packets.dropped&quot;`
+
+		// Number of packets processed by server
+		PacketsProcessed metrics.Counter `metric:&quot;thrift.udp.server.packets.processed&quot;`
+
+		// Number of malformed packets the server received
+		ReadError metrics.Counter `metric:&quot;thrift.udp.server.read.errors&quot;`
+	}
+}
+
+...
+
+// NewTBufferedServer creates a TBufferedServer
+// 接收服务的new方法
+func NewTBufferedServer(
+	transport ThriftTransport,
+	maxQueueSize int,
+	maxPacketSize int,
+	mFactory metrics.Factory,
+) (*TBufferedServer, error) {
+	dataChan := make(chan *ReadBuf, maxQueueSize)
+    // 处理后的数据放入的 `sync.Pool`
+	var readBufPool = &amp;sync.Pool{
+		New: func() interface{} {
+			return &amp;ReadBuf{bytes: make([]byte, maxPacketSize)}
+		},
+	}
+
+	res := &amp;TBufferedServer{dataChan: dataChan,
+		transport:     transport,
+		maxQueueSize:  maxQueueSize,
+		maxPacketSize: maxPacketSize,
+		readBufPool:   readBufPool,
+		serving:       stateInit,
+	}
+
+	metrics.MustInit(&amp;res.metrics, mFactory, nil)
+	return res, nil
+}
+
+...
+
+// Serve initiates the readers and starts serving traffic
+func (s *TBufferedServer) Serve() {
+	defer close(s.dataChan)
+    // cas方式控制服务的启停，并没有使用chan实现
+	if !atomic.CompareAndSwapUint32(&amp;s.serving, stateInit, stateServing) {
+		return // Stop already called
+	}
+
+	for s.IsServing() {
+		readBuf := s.readBufPool.Get().(*ReadBuf)
+		n, err := s.transport.Read(readBuf.bytes)
+		if err == nil {
+			readBuf.n = n
+			s.metrics.PacketSize.Update(int64(n))
+            // 阻塞式等数据
+			select {
+			case s.dataChan &lt;- readBuf:
+				s.metrics.PacketsProcessed.Inc(1)
+				s.updateQueueSize(1)
+			default:
+				s.readBufPool.Put(readBuf)
+				s.metrics.PacketsDropped.Inc(1)
+			}
+		} else {
+			s.readBufPool.Put(readBuf)
+			s.metrics.ReadError.Inc(1)
+		}
+	}
+}
+</code></pre>
+<p>接收到之后，需要简单的进行一个处理</p>
+<pre><code class="language-go">// processBuffer reads data off the channel and puts it into a custom transport for
+// the processor to process
+func (s *ThriftProcessor) processBuffer() {
+	for readBuf := range s.server.DataChan() {
+		protocol := s.protocolPool.Get().(thrift.TProtocol)
+		payload := readBuf.GetBytes()
+		protocol.Transport().Write(payload)
+		s.logger.Debug(&quot;Span(s) received by the agent&quot;, zap.Int(&quot;bytes-received&quot;, len(payload)))
+        // 只有一些很简单的校验，日志打印，错误记录等
+		if ok, err := s.handler.Process(context.Background(), protocol, protocol); !ok {
+			s.logger.Error(&quot;Processor failed&quot;, zap.Error(err))
+			s.metrics.HandlerProcessError.Inc(1)
+		}
+		s.protocolPool.Put(protocol)
+        // 塞入数据到pool
+		s.server.DataRecd(readBuf) // acknowledge receipt and release the buffer
+	}
+}
+</code></pre>
+<h5 id="发送">发送</h5>
+<p>处理完放好之后，就是发送了</p>
+<pre><code class="language-go">func (p *agentProcessorEmitBatch) Process(ctx context.Context, seqId int32, iprot, oprot thrift.TProtocol) (success bool, err thrift.TException) {
+  args := AgentEmitBatchArgs{}
+  var err2 error
+  // 按协议读出数据
+  if err2 = args.Read(ctx, iprot); err2 != nil {
+    iprot.ReadMessageEnd(ctx)
+    return false, thrift.WrapTException(err2)
+  }
+  iprot.ReadMessageEnd(ctx)
+
+  tickerCancel := func() {}
+  _ = tickerCancel
+
+  // 批量发出，发出后释放资源，细节
+  if err2 = p.handler.EmitBatch(ctx, args.Batch); err2 != nil {
+    tickerCancel()
+    return true, thrift.WrapTException(err2)
+  }
+  tickerCancel()
+  return true, nil
+}
+</code></pre>
+<h3 id="collector">collector</h3>
+<p>collector主要负责的就是汇总数据，保存数据，所以这里一定会看到一些并发支持的代码</p>
+<h5 id="接收-2">接收</h5>
+<p>接收数据，汇总数据，不多说，上代码<br>
+我们先来看下如何做的接收消息的并发支持</p>
+<pre><code class="language-go">func (q *BoundedQueue) Produce(item interface{}) bool {
+    if atomic.LoadInt32(&amp;q.stopped) != 0 {
+    	q.onDroppedItem(item)
+    	return false
+    }
+    select {
+    // 接收到消息后，扔进队列，下面会有处理的地方
+    case q.items &lt;- item:
+    	atomic.AddInt32(&amp;q.size, 1)
+    	return true
+    default:
+    	if q.onDroppedItem != nil {
+    		q.onDroppedItem(item)
+    	}
+    	return false
+    }
+}
+</code></pre>
+<p>这里会消费扔进队列的数据</p>
+<pre><code class="language-go">// StartConsumersWithFactory creates a given number of consumers consuming items
+// from the queue in separate goroutines.
+func (q *BoundedQueue) StartConsumersWithFactory(num int, factory func() Consumer) {
+	q.workers = num
+	q.factory = factory
+    // waitGroup 做的等待，保持goroutinue统一
+	var startWG sync.WaitGroup
+    // 默认workers有50个
+	for i := 0; i &lt; q.workers; i++ {
+		q.stopWG.Add(1)
+		startWG.Add(1)
+		go func() {
+			startWG.Done()
+			defer q.stopWG.Done()
+			consumer := q.factory()
+			queue := *q.items
+            // 基于 select + chan 做的轮训等待 和 启停机制
+			for {
+				select {
+				case item, ok := &lt;-queue:
+					if ok {
+						q.size.Sub(1)
+                        // 执行消费
+						consumer.Consume(item)
+					} else {
+						// channel closed, finish worker
+						return
+					}
+				case &lt;-q.stopCh:
+					// the whole queue is closing, finish worker
+					return
+				}
+			}
+		}()
+	}
+	startWG.Wait()
+}
+</code></pre>
+<h5 id="写入数据">写入数据</h5>
+<p>在 github.com/jaegertracing/jaeger/plugin/storage 中可以看到很多种存储介质，es、memory、cassandra等等，分别去处理不同存储介质时的保存等工作</p>
+<p>以内存为例</p>
+<pre><code class="language-go">// WriteSpan writes the given span
+func (m *Store) WriteSpan(ctx context.Context, span *model.Span) error {
+	m.Lock()
+	defer m.Unlock()
+	if _, ok := m.operations[span.Process.ServiceName]; !ok {
+		m.operations[span.Process.ServiceName] = map[spanstore.Operation]struct{}{}
+	}
+
+	spanKind, _ := span.GetSpanKind()
+	operation := spanstore.Operation{
+		Name:     span.OperationName,
+		SpanKind: spanKind,
+	}
+
+	if _, ok := m.operations[span.Process.ServiceName][operation]; !ok {
+		m.operations[span.Process.ServiceName][operation] = struct{}{}
+	}
+
+	m.services[span.Process.ServiceName] = struct{}{}
+	if _, ok := m.traces[span.TraceID]; !ok {
+		m.traces[span.TraceID] = &amp;model.Trace{}
+
+		// if we have a limit, let's cleanup the oldest traces
+		if m.config.MaxTraces &gt; 0 {
+			// we only have to deal with this slice if we have a limit
+			m.index = (m.index + 1) % m.config.MaxTraces
+
+			// do we have an item already on this position? if so, we are overriding it,
+			// and we need to remove from the map
+			if m.ids[m.index] != nil {
+				delete(m.traces, *m.ids[m.index])
+			}
+
+			// update the ring with the trace id
+			m.ids[m.index] = &amp;span.TraceID
+		}
+
+	}
+    // 使用traceID串起来spans
+	m.traces[span.TraceID].Spans = append(m.traces[span.TraceID].Spans, span)
+
+	return nil
+}
+</code></pre>
+<p>这里暂时列出了这些相对比较关键的步骤源码，大家感兴趣的可以继续探索</p>
+<h1 id="总结">总结</h1>
+<p>第一次从一个完整的项目工具方案的角度看源码学习，jaeger client上报数据、collector处理数据等处的并发玩法，以及chan的运用，还有就是agent丢消息策略等等，这些都很值得我们学习和借鉴。希望能够多多阅读此类代码，运用到自己的工作中去，提高自己的工程水平。共勉</p>
+<h1 id="引用">引用</h1>
+<h3 id="理论学习">理论学习</h3>
+<p><a href="https://bigbully.github.io/Dapper-translation/">Dapper，大规模分布式系统的跟踪系统</a><br>
+<a href="https://wu-sheng.gitbooks.io/opentracing-io/content/">opentracing文档中文版 ( 翻译 ) 吴晟</a><br>
+<a href="https://opentracing.io/docs/overview/spans/">OpenTracing文档</a><br>
+<a href="https://github.com/opentracing-contrib/opentracing-specification-zh/blob/master/specification.md">OpenTracing语义标准</a><br>
+<a href="https://github.com/opentracing-contrib/opentracing-specification-zh/blob/master/semantic_conventions.md">OpenTracing语义惯例</a><br>
+<a href="https://www.jianshu.com/p/a963ad0bbe3e">OpenTracing语义标准规范及实现</a><br>
+<a href="https://www.jaegertracing.io/docs/1.25/">jaeger-docs</a><br>
+<a href="https://iter01.com/500436.html">opentracing jaeger 整合及源码分析</a><br>
+<a href="https://github.com/opentracing/opentracing-go">opentracing/opentracing-go源码</a><br>
+<a href="https://github.com/jukylin/blog/blob/master/Jaeger%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90%E2%80%94%E2%80%94%E7%AA%A5%E8%A7%86%E5%88%86%E5%B8%83%E5%BC%8F%E7%B3%BB%E7%BB%9F%E5%AE%9E%E7%8E%B0.md">Jaeger源码分析——窥视分布式系统实现</a></p>
+<h3 id="工程实战">工程实战</h3>
+<p><a href="https://tehub.com/a/3RsRiVgWHc">基于Zap Context实现日志服务链路追踪</a><br>
+<a href="https://pcap.xyz/584.html">Gin 通过中间件接入 Jaeger 收集 Tracing</a><br>
+<a href="https://blog.csdn.net/yes169yes123/article/details/108016990">Golang 上手GORM V2 + Opentracing链路追踪优化CRUD体验（源码阅读）</a><br>
+<a href="https://github.com/jaegertracing/jaeger">jaegertracing/jaeger源码</a><br>
+<a href="https://github.com/jaegertracing/jaeger-client-go">jaegertracing/jaeger-client-go源码</a><br>
+<a href="https://github.com/gin-gonic/examples">gin-gonic/examples</a><br>
+<a href="https://objectpartners.com/2019/04/25/distributed-tracing-with-apache-kafka-and-jaeger/">Distributed Tracing with Apache Kafka and Jaeger</a><br>
+<a href="https://lenses.io/blog/2020/12/kafka-distributed-tracing-with-message-headers/">Distributed tracing with Kafka message headers</a><br>
+<a href="https://github.com/geek981108/go-jaeger-kafka-client/blob/master/transport/kafka.go">geek981108/go-jaeger-kafka-client</a><br>
+<a href="https://github.com/dlmiddlecote/sqlstats">dlmiddlecote/sqlstats</a><br>
+<a href="https://github.com/johejo/promredis">johejo/promredis</a><br>
+<a href="https://kebingzao.com/2021/01/08/jaeger-es/">使用 ElasticSearch 作为 Jaeger 的存储并且进行聚合计算</a><br>
+<a href="https://zhuanlan.zhihu.com/p/66534611">jaeger linux 部署</a><br>
+<a href="https://blog.csdn.net/qqq125536039/article/details/107046465">docker compose安装Jaeger 1.18</a></p>
+
+                                </div>
+                    </article>
+                    <!--  -->
+                    
+                        <div class="next-post">
+                            <div class="next">下一篇</div>
+                            <a href="https://freephenix.github.io/leetcode111/">
+                                <h3 class="post-title">
+                                    LeetCode-279 完全平方数
+                                </h3>
+                            </a>
+                        </div>
+                        
+                            <div id="disqus_thread"></div>
+                            <div id="gitalk-container"></div>
+                </div>
+                <!-- middle -->
+                <div class="main-container-middle"></div>
+                <!-- right -->
+                <div id="sidebar" class="main-container-right">
+                    
+                        <!-- toc -->
+                        
+    <div class="toc-card i-card ">
+        <div class="toc-title i-card-title">目录</div>
+        <div class="toc-content">
+            <ul class="markdownIt-TOC">
+<li><a href="#%E8%83%8C%E6%99%AF">背景</a></li>
+<li><a href="#opentracing-%E5%8D%8F%E8%AE%AE%E6%95%B0%E6%8D%AE%E6%A8%A1%E5%9E%8B">Opentracing 协议数据模型</a><br>
+*
+<ul>
+<li><a href="#tracer">Tracer</a></li>
+<li><a href="#span">Span</a><br>
+*
+<ul>
+<li><a href="#exttags">ext/tags</a></li>
+</ul>
+</li>
+<li><a href="#spancontext">SpanContext</a><br>
+*
+<ul>
+<li><a href="#baggage%E8%AF%BB%E5%86%99">Baggage读写</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#jaeger">Jaeger</a><br>
+*
+<ul>
+<li><a href="#client">Client</a><br>
+*
+<ul>
+<li><a href="#%E6%B3%A8%E5%85%A5">注入</a></li>
+<li><a href="#%E6%8F%90%E5%8F%96">提取</a></li>
+<li><a href="#%E4%B8%8A%E6%8A%A5">上报</a></li>
+</ul>
+</li>
+<li><a href="#agent">Agent</a><br>
+*
+<ul>
+<li><a href="#%E7%AB%AF%E5%8F%A3">端口</a></li>
+<li><a href="#%E6%8E%A5%E6%94%B6">接收</a></li>
+<li><a href="#%E5%8F%91%E9%80%81">发送</a></li>
+</ul>
+</li>
+<li><a href="#collector">collector</a><br>
+*
+<ul>
+<li><a href="#%E6%8E%A5%E6%94%B6-2">接收</a></li>
+<li><a href="#%E5%86%99%E5%85%A5%E6%95%B0%E6%8D%AE">写入数据</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#%E6%80%BB%E7%BB%93">总结</a></li>
+<li><a href="#%E5%BC%95%E7%94%A8">引用</a><br>
+*
+<ul>
+<li><a href="#%E7%90%86%E8%AE%BA%E5%AD%A6%E4%B9%A0">理论学习</a></li>
+<li><a href="#%E5%B7%A5%E7%A8%8B%E5%AE%9E%E6%88%98">工程实战</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+        <script>
+            function locateCatelogList() {
+                /*获取文章目录集合,可通过:header过滤器*/
+                var alis = $('.post-content :header');
+                /*获取侧边栏目录列表集合**/
+                var sidebar_alis = $('.markdownIt-TOC a');
+                /*获取滚动条到顶部的距离*/
+                var scroll_height = $(window).scrollTop();
+                for (var i = 0; i < alis.length; i++) {
+                    /*获取锚点集合中的元素分别到顶点的距离*/
+                    var a_height = $(alis[i]).offset().top;
+                    if (a_height < scroll_height) {
+                        /*高亮显示*/
+                        sidebar_alis.removeClass('on');
+                        $(sidebar_alis[i]).addClass('on');
+                    }
+                }
+            }
+            $(function() {
+                /*绑定滚动事件 */
+                $(window).bind('scroll', locateCatelogList);
+            });
+        </script>
+    </div>
+    
+                            
+
+                </div>
+
+
+
+
+            </div>
+
+
+            <div class="site-footer">
+  Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a> | 
+  <a class="rss" href="https://freephenix.github.io//atom.xml" target="_blank">RSS</a>
+</div>
+
+<script>
+  hljs.initHighlightingOnLoad()
+</script>
+
+
+    </div>
+    <script>
+        $('#sidebar').stickySidebar({
+            topSpacing: 80,
+            // bottomSpacing: 60
+        });
+    </script>
+    
+        
+            <script>
+    window.onload = function() {
+        var gitalk = new Gitalk({
+            clientID: '008503f8c8bca8787fbe',
+            clientSecret: '5f789f71e3288ff1866d17523348881053068eb4',
+            repo: 'freephenix.github.io',
+            owner: 'freephenix',
+            admin: ['freephenix'],
+            id: (location.pathname).substring(0, 49), // Ensure uniqueness and length less than 50
+            distractionFreeMode: false // Facebook-like distraction free mode
+        })
+
+        gitalk.render('gitalk-container')
+    }
+</script>
+                
+
+                    
+                                
+</body>
+
+</html>

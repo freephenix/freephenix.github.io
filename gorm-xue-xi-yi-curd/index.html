@@ -1,0 +1,369 @@
+<html>
+
+<head>
+    <meta charset="utf-8" />
+<meta name="description" content="" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>
+    GORM学习(一) 初识 | 半亩房顶
+</title>
+<link rel="shortcut icon" href="https://freephenix.github.io//favicon.ico?v=1713840769430">
+<!-- <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous"> -->
+<link href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+<link rel="stylesheet" href="https://freephenix.github.io//styles/main.css">
+<!-- js -->
+<script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.min.js"></script>
+<script src="https://freephenix.github.io//media/js/jquery.sticky-sidebar.min.js"></script>
+<script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
+<script src="https://cdn.bootcss.com/moment.js/2.23.0/moment.min.js"></script>
+
+
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-147240912-1"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+
+        function gtag() {
+            dataLayer.push(arguments);
+        }
+        gtag('js', new Date());
+
+        gtag('config', 'UA-147240912-1');
+    </script>
+    
+        
+            
+                <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+                <script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+                
+
+                    
+                            
+</head>
+
+<body>
+    <div class="main">
+        <div class="header">
+    <div class="nav">
+        <div class="logo">
+            <a href="https://freephenix.github.io/">
+                <img class="avatar" src="https://freephenix.github.io//images/avatar.png?v=1713840769430" alt="">
+            </a>
+            <div class="site-title">
+                <h1>
+                    半亩房顶
+                </h1>
+            </div>
+        </div>
+        <span class="menu-btn fa fa-align-justify"></span>
+        <div class="menu-container">
+            <ul>
+                
+                    
+                            <li>
+                                <a href="/" class="menu">
+                                    首页
+                                </a>
+                            </li>
+                            
+                                
+                    
+                            <li>
+                                <a href="/archives" class="menu">
+                                    归档
+                                </a>
+                            </li>
+                            
+                                
+                    
+                            <li>
+                                <a href="/tags" class="menu">
+                                    标签
+                                </a>
+                            </li>
+                            
+                                
+                    
+                            <li>
+                                <a href="https://freephenix.github.io//post/guan-yu-ban-mu-fang-ding/" class="menu">
+                                    关于
+                                </a>
+                            </li>
+                            
+                                
+            </ul>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function() {
+        $(".menu-btn").click(function() {
+            $(".menu-container").slideToggle();
+        });
+        $(window).resize(function() {
+
+            if (window.matchMedia('(min-width: 960px)').matches) {
+                $(".menu-container").css('display', 'block')
+            } else {
+                $(".menu-container").css('display', 'none')
+            }
+
+        });
+    });
+</script>
+
+            <div id="main-content" class="post-detail main-container">
+                <!-- left -->
+                <div id="content" class="main-container-left">
+                    <article class="post i-card">
+                        <h2 class="post-title">
+                            GORM学习(一) 初识
+                        </h2>
+                        <div class="post-info">
+                            <time class="post-time">2020-09-17</time>
+                            
+                                <a href="https://freephenix.github.io/go/" class="post-tag i-tag
+                            i-tag-other_2">
+                            #Go
+                        </a>
+                                
+                                <a href="https://freephenix.github.io/xlAA18dwW/" class="post-tag i-tag
+                            i-tag-other_3">
+                            #ORM
+                        </a>
+                                
+                                <a href="https://freephenix.github.io/CUDfp_5Bhf/" class="post-tag i-tag
+                            i-tag-other_4">
+                            #GORM
+                        </a>
+                                
+                        </div>
+                        
+                            <div class="post-feature-image" style="background-image: url('https://freephenix.github.io//post-images/gorm-xue-xi-yi-curd.png')"></div>
+                            
+                                <div class="post-content">
+                                    <p>初识GORM</p>
+<!-- more -->
+<h1 id="什么是orm">什么是ORM</h1>
+<p>Object-Relationl Mapping， 它的作用是映射数据库和对象之间的关系，方便我们在实现数据库操作的时候不用去写复杂的sql语句，把对数据库的操作上升到对于对象的操作。</p>
+<h1 id="什么是gorm">什么是GORM</h1>
+<p>顾名思义，gorm = go + orm，即基于go语言实现的orm库<br>
+v1版本github地址：https://github.com/jinzhu/gorm<br>
+v2版本github地址：https://github.com/go-gorm/gorm<br>
+官网地址：https://gorm.io/zh_CN/<br>
+官方文档地址：https://gorm.io/zh_CN/docs/index.html</p>
+<h1 id="gorm-结构标记">GORM 结构标记</h1>
+<blockquote>
+<p>安装过程以及简单的curd，大家看下官方文档即可，使用起来还是比较方便的，也与其他的orm没有大的区别，这里想先提下gorm中的结构标记</p>
+</blockquote>
+<p>大家都知道，orm是完成了数据表和对象之间的映射，而这个对象的结构、字段等等，都是需要我们在程序中定义出来的，但是gorm中有一点与以往不同，gorm中提供了功能强大丰富的结构标记</p>
+<pre><code>type User struct {
+    ID         int64
+    Number     int64
+    Name       string
+    ImgURL    string
+    CreatedAt  time.Time
+    UpdatedAt  time.Time
+}
+</code></pre>
+<p>再辅以<code>AutoMigrate</code>方法，就可以让我们直接通过代码生成对应的数据表，这一<code>逆向操作</code>起初应该是不甚习惯的，毕竟大多数情况下来说，我们的习惯还是先设计出数据表，然后给映射出对象，再给这个对象添加功能、使用对象完成逻辑实现等</p>
+<p>但其实我们自己也经常会遇到这样的情况，设计出数据表后，往往在实际开发业务时候，或者在之后的迭代中，会发现我们的数据表需要一点点的打补丁，添加或者修改字段等等，其实道理也很明白，一时的设计，很难满足未出现的需求，而需求是不断更新迭代的，设计自然需要迎合和适应。</p>
+<p>基于这个观点，我认为这个逆向的过程确实是一个值得思考的点，当然这里也会有很多问题：比如增加信息同步成本、增加高效协作难度等等</p>
+<p>好，回归正题，我们先来看下部分常用的标签们：</p>
+<pre><code>type User struct {
+    ID         int64        `gorm:&quot;type:bigint(20);primary_key;autoIncrement&quot;`
+    Number     int64        `gorm:&quot;&lt;-:create;index:idx_number&quot;`
+    Name       string       
+    ImgURL     string       `gorm:&quot;column:name&quot;`
+    CreatedAt  time.Time    `gorm:&quot;autoCreateTime&quot;`
+    UpdatedAt  time.Time    `gorm:&quot;autoUpdateTime&quot;`
+}
+</code></pre>
+<ul>
+<li>primary_key 指定主键，可以不指定在id字段上</li>
+<li>type 指定字段类型</li>
+<li>autoIncrement 自增</li>
+<li>&lt;-:false，跟 chan 相似左箭头为写，右箭头为读， create代表只能创建时写</li>
+<li>index 创建索引，冒号后跟索引名称，可为空，相同非空名称的索引会创建联合索引</li>
+<li>autoCreateTime 自动s为单位填充创建时间</li>
+<li>autoUpdateTime 自动s为单位填充更新时间</li>
+<li>column 这个类似json标签，用于字段映射时，无法直接通过首字母大小写的转化和驼峰和下划线互转等操作，完成字段和数据库列名直接映射上的情况，直接指定列名</li>
+</ul>
+<p>对于其他标签，以及一些比较高级的<a href="https://gorm.io/zh_CN/docs/indexes.html">索引</a>、<a href="https://gorm.io/zh_CN/docs/constraints.html">约束</a>、<a href="https://gorm.io/zh_CN/docs/composite_primary_key.html">复合主键</a>标签，大家可以参看官方文档</p>
+<h1 id="gorm-v2-更新内容摘要">GORM v2 更新内容摘要</h1>
+<h3 id="context-支持">Context 支持</h3>
+<p>增加原生支持ctx</p>
+<h3 id="create-支持批量创建">create 支持批量创建</h3>
+<ul>
+<li>生成一条语句来进行插入（难不成还遍历？）</li>
+<li>数据有关联的将会调用upsert</li>
+<li>批量插入依然会调用<code>钩子</code>方法</li>
+</ul>
+<h3 id="upsert">upsert</h3>
+<p><code>clause.OnConflict</code> 将会提供upsert支持</p>
+<pre><code>import &quot;gorm.io/gorm/clause&quot;
+
+DB.Clauses(clause.OnConflict{DoNothing: true}).Create(&amp;users)
+</code></pre>
+<h3 id="支持嵌套事务">支持嵌套事务</h3>
+<h3 id="savepointrollbackto">SavePoint，RollbackTo</h3>
+<p>事务操作将会更加丰富</p>
+<h3 id="字段权限-和-更新-创建时间追踪">字段权限 和 更新、创建时间追踪</h3>
+<p>还记得上面标签提高的<code>&lt;-:create</code>和<code>gorm:&quot;autoCreateTime</code>等吗，对的，v2.0开始支持</p>
+<h3 id="prometheus">Prometheus</h3>
+<p>增加Prometheus插件支持来收集 DBStats 和用户自定义指标<br>
+<a href="https://gorm.io/zh_CN/docs/prometheus.html">Prometheus插件简介</a></p>
+<h3 id="tablename-不再允许动态表名">tableName 不再允许动态表名</h3>
+<pre><code>func (User) TableName() string {
+  return &quot;t_user&quot;
+}
+</code></pre>
+<p>当然，以后使用动态表名可以使用<code>scope</code>实现</p>
+<pre><code>func UserTable(u *User) func(*gorm.DB) *gorm.DB {
+  return func(db *gorm.DB) *gorm.DB {
+    return db.Table(&quot;user_&quot; + u.Role)
+  }
+}
+
+DB.Scopes(UserTable(&amp;user)).Create(&amp;user)
+</code></pre>
+<h3 id="migrator迁移将会更加强大">Migrator（迁移）将会更加强大</h3>
+<p><a href="https://gorm.io/zh_CN/docs/migration.html">gorm 迁移</a></p>
+<h1 id="总结">总结</h1>
+<p>总的来说，gorm是一个很遍历，足够强大，值得深挖源码，深入学习的orm，燥起来！</p>
+<h1 id="引用">引用</h1>
+<p><a href="https://gorm.io/zh_CN/docs/models.html">gorm 声明模型</a><br>
+<a href="https://gorm.io/zh_CN/docs/indexes.html">gorm 索引标签</a><br>
+<a href="https://gorm.io/zh_CN/docs/constraints.html">gorm 约束标签</a><br>
+<a href="https://gorm.io/zh_CN/docs/composite_primary_key.html">gorm 复合主键标签</a><br>
+<a href="https://gorm.io/zh_CN/docs/migration.html">gorm 迁移</a></p>
+<hr>
+<p>欢迎大家关注我的公众号，一起交流<br>
+<img src="https://freephenix.github.io//post-images/1601453523798.jpeg" alt="" loading="lazy"></p>
+
+                                </div>
+                    </article>
+                    <!--  -->
+                    
+                        <div class="next-post">
+                            <div class="next">下一篇</div>
+                            <a href="https://freephenix.github.io/ddd-xue-xi-bi-ji-si/">
+                                <h3 class="post-title">
+                                    DDD 学习笔记（四）
+                                </h3>
+                            </a>
+                        </div>
+                        
+                            <div id="disqus_thread"></div>
+                            <div id="gitalk-container"></div>
+                </div>
+                <!-- middle -->
+                <div class="main-container-middle"></div>
+                <!-- right -->
+                <div id="sidebar" class="main-container-right">
+                    
+                        <!-- toc -->
+                        
+    <div class="toc-card i-card ">
+        <div class="toc-title i-card-title">目录</div>
+        <div class="toc-content">
+            <ul class="markdownIt-TOC">
+<li><a href="#%E4%BB%80%E4%B9%88%E6%98%AForm">什么是ORM</a></li>
+<li><a href="#%E4%BB%80%E4%B9%88%E6%98%AFgorm">什么是GORM</a></li>
+<li><a href="#gorm-%E7%BB%93%E6%9E%84%E6%A0%87%E8%AE%B0">GORM 结构标记</a></li>
+<li><a href="#gorm-v2-%E6%9B%B4%E6%96%B0%E5%86%85%E5%AE%B9%E6%91%98%E8%A6%81">GORM v2 更新内容摘要</a><br>
+*
+<ul>
+<li><a href="#context-%E6%94%AF%E6%8C%81">Context 支持</a></li>
+<li><a href="#create-%E6%94%AF%E6%8C%81%E6%89%B9%E9%87%8F%E5%88%9B%E5%BB%BA">create 支持批量创建</a></li>
+<li><a href="#upsert">upsert</a></li>
+<li><a href="#%E6%94%AF%E6%8C%81%E5%B5%8C%E5%A5%97%E4%BA%8B%E5%8A%A1">支持嵌套事务</a></li>
+<li><a href="#savepointrollbackto">SavePoint，RollbackTo</a></li>
+<li><a href="#%E5%AD%97%E6%AE%B5%E6%9D%83%E9%99%90-%E5%92%8C-%E6%9B%B4%E6%96%B0-%E5%88%9B%E5%BB%BA%E6%97%B6%E9%97%B4%E8%BF%BD%E8%B8%AA">字段权限 和 更新、创建时间追踪</a></li>
+<li><a href="#prometheus">Prometheus</a></li>
+<li><a href="#tablename-%E4%B8%8D%E5%86%8D%E5%85%81%E8%AE%B8%E5%8A%A8%E6%80%81%E8%A1%A8%E5%90%8D">tableName 不再允许动态表名</a></li>
+<li><a href="#migrator%E8%BF%81%E7%A7%BB%E5%B0%86%E4%BC%9A%E6%9B%B4%E5%8A%A0%E5%BC%BA%E5%A4%A7">Migrator（迁移）将会更加强大</a></li>
+</ul>
+</li>
+<li><a href="#%E6%80%BB%E7%BB%93">总结</a></li>
+<li><a href="#%E5%BC%95%E7%94%A8">引用</a></li>
+</ul>
+
+        </div>
+        <script>
+            function locateCatelogList() {
+                /*获取文章目录集合,可通过:header过滤器*/
+                var alis = $('.post-content :header');
+                /*获取侧边栏目录列表集合**/
+                var sidebar_alis = $('.markdownIt-TOC a');
+                /*获取滚动条到顶部的距离*/
+                var scroll_height = $(window).scrollTop();
+                for (var i = 0; i < alis.length; i++) {
+                    /*获取锚点集合中的元素分别到顶点的距离*/
+                    var a_height = $(alis[i]).offset().top;
+                    if (a_height < scroll_height) {
+                        /*高亮显示*/
+                        sidebar_alis.removeClass('on');
+                        $(sidebar_alis[i]).addClass('on');
+                    }
+                }
+            }
+            $(function() {
+                /*绑定滚动事件 */
+                $(window).bind('scroll', locateCatelogList);
+            });
+        </script>
+    </div>
+    
+                            
+
+                </div>
+
+
+
+
+            </div>
+
+
+            <div class="site-footer">
+  Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a> | 
+  <a class="rss" href="https://freephenix.github.io//atom.xml" target="_blank">RSS</a>
+</div>
+
+<script>
+  hljs.initHighlightingOnLoad()
+</script>
+
+
+    </div>
+    <script>
+        $('#sidebar').stickySidebar({
+            topSpacing: 80,
+            // bottomSpacing: 60
+        });
+    </script>
+    
+        
+            <script>
+    window.onload = function() {
+        var gitalk = new Gitalk({
+            clientID: '008503f8c8bca8787fbe',
+            clientSecret: '5f789f71e3288ff1866d17523348881053068eb4',
+            repo: 'freephenix.github.io',
+            owner: 'freephenix',
+            admin: ['freephenix'],
+            id: (location.pathname).substring(0, 49), // Ensure uniqueness and length less than 50
+            distractionFreeMode: false // Facebook-like distraction free mode
+        })
+
+        gitalk.render('gitalk-container')
+    }
+</script>
+                
+
+                    
+                                
+</body>
+
+</html>

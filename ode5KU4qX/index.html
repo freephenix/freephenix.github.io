@@ -1,0 +1,372 @@
+<html>
+
+<head>
+    <meta charset="utf-8" />
+<meta name="description" content="" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>
+    LeetCode-394. 字符串解码 | 半亩房顶
+</title>
+<link rel="shortcut icon" href="https://freephenix.github.io//favicon.ico?v=1713840769430">
+<!-- <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous"> -->
+<link href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+<link rel="stylesheet" href="https://freephenix.github.io//styles/main.css">
+<!-- js -->
+<script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.min.js"></script>
+<script src="https://freephenix.github.io//media/js/jquery.sticky-sidebar.min.js"></script>
+<script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
+<script src="https://cdn.bootcss.com/moment.js/2.23.0/moment.min.js"></script>
+
+
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-147240912-1"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+
+        function gtag() {
+            dataLayer.push(arguments);
+        }
+        gtag('js', new Date());
+
+        gtag('config', 'UA-147240912-1');
+    </script>
+    
+        
+            
+                <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+                <script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+                
+
+                    
+                            
+</head>
+
+<body>
+    <div class="main">
+        <div class="header">
+    <div class="nav">
+        <div class="logo">
+            <a href="https://freephenix.github.io/">
+                <img class="avatar" src="https://freephenix.github.io//images/avatar.png?v=1713840769430" alt="">
+            </a>
+            <div class="site-title">
+                <h1>
+                    半亩房顶
+                </h1>
+            </div>
+        </div>
+        <span class="menu-btn fa fa-align-justify"></span>
+        <div class="menu-container">
+            <ul>
+                
+                    
+                            <li>
+                                <a href="/" class="menu">
+                                    首页
+                                </a>
+                            </li>
+                            
+                                
+                    
+                            <li>
+                                <a href="/archives" class="menu">
+                                    归档
+                                </a>
+                            </li>
+                            
+                                
+                    
+                            <li>
+                                <a href="/tags" class="menu">
+                                    标签
+                                </a>
+                            </li>
+                            
+                                
+                    
+                            <li>
+                                <a href="https://freephenix.github.io//post/guan-yu-ban-mu-fang-ding/" class="menu">
+                                    关于
+                                </a>
+                            </li>
+                            
+                                
+            </ul>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function() {
+        $(".menu-btn").click(function() {
+            $(".menu-container").slideToggle();
+        });
+        $(window).resize(function() {
+
+            if (window.matchMedia('(min-width: 960px)').matches) {
+                $(".menu-container").css('display', 'block')
+            } else {
+                $(".menu-container").css('display', 'none')
+            }
+
+        });
+    });
+</script>
+
+            <div id="main-content" class="post-detail main-container">
+                <!-- left -->
+                <div id="content" class="main-container-left">
+                    <article class="post i-card">
+                        <h2 class="post-title">
+                            LeetCode-394. 字符串解码
+                        </h2>
+                        <div class="post-info">
+                            <time class="post-time">2023-12-19</time>
+                            
+                                <a href="https://freephenix.github.io/l_D4yZcDN/" class="post-tag i-tag
+                            i-tag-banana">
+                            #字符串
+                        </a>
+                                
+                                <a href="https://freephenix.github.io/8spMJBknC/" class="post-tag i-tag
+                            i-tag-success">
+                            #递归
+                        </a>
+                                
+                                <a href="https://freephenix.github.io/YWFpnf3Gl/" class="post-tag i-tag
+                            i-tag-other_2">
+                            #刷题
+                        </a>
+                                
+                                <a href="https://freephenix.github.io/70TrDOWqgi/" class="post-tag i-tag
+                            i-tag-primary">
+                            #面试
+                        </a>
+                                
+                                <a href="https://freephenix.github.io/go/" class="post-tag i-tag
+                            i-tag-primary">
+                            #Go
+                        </a>
+                                
+                                <a href="https://freephenix.github.io/k1NaSbOoC/" class="post-tag i-tag
+                            i-tag-info">
+                            #LeetCode
+                        </a>
+                                
+                                <a href="https://freephenix.github.io/WucazjDbn/" class="post-tag i-tag
+                            i-tag-primary">
+                            #算法
+                        </a>
+                                
+                        </div>
+                        
+                                <div class="post-content">
+                                    <p>刷题使我快乐，满脸开心.jpg</p>
+<ul>
+<li>来源：力扣（LeetCode）</li>
+<li>链接：https://leetcode.cn/problems/decode-string/</li>
+<li>著作权归领扣网络所有。商业转载请联系官方授权，非商业转载请注明出处。</li>
+</ul>
+<!-- more -->
+<h1 id="题目">题目</h1>
+<p>给定一个经过编码的字符串，返回它解码后的字符串。</p>
+<p>编码规则为: <code>k[encoded_string]</code>，表示其中方括号内部的 <code>encoded_string</code> 正好重复 <code>k</code> 次。注意 <code>k</code> 保证为正整数。</p>
+<p>你可以认为输入字符串总是有效的；输入字符串中没有额外的空格，且输入的方括号总是符合格式要求的。</p>
+<p>此外，你可以认为原始数据不包含数字，所有的数字只表示重复的次数 <code>k</code> ，例如不会出现像 <code>3a</code> 或 <code>2[4]</code> 的输入。</p>
+<p>示例 1：</p>
+<pre><code>输入：s = &quot;3[a]2[bc]&quot;
+输出：&quot;aaabcbc&quot;
+</code></pre>
+<p>示例 2：</p>
+<pre><code>输入：s = &quot;3[a2[c]]&quot;
+输出：&quot;accaccacc&quot;
+</code></pre>
+<p>示例 3：</p>
+<pre><code>输入：s = &quot;2[abc]3[cd]ef&quot;
+输出：&quot;abcabccdcdcdef&quot;
+</code></pre>
+<p>示例 4：</p>
+<pre><code>输入：s = &quot;abc3[cd]xyz&quot;
+输出：&quot;abccdcdcdxyz&quot;
+</code></pre>
+<p>提示：</p>
+<ul>
+<li><code>1 &lt;= s.length &lt;= 30</code></li>
+<li><code>s</code> 由小写英文字母、数字和方括号 '[]' 组成</li>
+<li><code>s</code> 保证是一个 <code>有效</code> 的输入。</li>
+<li><code>s</code> 中所有整数的取值范围为 <code>[1, 300] </code></li>
+</ul>
+<h1 id="思路">思路</h1>
+<p>这道题我第一反应是递归，栈方法也可以的，只是这里只说我自己写的递归了~<br>
+对于<code>数字+括号</code>的组合，我觉得反倒是没什么大问题，因为这里递归的进出条件都很清晰</p>
+<p>问题就复杂在了<code>字母</code> 和 <code>数字+括号</code>的组合的杂揉处理上了</p>
+<p>我的思路就是，先试着拆分问题：</p>
+<ul>
+<li>对于<code>数字+括号</code>可以较快的写出来一套逻辑，可以把这部分看做一个<code>整体</code></li>
+<li>对于<code>字母</code>，如果把括号、数字考虑进来会很复杂，所以就只考虑<code>纯字母</code>的一段作为一个<code>整体</code></li>
+</ul>
+<figure data-type="image" tabindex="1"><img src="https://freephenix.github.io//post-images/1702972586151.png" alt="" loading="lazy"></figure>
+<p>如此拆分之后，在这两种组合之间，还需要考虑的就是</p>
+<ul>
+<li>如何处理嵌套中的<code>纯字母</code>的<code>整体</code></li>
+<li>如何将各个<code>整体</code>组合起来</li>
+</ul>
+<p>第一个问题其实好解决，那就是将需要处理嵌套内容时，深入一层递归去处理，这样就是要么内部是一个<code>整体</code>，要么内部还有新的递归。也因此，<strong>右括号<code>]</code>要作为递归的一个退出条件</strong></p>
+<p>第二个问题，有点难想，可以转化下这个问题，那就是</p>
+<blockquote>
+<p>如何处理每个<code>整体</code>后的字符串</p>
+</blockquote>
+<p>这样想可能会有些启发作用，就是可以在每个<code>整体</code>的尾部再调用一次递归函数。这样，新的函数要么<strong>到边界满足这个退出条件</strong>、要么发现了下一个<code>整体</code>继续处理，这样就可以将各个<code>整体</code>串联起来了。</p>
+<p>至此，上代码</p>
+<h1 id="代码">代码</h1>
+<pre><code class="language-golang">func decodeString(s string) string {
+    i := 0
+    sBytes := []byte(s)
+    n := len(sBytes)
+
+    var getStr func() string
+    getStr = func() string {
+        // i == n 为总体退出条件
+        // 右括号为数字+嵌套循环组合的退出条件
+        if i == n || sBytes[i] == ']' {
+            return &quot;&quot;
+        }
+        temp := &quot;&quot;
+        // 数字+嵌套循环组合 作为一个整体
+        if sBytes[i]-'0' &lt;= 9 {
+            num := 0
+            for sBytes[i]-'0' &lt;= 9 {
+                num = num*10 + int(sBytes[i]-'0')
+                i++
+            }
+            // 跳过左括号
+            i++
+            loopStr := getStr()
+            // 跳过右括号
+            i++
+            for ; num &gt; 0; num-- {
+                temp += loopStr
+            }
+        } else {
+            // 一段纯字母作为一个整体
+           for i &lt; n &amp;&amp; sBytes[i] &gt;= 'a' &amp;&amp; sBytes[i] &lt;= 'z' {
+                temp += string(sBytes[i])
+                i++
+            }
+        }
+        // 后续继续获取，主要根据尾字母和下标做限制
+        return temp + getStr()
+    }
+    return getStr()
+}
+</code></pre>
+
+                                </div>
+                    </article>
+                    <!--  -->
+                    
+                        <div class="next-post">
+                            <div class="next">下一篇</div>
+                            <a href="https://freephenix.github.io/MsCK6vWMR/">
+                                <h3 class="post-title">
+                                    LeetCode-470. 用 Rand7() 实现 Rand10()
+                                </h3>
+                            </a>
+                        </div>
+                        
+                            <div id="disqus_thread"></div>
+                            <div id="gitalk-container"></div>
+                </div>
+                <!-- middle -->
+                <div class="main-container-middle"></div>
+                <!-- right -->
+                <div id="sidebar" class="main-container-right">
+                    
+                        <!-- toc -->
+                        
+    <div class="toc-card i-card ">
+        <div class="toc-title i-card-title">目录</div>
+        <div class="toc-content">
+            <ul class="markdownIt-TOC">
+<li><a href="#%E9%A2%98%E7%9B%AE">题目</a></li>
+<li><a href="#%E6%80%9D%E8%B7%AF">思路</a></li>
+<li><a href="#%E4%BB%A3%E7%A0%81">代码</a></li>
+</ul>
+
+        </div>
+        <script>
+            function locateCatelogList() {
+                /*获取文章目录集合,可通过:header过滤器*/
+                var alis = $('.post-content :header');
+                /*获取侧边栏目录列表集合**/
+                var sidebar_alis = $('.markdownIt-TOC a');
+                /*获取滚动条到顶部的距离*/
+                var scroll_height = $(window).scrollTop();
+                for (var i = 0; i < alis.length; i++) {
+                    /*获取锚点集合中的元素分别到顶点的距离*/
+                    var a_height = $(alis[i]).offset().top;
+                    if (a_height < scroll_height) {
+                        /*高亮显示*/
+                        sidebar_alis.removeClass('on');
+                        $(sidebar_alis[i]).addClass('on');
+                    }
+                }
+            }
+            $(function() {
+                /*绑定滚动事件 */
+                $(window).bind('scroll', locateCatelogList);
+            });
+        </script>
+    </div>
+    
+                            
+
+                </div>
+
+
+
+
+            </div>
+
+
+            <div class="site-footer">
+  Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a> | 
+  <a class="rss" href="https://freephenix.github.io//atom.xml" target="_blank">RSS</a>
+</div>
+
+<script>
+  hljs.initHighlightingOnLoad()
+</script>
+
+
+    </div>
+    <script>
+        $('#sidebar').stickySidebar({
+            topSpacing: 80,
+            // bottomSpacing: 60
+        });
+    </script>
+    
+        
+            <script>
+    window.onload = function() {
+        var gitalk = new Gitalk({
+            clientID: '008503f8c8bca8787fbe',
+            clientSecret: '5f789f71e3288ff1866d17523348881053068eb4',
+            repo: 'freephenix.github.io',
+            owner: 'freephenix',
+            admin: ['freephenix'],
+            id: (location.pathname).substring(0, 49), // Ensure uniqueness and length less than 50
+            distractionFreeMode: false // Facebook-like distraction free mode
+        })
+
+        gitalk.render('gitalk-container')
+    }
+</script>
+                
+
+                    
+                                
+</body>
+
+</html>

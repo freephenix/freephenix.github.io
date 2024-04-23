@@ -1,0 +1,355 @@
+<html>
+
+<head>
+    <meta charset="utf-8" />
+<meta name="description" content="" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>
+    LeetCode-787. K 站中转内最便宜的航班 | 半亩房顶
+</title>
+<link rel="shortcut icon" href="https://freephenix.github.io//favicon.ico?v=1713840769430">
+<!-- <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous"> -->
+<link href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+<link rel="stylesheet" href="https://freephenix.github.io//styles/main.css">
+<!-- js -->
+<script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.min.js"></script>
+<script src="https://freephenix.github.io//media/js/jquery.sticky-sidebar.min.js"></script>
+<script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
+<script src="https://cdn.bootcss.com/moment.js/2.23.0/moment.min.js"></script>
+
+
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-147240912-1"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+
+        function gtag() {
+            dataLayer.push(arguments);
+        }
+        gtag('js', new Date());
+
+        gtag('config', 'UA-147240912-1');
+    </script>
+    
+        
+            
+                <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+                <script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+                
+
+                    
+                            
+</head>
+
+<body>
+    <div class="main">
+        <div class="header">
+    <div class="nav">
+        <div class="logo">
+            <a href="https://freephenix.github.io/">
+                <img class="avatar" src="https://freephenix.github.io//images/avatar.png?v=1713840769430" alt="">
+            </a>
+            <div class="site-title">
+                <h1>
+                    半亩房顶
+                </h1>
+            </div>
+        </div>
+        <span class="menu-btn fa fa-align-justify"></span>
+        <div class="menu-container">
+            <ul>
+                
+                    
+                            <li>
+                                <a href="/" class="menu">
+                                    首页
+                                </a>
+                            </li>
+                            
+                                
+                    
+                            <li>
+                                <a href="/archives" class="menu">
+                                    归档
+                                </a>
+                            </li>
+                            
+                                
+                    
+                            <li>
+                                <a href="/tags" class="menu">
+                                    标签
+                                </a>
+                            </li>
+                            
+                                
+                    
+                            <li>
+                                <a href="https://freephenix.github.io//post/guan-yu-ban-mu-fang-ding/" class="menu">
+                                    关于
+                                </a>
+                            </li>
+                            
+                                
+            </ul>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function() {
+        $(".menu-btn").click(function() {
+            $(".menu-container").slideToggle();
+        });
+        $(window).resize(function() {
+
+            if (window.matchMedia('(min-width: 960px)').matches) {
+                $(".menu-container").css('display', 'block')
+            } else {
+                $(".menu-container").css('display', 'none')
+            }
+
+        });
+    });
+</script>
+
+            <div id="main-content" class="post-detail main-container">
+                <!-- left -->
+                <div id="content" class="main-container-left">
+                    <article class="post i-card">
+                        <h2 class="post-title">
+                            LeetCode-787. K 站中转内最便宜的航班
+                        </h2>
+                        <div class="post-info">
+                            <time class="post-time">2023-10-11</time>
+                            
+                                <a href="https://freephenix.github.io/bURmaxGfQ/" class="post-tag i-tag
+                            i-tag-warning">
+                            #动态规划
+                        </a>
+                                
+                                <a href="https://freephenix.github.io/YWFpnf3Gl/" class="post-tag i-tag
+                            i-tag-">
+                            #刷题
+                        </a>
+                                
+                                <a href="https://freephenix.github.io/70TrDOWqgi/" class="post-tag i-tag
+                            i-tag-primary">
+                            #面试
+                        </a>
+                                
+                                <a href="https://freephenix.github.io/go/" class="post-tag i-tag
+                            i-tag-other_1">
+                            #Go
+                        </a>
+                                
+                                <a href="https://freephenix.github.io/k1NaSbOoC/" class="post-tag i-tag
+                            i-tag-primary">
+                            #LeetCode
+                        </a>
+                                
+                                <a href="https://freephenix.github.io/WucazjDbn/" class="post-tag i-tag
+                            i-tag-warning">
+                            #算法
+                        </a>
+                                
+                        </div>
+                        
+                            <div class="post-feature-image" style="background-image: url('https://freephenix.github.io//post-images/KFx2SEDqw.jpeg')"></div>
+                            
+                                <div class="post-content">
+                                    <p>刷题使我快乐，满脸开心.jpg</p>
+<ul>
+<li>来源：力扣（LeetCode）</li>
+<li>链接：https://leetcode.cn/problems/cheapest-flights-within-k-stops/</li>
+<li>著作权归领扣网络所有。商业转载请联系官方授权，非商业转载请注明出处。</li>
+</ul>
+<!-- more -->
+<h1 id="题目">题目</h1>
+<p>有 <code>n</code> 个城市通过一些航班连接。给你一个数组 <code>flights</code> ，其中 <code>flights[i] = [fromi, toi, pricei]</code> ，表示该航班都从城市 <code>fromi</code> 开始，以价格 <code>pricei</code> 抵达 <code>toi</code>。</p>
+<p>现在给定所有的城市和航班，以及出发城市 <code>src</code> 和目的地 <code>dst</code>，你的任务是找到出一条最多经过 <code>k</code> 站中转的路线，使得从 <code>src</code> 到 <code>dst</code> 的 <code>价格最便宜</code> ，并返回该价格。 如果不存在这样的路线，则输出 <code>-1</code>。</p>
+<p>示例 1：</p>
+<pre><code>输入: 
+n = 3, edges = [[0,1,100],[1,2,100],[0,2,500]]
+src = 0, dst = 2, k = 1
+输出: 200
+解释: 
+城市航班图如下
+</code></pre>
+<figure data-type="image" tabindex="1"><img src="https://freephenix.github.io//post-images/1696994025512.png" alt="" loading="lazy"></figure>
+<pre><code>从城市 0 到城市 2 在 1 站中转以内的最便宜价格是 200，如图中红色所示。
+</code></pre>
+<p>示例 2：</p>
+<pre><code>输入: 
+n = 3, edges = [[0,1,100],[1,2,100],[0,2,500]]
+src = 0, dst = 2, k = 0
+输出: 500
+解释: 
+城市航班图如下
+</code></pre>
+<figure data-type="image" tabindex="2"><img src="https://freephenix.github.io//post-images/1696994032130.png" alt="" loading="lazy"></figure>
+<pre><code>从城市 0 到城市 2 在 0 站中转以内的最便宜价格是 500，如图中蓝色所示。
+</code></pre>
+<p>提示：</p>
+<ul>
+<li><code>1 &lt;= n &lt;= 100</code></li>
+<li><code>0 &lt;= flights.length &lt;= (n * (n - 1) / 2)</code></li>
+<li><code>flights[i].length == 3</code></li>
+<li><code>0 &lt;= fromi, toi &lt; n</code></li>
+<li><code>fromi != toi</code></li>
+<li><code>1 &lt;= pricei &lt;= 104</code></li>
+<li>航班没有重复，且不存在自环</li>
+<li><code>0 &lt;= src, dst, k &lt; n</code></li>
+<li><code>src != dst</code></li>
+</ul>
+<h1 id="思路">思路</h1>
+<p><code>动态规划</code>可行，但是难在状态转移方程。有转机次数，有点对点花费，所以肯定是需要二维数组的，出发城市是给定的，常规一维数组，我们可以根据航班表得到一个从出发城市起飞到各个城市的一个花费数组，那么这里再加上转机次数，那我们就可以得到一个转机次数*从出发城市起飞到各个城市的花费的二维数组了。</p>
+<p>当然，需要一个极大值来初始化，不过这里要注意，不能无脑用<code>math.MaxInt</code>。因为花费还是需要根据航班表相加计算的，这时就会造成溢出，所以可以根据提示里的值得到一个极大值 <code>10000 * 99</code>， 再加上个<code>1</code>就肯定是不可能存在的花费数值了</p>
+<p>详情可以参考官方题解：<a href="https://leetcode.cn/problems/cheapest-flights-within-k-stops/solutions/954402/k-zhan-zhong-zhuan-nei-zui-bian-yi-de-ha-abzi/">官方题解</a></p>
+<h1 id="代码">代码</h1>
+<pre><code class="language-golang">func findCheapestPrice(n int, flights [][]int, src int, dst int, k int) int {
+    // 是个可计算的值，稍微多大点可以，但是不能直接取极大值，加cost时有可能溢出，结果就不对了
+    // inf := math.MaxInt
+    inf := 10000 * 101 + 1
+    f := make([][]int, k+2)
+    for i := range f {
+        f[i] = make([]int, n)
+        for j := range f[i] {
+            f[i][j] = inf
+        }
+    }
+    // f[i][j] 表示 从src出发，经过i次转机，到达j的最小花费
+    f[0][src] = 0
+    for times := 1; times &lt;= k+1; times++ {
+        for _, flight := range flights {
+            front, to, cost := flight[0], flight[1], flight[2]
+            f[times][to] = min(f[times][to], f[times-1][front]+cost)
+        }
+    }
+    ans := inf
+    for t := 1; t &lt;= k+1; t++ {
+        ans = min(ans, f[t][dst])
+    }
+    if ans == inf {
+        ans = -1
+    }
+    return ans
+}
+
+func min(a, b int) int {
+    if a &lt; b {
+        return a
+    }
+    return b
+}
+</code></pre>
+
+                                </div>
+                    </article>
+                    <!--  -->
+                    
+                        <div class="next-post">
+                            <div class="next">下一篇</div>
+                            <a href="https://freephenix.github.io/07hUMFCYn/">
+                                <h3 class="post-title">
+                                    LeetCode-53. 最大子数组和
+                                </h3>
+                            </a>
+                        </div>
+                        
+                            <div id="disqus_thread"></div>
+                            <div id="gitalk-container"></div>
+                </div>
+                <!-- middle -->
+                <div class="main-container-middle"></div>
+                <!-- right -->
+                <div id="sidebar" class="main-container-right">
+                    
+                        <!-- toc -->
+                        
+    <div class="toc-card i-card ">
+        <div class="toc-title i-card-title">目录</div>
+        <div class="toc-content">
+            <ul class="markdownIt-TOC">
+<li><a href="#%E9%A2%98%E7%9B%AE">题目</a></li>
+<li><a href="#%E6%80%9D%E8%B7%AF">思路</a></li>
+<li><a href="#%E4%BB%A3%E7%A0%81">代码</a></li>
+</ul>
+
+        </div>
+        <script>
+            function locateCatelogList() {
+                /*获取文章目录集合,可通过:header过滤器*/
+                var alis = $('.post-content :header');
+                /*获取侧边栏目录列表集合**/
+                var sidebar_alis = $('.markdownIt-TOC a');
+                /*获取滚动条到顶部的距离*/
+                var scroll_height = $(window).scrollTop();
+                for (var i = 0; i < alis.length; i++) {
+                    /*获取锚点集合中的元素分别到顶点的距离*/
+                    var a_height = $(alis[i]).offset().top;
+                    if (a_height < scroll_height) {
+                        /*高亮显示*/
+                        sidebar_alis.removeClass('on');
+                        $(sidebar_alis[i]).addClass('on');
+                    }
+                }
+            }
+            $(function() {
+                /*绑定滚动事件 */
+                $(window).bind('scroll', locateCatelogList);
+            });
+        </script>
+    </div>
+    
+                            
+
+                </div>
+
+
+
+
+            </div>
+
+
+            <div class="site-footer">
+  Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a> | 
+  <a class="rss" href="https://freephenix.github.io//atom.xml" target="_blank">RSS</a>
+</div>
+
+<script>
+  hljs.initHighlightingOnLoad()
+</script>
+
+
+    </div>
+    <script>
+        $('#sidebar').stickySidebar({
+            topSpacing: 80,
+            // bottomSpacing: 60
+        });
+    </script>
+    
+        
+            <script>
+    window.onload = function() {
+        var gitalk = new Gitalk({
+            clientID: '008503f8c8bca8787fbe',
+            clientSecret: '5f789f71e3288ff1866d17523348881053068eb4',
+            repo: 'freephenix.github.io',
+            owner: 'freephenix',
+            admin: ['freephenix'],
+            id: (location.pathname).substring(0, 49), // Ensure uniqueness and length less than 50
+            distractionFreeMode: false // Facebook-like distraction free mode
+        })
+
+        gitalk.render('gitalk-container')
+    }
+</script>
+                
+
+                    
+                                
+</body>
+
+</html>

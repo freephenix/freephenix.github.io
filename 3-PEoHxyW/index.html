@@ -1,0 +1,410 @@
+<html>
+
+<head>
+    <meta charset="utf-8" />
+<meta name="description" content="" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>
+    LeetCode-42. 接雨水 | 半亩房顶
+</title>
+<link rel="shortcut icon" href="https://freephenix.github.io//favicon.ico?v=1713840769430">
+<!-- <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous"> -->
+<link href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+<link rel="stylesheet" href="https://freephenix.github.io//styles/main.css">
+<!-- js -->
+<script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.min.js"></script>
+<script src="https://freephenix.github.io//media/js/jquery.sticky-sidebar.min.js"></script>
+<script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
+<script src="https://cdn.bootcss.com/moment.js/2.23.0/moment.min.js"></script>
+
+
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-147240912-1"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+
+        function gtag() {
+            dataLayer.push(arguments);
+        }
+        gtag('js', new Date());
+
+        gtag('config', 'UA-147240912-1');
+    </script>
+    
+        
+            
+                <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+                <script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+                
+
+                    
+                            
+</head>
+
+<body>
+    <div class="main">
+        <div class="header">
+    <div class="nav">
+        <div class="logo">
+            <a href="https://freephenix.github.io/">
+                <img class="avatar" src="https://freephenix.github.io//images/avatar.png?v=1713840769430" alt="">
+            </a>
+            <div class="site-title">
+                <h1>
+                    半亩房顶
+                </h1>
+            </div>
+        </div>
+        <span class="menu-btn fa fa-align-justify"></span>
+        <div class="menu-container">
+            <ul>
+                
+                    
+                            <li>
+                                <a href="/" class="menu">
+                                    首页
+                                </a>
+                            </li>
+                            
+                                
+                    
+                            <li>
+                                <a href="/archives" class="menu">
+                                    归档
+                                </a>
+                            </li>
+                            
+                                
+                    
+                            <li>
+                                <a href="/tags" class="menu">
+                                    标签
+                                </a>
+                            </li>
+                            
+                                
+                    
+                            <li>
+                                <a href="https://freephenix.github.io//post/guan-yu-ban-mu-fang-ding/" class="menu">
+                                    关于
+                                </a>
+                            </li>
+                            
+                                
+            </ul>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function() {
+        $(".menu-btn").click(function() {
+            $(".menu-container").slideToggle();
+        });
+        $(window).resize(function() {
+
+            if (window.matchMedia('(min-width: 960px)').matches) {
+                $(".menu-container").css('display', 'block')
+            } else {
+                $(".menu-container").css('display', 'none')
+            }
+
+        });
+    });
+</script>
+
+            <div id="main-content" class="post-detail main-container">
+                <!-- left -->
+                <div id="content" class="main-container-left">
+                    <article class="post i-card">
+                        <h2 class="post-title">
+                            LeetCode-42. 接雨水
+                        </h2>
+                        <div class="post-info">
+                            <time class="post-time">2023-11-12</time>
+                            
+                                <a href="https://freephenix.github.io/W730uBydc/" class="post-tag i-tag
+                            i-tag-other_4">
+                            #栈
+                        </a>
+                                
+                                <a href="https://freephenix.github.io/bURmaxGfQ/" class="post-tag i-tag
+                            i-tag-error">
+                            #动态规划
+                        </a>
+                                
+                                <a href="https://freephenix.github.io/YWFpnf3Gl/" class="post-tag i-tag
+                            i-tag-success">
+                            #刷题
+                        </a>
+                                
+                                <a href="https://freephenix.github.io/70TrDOWqgi/" class="post-tag i-tag
+                            i-tag-info">
+                            #面试
+                        </a>
+                                
+                                <a href="https://freephenix.github.io/go/" class="post-tag i-tag
+                            i-tag-other_1">
+                            #Go
+                        </a>
+                                
+                                <a href="https://freephenix.github.io/k1NaSbOoC/" class="post-tag i-tag
+                            i-tag-banana">
+                            #LeetCode
+                        </a>
+                                
+                                <a href="https://freephenix.github.io/WucazjDbn/" class="post-tag i-tag
+                            i-tag-primary">
+                            #算法
+                        </a>
+                                
+                        </div>
+                        
+                            <div class="post-feature-image" style="background-image: url('https://freephenix.github.io//post-images/3-PEoHxyW.jpeg')"></div>
+                            
+                                <div class="post-content">
+                                    <p>刷题使我快乐，满脸开心.jpg</p>
+<ul>
+<li>来源：力扣（LeetCode）</li>
+<li>链接：https://leetcode.cn/problems/trapping-rain-water/</li>
+<li>著作权归领扣网络所有。商业转载请联系官方授权，非商业转载请注明出处。</li>
+</ul>
+<!-- more -->
+<h1 id="题目">题目</h1>
+<p>给定 <code>n</code> 个非负整数表示每个宽度为 <code>1</code> 的柱子的高度图，计算按此排列的柱子，下雨之后能接多少雨水。</p>
+<p>示例 1：<br>
+<img src="https://freephenix.github.io//post-images/1699786086640.png" alt="" loading="lazy"></p>
+<pre><code>输入：height = [0,1,0,2,1,0,1,3,2,1,2,1]
+输出：6
+解释：上面是由数组 [0,1,0,2,1,0,1,3,2,1,2,1] 表示的高度图，在这种情况下，可以接 6 个单位的雨水（蓝色部分表示雨水）。 
+</code></pre>
+<p>示例 2：</p>
+<pre><code>输入：height = [4,2,0,3,2,5]
+输出：9
+</code></pre>
+<p>提示：</p>
+<ul>
+<li><code>n == height.length</code></li>
+<li><code>1 &lt;= n &lt;= 2 * 104</code></li>
+<li><code>0 &lt;= height[i] &lt;= 105</code></li>
+</ul>
+<h1 id="思路">思路</h1>
+<p>首先，强推这篇题解，五种解法层层递进，受益匪浅：<a href="https://leetcode.cn/problems/trapping-rain-water/solutions/9112/xiang-xi-tong-su-de-si-lu-fen-xi-duo-jie-fa-by-w-8/">五种解法精选题解</a></p>
+<h3 id="我个人解法是解法三优先说下这种解法的思路">我个人解法是‘解法三’，优先说下这种解法的思路：</h3>
+<p>首先在基本思路上，是逐列的去求雨水量，而我们根据<code>木桶原理</code>的思维，很容易就能明白，<code>每一列的水量，取决于这一列的左边最大值，和右边最大值的较小值</code>。这个左最大值和右最大值是随着位置不断变化的，那么每次遍历到一个位置，再去起循环求两边最大值肯定是时间复杂度高多了（对应上文题解第二种解法），所以，可以先预处理走两趟数组，求出每个位置的<code>左最大值</code>和<code>右最大值</code></p>
+<p>这样在遍历到每个位置时候，就不需要单独去求了， 直接取用即可。</p>
+<h3 id="再进一步优化空间复杂度就是解法四">再进一步优化空间复杂度就是‘解法四’</h3>
+<p>这里有一个数学推理，如下图所示：<br>
+<code>i</code>位置的水量取决于<code>iLeftMax</code>和<code>iRightMax</code>，<br>
+<code>j</code>位置的水量取决于<code>jLeftMax</code>和<code>jRightMax</code>。<br>
+而<code>iRightMax</code>正常应该是从右往左一步步比大小得到的，所以</p>
+<blockquote>
+<p>式一：<code>iRightMax &gt;= jRightMax</code>，<br>
+同理<br>
+式二：<code>jLeftMax &gt;= iLeftMax</code><br>
+所以‘解法四’所谓<code>双指针法</code>就是</p>
+</blockquote>
+<ul>
+<li>卡住<code>i</code>位置和<code>j</code>位置的左右两边</li>
+<li>当<code>iLeftMax</code>大于<code>jRightMax</code>时，根据式二，可得<code>jLeftMax &gt;= (iLeftMax &gt;=) jRightMax</code>，所以我们可以只根据<code>jRightMax</code>计算<code>j</code>位置水量。然后<code>i</code>位置右移，更新<code>iLeftMax</code>继续求解</li>
+<li>同理，<code>iLeftMax</code>小于<code>jRightMax</code>时，根据式一，可得<code>iRightMax &gt;= (jRightMax &gt;=) iLeftMax</code>，所以我们可以只根据<code>iLeftMax</code>计算<code>i</code>位置水量。然后<code>j</code>位置左移，更新<code>jRightMax</code>继续求解<br>
+<img src="https://freephenix.github.io//post-images/1699787013865.png" alt="" loading="lazy"></li>
+</ul>
+<p>之所以这么大费周章，就是因为如果要两边都求解卡住，则因为最终遍历时只能照顾一边，所以另一边必须要做存储，空间复杂度无法降低。</p>
+<h3 id="栈思路也是比较直接但代码却要注意些细节">栈思路也是比较直接，但代码却要注意些细节</h3>
+<p>感兴趣可以自行看题解或者尝试下~</p>
+<p>至此，上代码</p>
+<h1 id="代码">代码</h1>
+<h4 id="时间复杂度on-空间复杂度on">时间复杂度<code>O(n)</code>。空间复杂度<code>O(n)</code></h4>
+<pre><code class="language-golang">func trap(height []int) int {
+    n := len(height)
+    // 求出中间各位置的左边最大值
+    maxLeft := make([]int, n)
+    for i:=1; i&lt;=n-2; i++ {
+        if height[i-1] &gt; maxLeft[i-1] {
+            maxLeft[i] = height[i-1]
+        } else {
+            maxLeft[i] = maxLeft[i-1]
+        }
+    }
+    // 求出中间各位置的右边最大值
+    maxRight := make([]int, n)
+    for i := n-2; i&gt;=0; i-- {
+        if height[i+1] &gt; maxRight[i+1] {
+            maxRight[i] = height[i+1]
+        } else {
+            maxRight[i] = maxRight[i+1]
+        }
+    }
+
+    // 根据左右最大边界得出每一列水量
+    sum := 0
+    for i:=1; i&lt;= n-2;i++ {
+        min := maxLeft[i]
+        if min &gt; maxRight[i] {
+            min = maxRight[i]
+        }
+        if min &gt; height[i] {
+            sum += min - height[i]
+        }
+    }
+    return sum
+}
+</code></pre>
+<h4 id="时间复杂度on-空间复杂度o1">时间复杂度<code>O(n)</code>。空间复杂度<code>O(1)</code></h4>
+<pre><code class="language-golang">func trap(height []int) int {
+    n := len(height)
+
+    // 0和n-1边界不可能有水
+    i := 1
+    j := n-2
+    // 由思路可知，其实只用i位置左最大值，j位置右最大值即可
+    iLeftMax := 0
+    jRightMax := 0
+
+    sum := 0
+    for i &lt;= j {
+        if iLeftMax &lt; height[i-1] {
+           iLeftMax = height[i-1]
+        }
+        if jRightMax &lt; height[j+1] {
+           jRightMax = height[j+1]
+        }
+        // 情况1，我们求j位置的水
+        if iLeftMax &gt; jRightMax {
+            if jRightMax &gt; height[j] {
+                sum += jRightMax - height[j]
+            }
+            j--
+        // 情况2，我们求i位置的水    
+        } else {
+            if iLeftMax &gt; height[i] {
+                sum += iLeftMax - height[i]
+            }
+            i++
+        }
+    }
+    return sum
+}
+</code></pre>
+
+                                </div>
+                    </article>
+                    <!--  -->
+                    
+                        <div class="next-post">
+                            <div class="next">下一篇</div>
+                            <a href="https://freephenix.github.io/OnlFpRAoT/">
+                                <h3 class="post-title">
+                                    LeetCode-143. 重排链表
+                                </h3>
+                            </a>
+                        </div>
+                        
+                            <div id="disqus_thread"></div>
+                            <div id="gitalk-container"></div>
+                </div>
+                <!-- middle -->
+                <div class="main-container-middle"></div>
+                <!-- right -->
+                <div id="sidebar" class="main-container-right">
+                    
+                        <!-- toc -->
+                        
+    <div class="toc-card i-card ">
+        <div class="toc-title i-card-title">目录</div>
+        <div class="toc-content">
+            <ul class="markdownIt-TOC">
+<li><a href="#%E9%A2%98%E7%9B%AE">题目</a></li>
+<li><a href="#%E6%80%9D%E8%B7%AF">思路</a><br>
+*
+<ul>
+<li><a href="#%E6%88%91%E4%B8%AA%E4%BA%BA%E8%A7%A3%E6%B3%95%E6%98%AF%E8%A7%A3%E6%B3%95%E4%B8%89%E4%BC%98%E5%85%88%E8%AF%B4%E4%B8%8B%E8%BF%99%E7%A7%8D%E8%A7%A3%E6%B3%95%E7%9A%84%E6%80%9D%E8%B7%AF">我个人解法是‘解法三’，优先说下这种解法的思路：</a></li>
+<li><a href="#%E5%86%8D%E8%BF%9B%E4%B8%80%E6%AD%A5%E4%BC%98%E5%8C%96%E7%A9%BA%E9%97%B4%E5%A4%8D%E6%9D%82%E5%BA%A6%E5%B0%B1%E6%98%AF%E8%A7%A3%E6%B3%95%E5%9B%9B">再进一步优化空间复杂度就是‘解法四’</a></li>
+<li><a href="#%E6%A0%88%E6%80%9D%E8%B7%AF%E4%B9%9F%E6%98%AF%E6%AF%94%E8%BE%83%E7%9B%B4%E6%8E%A5%E4%BD%86%E4%BB%A3%E7%A0%81%E5%8D%B4%E8%A6%81%E6%B3%A8%E6%84%8F%E4%BA%9B%E7%BB%86%E8%8A%82">栈思路也是比较直接，但代码却要注意些细节</a></li>
+</ul>
+</li>
+<li><a href="#%E4%BB%A3%E7%A0%81">代码</a><br>
+*<br>
+*<br>
+* <a href="#%E6%97%B6%E9%97%B4%E5%A4%8D%E6%9D%82%E5%BA%A6on-%E7%A9%BA%E9%97%B4%E5%A4%8D%E6%9D%82%E5%BA%A6on">时间复杂度<code>O(n)</code>。空间复杂度<code>O(n)</code></a><br>
+* <a href="#%E6%97%B6%E9%97%B4%E5%A4%8D%E6%9D%82%E5%BA%A6on-%E7%A9%BA%E9%97%B4%E5%A4%8D%E6%9D%82%E5%BA%A6o1">时间复杂度<code>O(n)</code>。空间复杂度<code>O(1)</code></a></li>
+</ul>
+
+        </div>
+        <script>
+            function locateCatelogList() {
+                /*获取文章目录集合,可通过:header过滤器*/
+                var alis = $('.post-content :header');
+                /*获取侧边栏目录列表集合**/
+                var sidebar_alis = $('.markdownIt-TOC a');
+                /*获取滚动条到顶部的距离*/
+                var scroll_height = $(window).scrollTop();
+                for (var i = 0; i < alis.length; i++) {
+                    /*获取锚点集合中的元素分别到顶点的距离*/
+                    var a_height = $(alis[i]).offset().top;
+                    if (a_height < scroll_height) {
+                        /*高亮显示*/
+                        sidebar_alis.removeClass('on');
+                        $(sidebar_alis[i]).addClass('on');
+                    }
+                }
+            }
+            $(function() {
+                /*绑定滚动事件 */
+                $(window).bind('scroll', locateCatelogList);
+            });
+        </script>
+    </div>
+    
+                            
+
+                </div>
+
+
+
+
+            </div>
+
+
+            <div class="site-footer">
+  Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a> | 
+  <a class="rss" href="https://freephenix.github.io//atom.xml" target="_blank">RSS</a>
+</div>
+
+<script>
+  hljs.initHighlightingOnLoad()
+</script>
+
+
+    </div>
+    <script>
+        $('#sidebar').stickySidebar({
+            topSpacing: 80,
+            // bottomSpacing: 60
+        });
+    </script>
+    
+        
+            <script>
+    window.onload = function() {
+        var gitalk = new Gitalk({
+            clientID: '008503f8c8bca8787fbe',
+            clientSecret: '5f789f71e3288ff1866d17523348881053068eb4',
+            repo: 'freephenix.github.io',
+            owner: 'freephenix',
+            admin: ['freephenix'],
+            id: (location.pathname).substring(0, 49), // Ensure uniqueness and length less than 50
+            distractionFreeMode: false // Facebook-like distraction free mode
+        })
+
+        gitalk.render('gitalk-container')
+    }
+</script>
+                
+
+                    
+                                
+</body>
+
+</html>

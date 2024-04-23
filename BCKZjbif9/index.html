@@ -1,0 +1,523 @@
+<html>
+
+<head>
+    <meta charset="utf-8" />
+<meta name="description" content="" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>
+    MySQL事务和锁浅析 | 半亩房顶
+</title>
+<link rel="shortcut icon" href="https://freephenix.github.io//favicon.ico?v=1713840769430">
+<!-- <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous"> -->
+<link href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+<link rel="stylesheet" href="https://freephenix.github.io//styles/main.css">
+<!-- js -->
+<script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.min.js"></script>
+<script src="https://freephenix.github.io//media/js/jquery.sticky-sidebar.min.js"></script>
+<script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
+<script src="https://cdn.bootcss.com/moment.js/2.23.0/moment.min.js"></script>
+
+
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-147240912-1"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+
+        function gtag() {
+            dataLayer.push(arguments);
+        }
+        gtag('js', new Date());
+
+        gtag('config', 'UA-147240912-1');
+    </script>
+    
+        
+            
+                <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+                <script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+                
+
+                    
+                            
+</head>
+
+<body>
+    <div class="main">
+        <div class="header">
+    <div class="nav">
+        <div class="logo">
+            <a href="https://freephenix.github.io/">
+                <img class="avatar" src="https://freephenix.github.io//images/avatar.png?v=1713840769430" alt="">
+            </a>
+            <div class="site-title">
+                <h1>
+                    半亩房顶
+                </h1>
+            </div>
+        </div>
+        <span class="menu-btn fa fa-align-justify"></span>
+        <div class="menu-container">
+            <ul>
+                
+                    
+                            <li>
+                                <a href="/" class="menu">
+                                    首页
+                                </a>
+                            </li>
+                            
+                                
+                    
+                            <li>
+                                <a href="/archives" class="menu">
+                                    归档
+                                </a>
+                            </li>
+                            
+                                
+                    
+                            <li>
+                                <a href="/tags" class="menu">
+                                    标签
+                                </a>
+                            </li>
+                            
+                                
+                    
+                            <li>
+                                <a href="https://freephenix.github.io//post/guan-yu-ban-mu-fang-ding/" class="menu">
+                                    关于
+                                </a>
+                            </li>
+                            
+                                
+            </ul>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function() {
+        $(".menu-btn").click(function() {
+            $(".menu-container").slideToggle();
+        });
+        $(window).resize(function() {
+
+            if (window.matchMedia('(min-width: 960px)').matches) {
+                $(".menu-container").css('display', 'block')
+            } else {
+                $(".menu-container").css('display', 'none')
+            }
+
+        });
+    });
+</script>
+
+            <div id="main-content" class="post-detail main-container">
+                <!-- left -->
+                <div id="content" class="main-container-left">
+                    <article class="post i-card">
+                        <h2 class="post-title">
+                            MySQL事务和锁浅析
+                        </h2>
+                        <div class="post-info">
+                            <time class="post-time">2022-02-09</time>
+                            
+                                <a href="https://freephenix.github.io/wNbvE8pQD/" class="post-tag i-tag
+                            i-tag-other_2">
+                            #MySQL
+                        </a>
+                                
+                        </div>
+                        
+                            <div class="post-feature-image" style="background-image: url('https://freephenix.github.io//post-images/BCKZjbif9.png')"></div>
+                            
+                                <div class="post-content">
+                                    <p>文章起于一次死锁案例<br>
+问题引发思考，思考带动学习<br>
+切身的面对让我了解了更多关于事务和锁的内容</p>
+<!-- more -->
+<p><strong>本文内容基于MySQL 5.7版本官方文档。只讨论InnoDB引擎。</strong></p>
+<h1 id="事务并发下存在的问题">事务并发下存在的问题</h1>
+<p>首先我们来看下事务并发下可能存在的几类问题。设定级别的目的也正是为了在解决问题的同时保证最大的并发性能，不然为啥要费这个劲儿呢，直接串行化莽就是了。<br>
+具体示例可以找下示例文章，这里只给出简单的定义</p>
+<h2 id="脏读dirty-read">脏读（dirty read）</h2>
+<p>读取了另一个事务未提交的修改</p>
+<h2 id="不可重复读unrepeatable-read">不可重复读（unrepeatable read）</h2>
+<p>读取了另一个事务提交之后的修改</p>
+<h2 id="幻读phantom-read">幻读（phantom read）</h2>
+<p>同样的条件，两次读取得到的结果集不一样，跟不可重复度不一样的是，幻读主要面临的是其他事务的insert或者delete，而不是update</p>
+<h2 id="丢失更新lost-update">丢失更新（lost update）</h2>
+<p>上面的三种问题主要是读、写两个事务间的问题，丢失更新是写、写两个事务间的问题。<br>
+丢失更新主要分为两类，回滚覆盖（第一类丢失更新），提交覆盖（第二类丢失更新）。<br>
+即，被其他事务的回滚或者提交影响了本事务的修改。但一般来说，回滚操作不应该影响其他正常提交的事务，毕竟回滚要做的只是回滚本事务的影响，所以基本上不会出现回滚覆盖问题。</p>
+<p>带着问题，我们去看下各个隔离级别，都解决了哪些问题</p>
+<h1 id="事务级别">事务级别</h1>
+<blockquote>
+<p>顺序基于英文官方文档</p>
+</blockquote>
+<h2 id="可重复读repeatable-read">可重复读（REPEATABLE READ）</h2>
+<p>这个是InnoDB的默认隔离级别，在同一个事务里，同样条件下的查询都会是稳定一致的。<br>
+对于会产生加锁行为的读取（例如<code>select for update</code> 或者 <code>select lock in share mode</code>）、更新、删除等操作，会根据查询的条件区分，加不同的锁：</p>
+<ul>
+<li>当查询条件是一个<em>唯一条目的查询条件</em>并且<em>命中唯一索引</em>时，只会加行锁，不会加间隙锁</li>
+<li>其他查询条件时，为了防止幻读，会添加间隙锁 或者 next-key锁</li>
+</ul>
+<blockquote>
+<p>至于，RR是否可以解决幻读问题，大家可以看看这篇讨论：<br>
+<a href="https://github.com/Yhzhtk/note/issues/42">Innodb 中 RR 隔离级别能否防止幻读？</a><br>
+个人观点倾向于，RR并没有完全解决幻读。<br>
+MySQL 用于实现事务隔离级别 MVCC 机制中衍生出了「当前读」和「快照读」两个概念。InnoDB在可重复读级别下的「当前读」通过<code>Next-Key Lock</code>锁机制解决了幻读问题，但是在「快照读」时还是会存在幻读，详细可以看下上面的链接</p>
+</blockquote>
+<h2 id="已提交读read-committed">已提交读（READ COMMITTED）</h2>
+<p>在这种隔离级别下，连续的查询中，甚至哪怕是在同一个事务中，也会读取到新的已经提交的记录。<br>
+已提交读中，对于会产生加锁行为的读取（例如<code>select for update</code> 或者 <code>select lock in share mode</code>）、更新、删除等操作，只会加行锁，而只有外键和唯一键的检查才会添加间隙锁。<br>
+因为没有了间隙锁，所以会出现幻读的情况，也就是允许在查询中的间隙里添加新行。<a href="https://dev.mysql.com/doc/refman/5.7/en/innodb-next-key-locking.html">关于幻读</a><br>
+已提交读仅支持基于行的二进制日志记录。如果使用已提交读这个隔离级别，并且有<code>binlog_format=MIXED</code> 这条配置的话，那服务会使用基于行的二进制日志。<br>
+使用已提交读还有会如下额外的影响：</p>
+<ul>
+<li>对于更新和删除操作，InnoDB只会对受影响的行加行锁，对于没有匹配到的行的锁，在where条件处理完之后就会释放掉，这样大大降低了死锁的概率，但是并不会完全避免。</li>
+<li>对于更新的情况，如果一行已经被锁定了，InnoDB会执行“半一致性”（<code>semi-consistent</code>）读，这时会返回最新的提交结果，从而判断是否需要更新，如果有行命中（需要更新），MySQL会再次读取一次，并加锁或者等待加锁。</li>
+<li>已提交读的影响与配置变量<code>innodb_locks_unsafe_for_binlog</code>类似，但是有一些区别<br>
+（1）<code>innodb_locks_unsafe_for_binlog</code>只能全局设定，而隔离级别可以全局可以局部<br>
+（2）<code>innodb_locks_unsafe_for_binlog</code>只能启动时设定，而隔离级别可以动态更改</li>
+</ul>
+<p>关于已提交读的影响，官方文档有一个很不错的示例，可以自己通读下<a href="https://dev.mysql.com/doc/refman/5.7/en/innodb-transaction-isolation-levels.html"></a><br>
+这里只摘一些简单对比<br>
+前提：</p>
+<pre><code>CREATE TABLE t (a INT NOT NULL, b INT) ENGINE = InnoDB;
+INSERT INTO t VALUES (1,2),(2,3),(3,2),(4,3),(5,2);
+COMMIT;
+</code></pre>
+<p>当执行如下语句时</p>
+<pre><code>START TRANSACTION;
+UPDATE t SET b = 5 WHERE b = 3;
+</code></pre>
+<p>可重复读加锁表现：</p>
+<pre><code>x-lock(1,2); retain x-lock
+x-lock(2,3); update(2,3) to (2,5); retain x-lock
+x-lock(3,2); retain x-lock
+x-lock(4,3); update(4,3) to (4,5); retain x-lock
+x-lock(5,2); retain x-lock
+</code></pre>
+<p>已提交读加锁表现：</p>
+<pre><code>x-lock(1,2); unlock(1,2)
+x-lock(2,3); update(2,3) to (2,5); retain x-lock
+x-lock(3,2); unlock(3,2)
+x-lock(4,3); update(4,3) to (4,5); retain x-lock
+x-lock(5,2); unlock(5,2)
+</code></pre>
+<h2 id="未提交读read-uncommitted">未提交读（READ UNCOMMITTED）</h2>
+<p>未提交读中，查询语句不会产生锁，也因此会查询到其他事务产生的改变，也就是会产生脏读。其他语句时，表现和已提交读表现一致。</p>
+<h2 id="可串行化serializable">可串行化（SERIALIZABLE）</h2>
+<p>此级别类似于可重复读，但是当禁用自动提交时，InnoDB 会将所有普通查询语句隐式转换为<code>select lock in share mode</code>；如果启用了自动提交，则每条查询语句都是单独的一个事务。因此它是只读的，并且如果作为一致（非锁定）读取执行并且不需要阻塞其他事务时可以序列化。（如果在其他事务修改了选定的行的情况下要强制一个普通的查询阻塞，则需要禁用自动提交。）</p>
+<h2 id="隔离级别小结">隔离级别小结</h2>
+<ul>
+<li>
+<p>四个隔离级别分别是为了除了不同的问题<br>
+由低到高依次为未提交读、已提交读、可重复读、可串行化，这四个级别可以逐个解决脏读 、不可重复读 、幻读 这几类问题。InnoDB默认情况下是可重复读，已经可以解决脏读、幻读以及绝大部分的幻读。<br>
+<img src="https://freephenix.github.io//post-images/1644480065342.png" alt="" loading="lazy"><br>
+而对于丢失更新问题，正如我们上面所说的，回滚覆盖基本不会出现。而提交覆盖理论上因为读写锁的存在，在可重复读级别就不会出现，但是和幻读的情况类似，也是因为「快照读」的存在，导致了可重复读级别中并没有完全的解决这个问题。</p>
+</li>
+<li>
+<p>隔离级别的实现并非只能是加锁<br>
+传统的隔离级别是基于锁实现的，这种方式叫做 基于锁的并发控制（Lock-Based Concurrent Control，简写 LBCC）。除了锁，实现并发问题的方式还有<a href="https://en.wikipedia.org/wiki/Timestamp-based_concurrency_control">时间戳</a>，<a href="https://en.wikipedia.org/wiki/Multiversion_concurrency_control">多版本控制</a>等等，这些也可以称为<a href="https://en.wikipedia.org/wiki/Non-lock_concurrency_control">无锁的并发控制</a></p>
+</li>
+</ul>
+<h1 id="锁类别">锁类别</h1>
+<p>说完了事务隔离级别，下面我们再来看下InnoDB中锁的类别，然后分析下每种锁的作用和加锁情况。</p>
+<h2 id="共享锁和排他锁shared-and-exclusive-locks">共享锁和排他锁（Shared and Exclusive Locks）</h2>
+<p>InnoDB 实现了标准的行级锁，其中包括共享(s)锁和排他(x)锁两种。</p>
+<ul>
+<li>共享(S)锁允许持有锁的事务读取行。</li>
+<li>排他(X)锁允许持有锁的事务更新或删除行。<br>
+事务持有S锁时，允许其他事务持有S锁，但不允许其他事务持有X锁。只有当所有S锁释放后，才能获取X锁，而获取X锁后，会阻塞其他事务申请S锁或者X锁。</li>
+</ul>
+<h2 id="意向锁intention-locks">意向锁（Intention Locks）</h2>
+<p>意向锁是<em>表级锁</em>，指示事务稍后对表中的某一行需要哪种类型的锁(共享锁或排他锁)</p>
+<ul>
+<li>意向共享锁（IS）指事务打算对表中单个行添加共享锁</li>
+<li>意向排他锁（IX）指事务打算对表中单个行添加排他锁</li>
+</ul>
+<p>意向锁协议如下：</p>
+<ul>
+<li>事务在获得表中某一行的S锁之前，必须首先获得表上的IS锁或IX锁。</li>
+<li>事务在获得表中某一行的X锁之前，必须首先获得表上的IX锁。</li>
+</ul>
+<p><img src="https://freephenix.github.io//post-images/1644481963315.png" alt="" loading="lazy"><br>
+这张图相信大家都不陌生，这里可以作为参考备查。</p>
+<blockquote>
+<p>（1）意向锁并不会直接阻塞什么，只是表明当前表中加锁状态和加锁意向状态。<br>
+（2）如果请求事务与现有锁兼容，则可以拿到锁，但如果与现有锁冲突，则无法拿到锁。事务会一直等待，直到产生冲突的现有锁被释放。如果锁请求与现有锁冲突，并且会导致死锁，则会产生报错</p>
+</blockquote>
+<h2 id="记录锁record-locks">记录锁（Record Locks）</h2>
+<p>记录锁没有太多要说的，最主要的就是它是锁定在索引记录上的，这并不代表着它只锁索引，而是会顺着索引去锁定对应的所有主键记录。<br>
+例如，锁定索引b上的b=2，下表中，第一和第二行都会被锁定<br>
+<img src="https://freephenix.github.io//post-images/1644484529305.png" alt="" loading="lazy"></p>
+<h2 id="间隙锁gap-locks">间隙锁（Gap Locks）</h2>
+<p>间隙锁是在两个索引记录之间或者单个索引构成的区间只上添加的锁，无论某些区间内的值是否存在，都会被禁止更改。</p>
+<p>查询条件命中唯一索引（包括主键）查询唯一行的语句不需要间隙锁定。如果查询条件没有索引或者命中非唯一索引，将会锁定条件前面的空白。</p>
+<p>冲突的X锁和S锁，可能由不同的事务在一个间隙上持有（在记录行上不允许）。例如，事务A可以对间隙持有共享间隙锁(gap S-lock)，而事务B对同一间隙持有排他间隙锁(gap X-lock)。允许使用冲突的间隙锁的原因是，<em>如果从索引中清除了一个记录，则必须合并不同事务在记录上持有的间隙锁</em>。</p>
+<p>InnoDB 中的间隙锁是“单纯抑制性的”（purely inhibitive），间隙锁唯一目的是防止其他事务插入到这个间隙中。所以间隙锁可以共存。共享间隙锁和排他间隙锁之间没有区别。它们之间在间隙锁的功能上没有冲突且功能相同。</p>
+<p>可以显式的禁用间隙锁。比如将事务隔离级别更改为已提交读 或者 启用<code>innodb_locks_unsafe_for_binlog</code>变量(不推荐)。在这种情况下，读操作不会产生间隙锁，外键约束检查和唯一键检查时依然会用到。</p>
+<h2 id="临键锁next-key-locks">临键锁（Next-Key Locks）</h2>
+<p>临键锁是记录锁和索引记录前的间隙锁的组合。</p>
+<blockquote>
+<p>其实我不太确定这个名字是不是一个公认的，因为大部分地方看到这个锁都是直接写的英文</p>
+</blockquote>
+<p>其实如果说间隙锁是一个开区间的话，那么临键锁就是一个闭区间，这样应该会更好理解一些。</p>
+<p>默认情况下，InnoDB在可重复读时会加临键锁，主要目的是防止幻读</p>
+<h2 id="插入意向锁insert-intention-locks">插入意向锁（Insert Intention Locks）</h2>
+<p>插入意向锁是由insert语句预先设置的一种特殊的间隙锁，代表插入的意图，所以有时候也把它简写成“II GAP”。插入意向锁彼此之间不需要等待。假设有值为4和7的索引记录。尝试插入值5和6的两个事务，每个事务在获得插入行的排他锁之前用插入意向锁锁锁定4和7之间的间隙，但是因为他们并不是插入同一行，所以并不会产生冲突，可以同时拿到排他锁（X锁）</p>
+<h2 id="自增锁auto-inc-locks">自增锁（AUTO-INC Locks）</h2>
+<p>自增锁是一种特殊的<em>表级锁</em>，当向带有自增列的表中插入数据时，会产生自增锁。举一个最简单的例子，如果一个事务正在向表中插入值，那么任何其他事务都必须暂停自己的插入操作等待之前的插入完成，然后接收连续的自增值。</p>
+<p>更多信息，戳：<a href="https://dev.mysql.com/doc/refman/5.7/en/innodb-auto-increment-handling.html">AUTO _ increment Handling</a></p>
+<h2 id="空间索引谓词锁predicate-locks-for-spatial-indexes">空间索引谓词锁（Predicate Locks for Spatial Indexes）</h2>
+<p>中文名字是谷歌翻译的，不过这种锁我也不了解，感兴趣可以去官方文档看下，这里就不班门弄斧了。</p>
+<p>综合下来，表锁有自增锁和意向锁，行锁有记录锁、间隙锁、临键锁、插入意向锁<br>
+表锁之间往往没有讨论的必要，他们也不会<em>直接</em>产生阻塞，所以我们常见的，就是行锁之间的兼容矩阵：<br>
+<img src="https://freephenix.github.io//post-images/1644494050544.png" alt="" loading="lazy"><br>
+除了插入意向锁之外，其他三个其实是对称的，比较好记。</p>
+<h2 id="常规语句加锁分析">常规语句加锁分析</h2>
+<ul>
+<li>常见的 DDL 语句（如 ALTER、CREATE 等）加表级锁，且这些语句为隐式提交，不能回滚；</li>
+<li>SELECT ... 语句正常情况下为快照读，不加锁；可串行化隔离级别下，为当前读，加S锁。</li>
+<li>SELECT ... LOCK IN SHARE MODE 语句为当前读，加 S 锁；</li>
+<li>SELECT ... FOR UPDATE 语句为当前读，加 X 锁；</li>
+<li>常见的 DML 语句（如 INSERT、DELETE、UPDATE）为当前读，加 X 锁；<br>
+以上这些行锁，在常规的可重复读级别下，又需要根据查询条件及其命中索引有所区分<br>
+（1）能定位到唯一键的具体行则为记录锁<br>
+（2）命中的是非唯一索引或者命中的是空隙那就是间隙锁<br>
+（3）如果命中了行并且还命中了一个区间，那会是一个临键锁或者间隙锁（命中的行是下边界，为临键锁，命中的行是上边界，是间隙锁）<br>
+（4）插入意向锁是插入操作独有的预先加的锁。这些遇到复杂情况会比较繁复，需要具体分析，这一块我也不是很擅长，共同进步吧。</li>
+</ul>
+<h1 id="死锁日志分析">死锁日志分析</h1>
+<p>本来是准备具体分析一个死锁案例的，但是发现，死锁情况分析网上已经有很多，这里主要说下如何分析一份死锁日志吧</p>
+<h2 id="开启日志监控">开启日志&amp;监控</h2>
+<p>首先是拿到可供分析的日志和监控。5.6之后，推荐使用系统参数，不再用更改系统表了</p>
+<pre><code>-- 开启标准监控
+set GLOBAL innodb_status_output=ON;
+ 
+-- 开启锁监控
+set GLOBAL innodb_status_output_locks=ON;
+
+-- 开启死锁日志
+set GLOBAL innodb_print_all_deadlocks=ON;
+</code></pre>
+<h2 id="阅读死锁日志">阅读死锁日志</h2>
+<blockquote>
+<p>(1) TRANSACTION:<br>
+TRANSACTION 182335752, ACTIVE 0 sec inserting</p>
+</blockquote>
+<p><code>ACTIVE 0 sec</code> 表示事务活动时间<br>
+<code>inserting</code> 为事务当前正在运行的状态，可能的事务状态有：<code>fetching rows</code>，<code>updating</code>，<code>deleting</code>，<code>inserting</code> 等。</p>
+<blockquote>
+<p>mysql tables in use 1, locked 1<br>
+LOCK WAIT 11 lock struct(s), heap size 1184, 2 row lock(s), undo log entries 15</p>
+</blockquote>
+<p><code>tables in use 1</code> 表示有一个表被使用<br>
+<code>locked 1</code> 表示有一个表锁<br>
+<code>LOCK WAIT</code> 表示事务正在等待锁<br>
+<code>11 lock struct(s)</code> 表示该事务的锁链表的长度为 11，每个链表节点代表该事务持有的一个锁结构，包括表锁，记录锁以及自增锁等<br>
+<code>heap size 1184</code> 为事务分配的锁堆内存大小。<br>
+<code>2 row lock(s)</code> 表示当前事务持有的行锁个数，通过遍历上面提到的 11 个锁结构，找出其中类型为 LOCK_REC 的记录数<br>
+<code>undo log entries 15</code> 表示当前事务有 15 个 <code>undo log</code> 记录，因为二级索引不记 <code>undo log</code>，说明该事务已经更新了 15 条聚集索引记录。</p>
+<blockquote>
+<p>MySQL thread id 12032077, OS thread handle 0x7ff35ebf6700, query id 196418265 10.40.191.57 RW_bok_db update</p>
+</blockquote>
+<p>这里是事务的线程信息，以及数据库 IP 地址和数据库名，对我们分析死锁用处不大。</p>
+<blockquote>
+<p>INSERT INTO bok_task<br>
+1 ( order_id ...</p>
+</blockquote>
+<p>这里显示的是正在等待锁的 SQL 语句，死锁日志里每个事务都只显示一条 SQL 语句，这对我们分析死锁很不方便，我们必须要结合应用程序去具体分析这个 SQL 之前还执行了哪些其他的 SQL 语句，或者根据 binlog 也可以大致找到一个事务执行的 SQL 语句。</p>
+<blockquote>
+<p>(1) WAITING FOR THIS LOCK TO BE GRANTED:<br>
+RECORD LOCKS space id 300 page no 5480 n bits 552 index <code>order_id_un</code> of table <code>bok_db</code>.<code>bok_task</code> trx id 182335752 lock_mode X insert intention waiting</p>
+</blockquote>
+<p>这里显示的是事务正在等待什么锁<br>
+<code>RECORD LOCKS</code> 表示记录锁（并且可以看出要加锁的索引为 order_id_un），space id 为 300，page no 为 5480，n bits 552 表示这个记录锁结构上留有 552 个 bit 位（该 page 上的记录数 + 64）。<br>
+<code>lock_mode X</code> 表示该记录锁为排他锁<br>
+<code>insert intention waiting</code> 表示要加的锁为插入意向锁，并处于锁等待状态。</p>
+<p>在上面有提到 <code>innodb_status_output_locks</code> 这个系统变量可以开启 InnoDb 的锁监控，如果开启了，这个地方还会显示出锁的一些额外信息，包括索引记录的 info bits 和数据信息等：</p>
+<blockquote>
+<p>Record lock, heap no 2 PHYSICAL RECORD: n_fields 2; compact format; info bits 0<br>
+0: len 4; hex 80000002; asc     ;;<br>
+1: len 4; hex 80000001; asc     ;;</p>
+</blockquote>
+<p>四种行锁对应的死锁日志各不相同，如下：</p>
+<ul>
+<li>记录锁（LOCK_REC_NOT_GAP）: lock_mode X locks rec but not gap</li>
+<li>间隙锁（LOCK_GAP）: lock_mode X locks gap before rec</li>
+<li>Next-key 锁（LOCK_ORNIDARY）: lock_mode X</li>
+<li>插入意向锁（LOCK_INSERT_INTENTION）: lock_mode X locks gap before rec insert intention</li>
+</ul>
+<p>这里有一点要注意的是，并不是在日志里看到 <code>lock_mode X</code> 就认为这是临键锁，因为还有一个例外：<br>
+如果在上边界上加锁，<code>locks gap before rec</code> 会省略掉，间隙锁会显示成 <code>lock_mode X</code>，插入意向锁会显示成 <code>lock_mode X insert intention</code>。譬如下面这个示例：</p>
+<blockquote>
+<p>RECORD LOCKS space id 0 page no 307 n bits 72 index <code>PRIMARY</code> of table <code>test</code>.<code>test</code> trx id 50F lock_mode X<br>
+Record lock, heap no 1 PHYSICAL RECORD: n_fields 1; compact format; info bits 0</p>
+</blockquote>
+<p>看起来像是 Next-key 锁，但是看下面的 heap no 1 表示这个记录是 supremum record（另外，infimum record 的 heap no 为 0），所以这个锁应该看作是一个间隙锁。</p>
+<h1 id="总结">总结</h1>
+<p>这里东西起初只是知道概念，直到我最近遇到一起死锁事故，深入分析时才扯出来这么多的内容，本次探索最意外的收获是得知了MVCC实现中产生的两个概念：「当前读」和「快照读」。后续继续研究后再来聊聊MVCC吧（挖坑！</p>
+<h1 id="引用">引用</h1>
+<ul>
+<li><a href="https://dev.mysql.com/doc/refman/5.7/en/innodb-transaction-isolation-levels.html">14.7.2.1 Transaction Isolation Levels</a></li>
+<li><a href="https://dev.mysql.com/doc/refman/5.7/en/innodb-locking.html">14.7.1 InnoDB Locking</a></li>
+<li><a href="https://www.mysqlzh.com/doc/215/427.html">15.2.10. InnoDB事务模型和锁定</a></li>
+<li><a href="https://www.aneasystone.com/archives/2017/12/solving-dead-locks-three.html">解决死锁之路 - 常见 SQL 语句的加锁分析</a></li>
+<li><a href="https://www.jianshu.com/p/7922f8b0e678">Mysql 死锁场景一（insert on duplicate key）</a></li>
+<li><a href="https://www.cnblogs.com/jay-huaxiao/p/11456921.html">Mysql死锁如何排查：insert on duplicate死锁一次排查分析过程</a></li>
+<li><a href="https://bugs.mysql.com/bug.php?id=52020">Bug #52020: InnoDB can still deadlock on just INSERT...ON DUPLICATE KEY</a></li>
+<li><a href="https://blog.csdn.net/li563868273/article/details/105213266">讲讲insert on duplicate key update 的死锁坑</a></li>
+<li><a href="https://blog.csdn.net/weixin_30905655/article/details/113127443">mysql批量insert数据锁表_mysql批量插入死锁问题分析(正序VS逆序)</a></li>
+<li><a href="https://www.cnblogs.com/dh17/articles/15423632.html">如何阅读死锁日志</a></li>
+<li><a href="http://www.linuxmysql.com/14/2019/1029.htm">MYSQL- Lock--gap before rec insert intention waiting:意向锁(IX)等待</a></li>
+<li><a href="https://juejin.cn/post/6844903666332368909">详解 MySql InnoDB 中意向锁的作用</a></li>
+</ul>
+
+                                </div>
+                    </article>
+                    <!--  -->
+                    
+                        <div class="next-post">
+                            <div class="next">下一篇</div>
+                            <a href="https://freephenix.github.io/ncbVeJREj/">
+                                <h3 class="post-title">
+                                    IO模型-epoll
+                                </h3>
+                            </a>
+                        </div>
+                        
+                            <div id="disqus_thread"></div>
+                            <div id="gitalk-container"></div>
+                </div>
+                <!-- middle -->
+                <div class="main-container-middle"></div>
+                <!-- right -->
+                <div id="sidebar" class="main-container-right">
+                    
+                        <!-- toc -->
+                        
+    <div class="toc-card i-card ">
+        <div class="toc-title i-card-title">目录</div>
+        <div class="toc-content">
+            <ul class="markdownIt-TOC">
+<li><a href="#%E4%BA%8B%E5%8A%A1%E5%B9%B6%E5%8F%91%E4%B8%8B%E5%AD%98%E5%9C%A8%E7%9A%84%E9%97%AE%E9%A2%98">事务并发下存在的问题</a>
+<ul>
+<li><a href="#%E8%84%8F%E8%AF%BBdirty-read">脏读（dirty read）</a></li>
+<li><a href="#%E4%B8%8D%E5%8F%AF%E9%87%8D%E5%A4%8D%E8%AF%BBunrepeatable-read">不可重复读（unrepeatable read）</a></li>
+<li><a href="#%E5%B9%BB%E8%AF%BBphantom-read">幻读（phantom read）</a></li>
+<li><a href="#%E4%B8%A2%E5%A4%B1%E6%9B%B4%E6%96%B0lost-update">丢失更新（lost update）</a></li>
+</ul>
+</li>
+<li><a href="#%E4%BA%8B%E5%8A%A1%E7%BA%A7%E5%88%AB">事务级别</a>
+<ul>
+<li><a href="#%E5%8F%AF%E9%87%8D%E5%A4%8D%E8%AF%BBrepeatable-read">可重复读（REPEATABLE READ）</a></li>
+<li><a href="#%E5%B7%B2%E6%8F%90%E4%BA%A4%E8%AF%BBread-committed">已提交读（READ COMMITTED）</a></li>
+<li><a href="#%E6%9C%AA%E6%8F%90%E4%BA%A4%E8%AF%BBread-uncommitted">未提交读（READ UNCOMMITTED）</a></li>
+<li><a href="#%E5%8F%AF%E4%B8%B2%E8%A1%8C%E5%8C%96serializable">可串行化（SERIALIZABLE）</a></li>
+<li><a href="#%E9%9A%94%E7%A6%BB%E7%BA%A7%E5%88%AB%E5%B0%8F%E7%BB%93">隔离级别小结</a></li>
+</ul>
+</li>
+<li><a href="#%E9%94%81%E7%B1%BB%E5%88%AB">锁类别</a>
+<ul>
+<li><a href="#%E5%85%B1%E4%BA%AB%E9%94%81%E5%92%8C%E6%8E%92%E4%BB%96%E9%94%81shared-and-exclusive-locks">共享锁和排他锁（Shared and Exclusive Locks）</a></li>
+<li><a href="#%E6%84%8F%E5%90%91%E9%94%81intention-locks">意向锁（Intention Locks）</a></li>
+<li><a href="#%E8%AE%B0%E5%BD%95%E9%94%81record-locks">记录锁（Record Locks）</a></li>
+<li><a href="#%E9%97%B4%E9%9A%99%E9%94%81gap-locks">间隙锁（Gap Locks）</a></li>
+<li><a href="#%E4%B8%B4%E9%94%AE%E9%94%81next-key-locks">临键锁（Next-Key Locks）</a></li>
+<li><a href="#%E6%8F%92%E5%85%A5%E6%84%8F%E5%90%91%E9%94%81insert-intention-locks">插入意向锁（Insert Intention Locks）</a></li>
+<li><a href="#%E8%87%AA%E5%A2%9E%E9%94%81auto-inc-locks">自增锁（AUTO-INC Locks）</a></li>
+<li><a href="#%E7%A9%BA%E9%97%B4%E7%B4%A2%E5%BC%95%E8%B0%93%E8%AF%8D%E9%94%81predicate-locks-for-spatial-indexes">空间索引谓词锁（Predicate Locks for Spatial Indexes）</a></li>
+<li><a href="#%E5%B8%B8%E8%A7%84%E8%AF%AD%E5%8F%A5%E5%8A%A0%E9%94%81%E5%88%86%E6%9E%90">常规语句加锁分析</a></li>
+</ul>
+</li>
+<li><a href="#%E6%AD%BB%E9%94%81%E6%97%A5%E5%BF%97%E5%88%86%E6%9E%90">死锁日志分析</a>
+<ul>
+<li><a href="#%E5%BC%80%E5%90%AF%E6%97%A5%E5%BF%97%E7%9B%91%E6%8E%A7">开启日志&amp;监控</a></li>
+<li><a href="#%E9%98%85%E8%AF%BB%E6%AD%BB%E9%94%81%E6%97%A5%E5%BF%97">阅读死锁日志</a></li>
+</ul>
+</li>
+<li><a href="#%E6%80%BB%E7%BB%93">总结</a></li>
+<li><a href="#%E5%BC%95%E7%94%A8">引用</a></li>
+</ul>
+
+        </div>
+        <script>
+            function locateCatelogList() {
+                /*获取文章目录集合,可通过:header过滤器*/
+                var alis = $('.post-content :header');
+                /*获取侧边栏目录列表集合**/
+                var sidebar_alis = $('.markdownIt-TOC a');
+                /*获取滚动条到顶部的距离*/
+                var scroll_height = $(window).scrollTop();
+                for (var i = 0; i < alis.length; i++) {
+                    /*获取锚点集合中的元素分别到顶点的距离*/
+                    var a_height = $(alis[i]).offset().top;
+                    if (a_height < scroll_height) {
+                        /*高亮显示*/
+                        sidebar_alis.removeClass('on');
+                        $(sidebar_alis[i]).addClass('on');
+                    }
+                }
+            }
+            $(function() {
+                /*绑定滚动事件 */
+                $(window).bind('scroll', locateCatelogList);
+            });
+        </script>
+    </div>
+    
+                            
+
+                </div>
+
+
+
+
+            </div>
+
+
+            <div class="site-footer">
+  Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a> | 
+  <a class="rss" href="https://freephenix.github.io//atom.xml" target="_blank">RSS</a>
+</div>
+
+<script>
+  hljs.initHighlightingOnLoad()
+</script>
+
+
+    </div>
+    <script>
+        $('#sidebar').stickySidebar({
+            topSpacing: 80,
+            // bottomSpacing: 60
+        });
+    </script>
+    
+        
+            <script>
+    window.onload = function() {
+        var gitalk = new Gitalk({
+            clientID: '008503f8c8bca8787fbe',
+            clientSecret: '5f789f71e3288ff1866d17523348881053068eb4',
+            repo: 'freephenix.github.io',
+            owner: 'freephenix',
+            admin: ['freephenix'],
+            id: (location.pathname).substring(0, 49), // Ensure uniqueness and length less than 50
+            distractionFreeMode: false // Facebook-like distraction free mode
+        })
+
+        gitalk.render('gitalk-container')
+    }
+</script>
+                
+
+                    
+                                
+</body>
+
+</html>

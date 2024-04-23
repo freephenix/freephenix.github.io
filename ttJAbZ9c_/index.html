@@ -1,0 +1,345 @@
+<html>
+
+<head>
+    <meta charset="utf-8" />
+<meta name="description" content="" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>
+    Leetcode-833. 字符串中的查找与替换 | 半亩房顶
+</title>
+<link rel="shortcut icon" href="https://freephenix.github.io//favicon.ico?v=1713840769430">
+<!-- <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous"> -->
+<link href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+<link rel="stylesheet" href="https://freephenix.github.io//styles/main.css">
+<!-- js -->
+<script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.min.js"></script>
+<script src="https://freephenix.github.io//media/js/jquery.sticky-sidebar.min.js"></script>
+<script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
+<script src="https://cdn.bootcss.com/moment.js/2.23.0/moment.min.js"></script>
+
+
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-147240912-1"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+
+        function gtag() {
+            dataLayer.push(arguments);
+        }
+        gtag('js', new Date());
+
+        gtag('config', 'UA-147240912-1');
+    </script>
+    
+        
+            
+                <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+                <script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+                
+
+                    
+                            
+</head>
+
+<body>
+    <div class="main">
+        <div class="header">
+    <div class="nav">
+        <div class="logo">
+            <a href="https://freephenix.github.io/">
+                <img class="avatar" src="https://freephenix.github.io//images/avatar.png?v=1713840769430" alt="">
+            </a>
+            <div class="site-title">
+                <h1>
+                    半亩房顶
+                </h1>
+            </div>
+        </div>
+        <span class="menu-btn fa fa-align-justify"></span>
+        <div class="menu-container">
+            <ul>
+                
+                    
+                            <li>
+                                <a href="/" class="menu">
+                                    首页
+                                </a>
+                            </li>
+                            
+                                
+                    
+                            <li>
+                                <a href="/archives" class="menu">
+                                    归档
+                                </a>
+                            </li>
+                            
+                                
+                    
+                            <li>
+                                <a href="/tags" class="menu">
+                                    标签
+                                </a>
+                            </li>
+                            
+                                
+                    
+                            <li>
+                                <a href="https://freephenix.github.io//post/guan-yu-ban-mu-fang-ding/" class="menu">
+                                    关于
+                                </a>
+                            </li>
+                            
+                                
+            </ul>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function() {
+        $(".menu-btn").click(function() {
+            $(".menu-container").slideToggle();
+        });
+        $(window).resize(function() {
+
+            if (window.matchMedia('(min-width: 960px)').matches) {
+                $(".menu-container").css('display', 'block')
+            } else {
+                $(".menu-container").css('display', 'none')
+            }
+
+        });
+    });
+</script>
+
+            <div id="main-content" class="post-detail main-container">
+                <!-- left -->
+                <div id="content" class="main-container-left">
+                    <article class="post i-card">
+                        <h2 class="post-title">
+                            Leetcode-833. 字符串中的查找与替换
+                        </h2>
+                        <div class="post-info">
+                            <time class="post-time">2023-08-15</time>
+                            
+                                <a href="https://freephenix.github.io/VzPqUfv6P/" class="post-tag i-tag
+                            i-tag-primary">
+                            #哈希
+                        </a>
+                                
+                                <a href="https://freephenix.github.io/YWFpnf3Gl/" class="post-tag i-tag
+                            i-tag-">
+                            #刷题
+                        </a>
+                                
+                                <a href="https://freephenix.github.io/70TrDOWqgi/" class="post-tag i-tag
+                            i-tag-success">
+                            #面试
+                        </a>
+                                
+                                <a href="https://freephenix.github.io/go/" class="post-tag i-tag
+                            i-tag-error">
+                            #Go
+                        </a>
+                                
+                                <a href="https://freephenix.github.io/k1NaSbOoC/" class="post-tag i-tag
+                            i-tag-primary">
+                            #LeetCode
+                        </a>
+                                
+                                <a href="https://freephenix.github.io/WucazjDbn/" class="post-tag i-tag
+                            i-tag-other_1">
+                            #算法
+                        </a>
+                                
+                        </div>
+                        
+                            <div class="post-feature-image" style="background-image: url('https://freephenix.github.io//post-images/ttJAbZ9c_.jpeg')"></div>
+                            
+                                <div class="post-content">
+                                    <p>刷题使我快乐，满脸开心.jpg</p>
+<ul>
+<li>来源：力扣（LeetCode）</li>
+<li>链接：https://leetcode.cn/problems/find-and-replace-in-string/</li>
+<li>著作权归领扣网络所有。商业转载请联系官方授权，非商业转载请注明出处。</li>
+</ul>
+<!-- more -->
+<h1 id="题目">题目</h1>
+<p>你会得到一个字符串 <code>s</code> (索引从 <code>0</code> 开始)，你必须对它执行 <code>k</code> 个替换操作。替换操作以三个长度均为 <code>k</code> 的并行数组给出：<code>indices</code>, <code>sources</code>,  <code>targets</code>。</p>
+<p>要完成第 <code>i </code>个替换操作:</p>
+<p>检查 <code>子字符串 sources[i]</code> 是否出现在 <code>原字符串 s</code> 的索引 <code>indices[i]</code> 处。<br>
+如果没有出现， <code>什么也不做</code> 。<br>
+如果出现，则用 <code>targets[i] </code>替换 <code>该子字符串</code>。<br>
+例如，如果 <code>s = &quot;abcd&quot;</code> ， <code>indices[i] = 0</code> , <code>sources[i] = &quot;ab&quot;</code>， <code>targets[i] = &quot;eee&quot;</code> ，那么替换的结果将是 <code>&quot;eeecd&quot;</code> 。</p>
+<p>所有替换操作必须<em><strong>同时</strong></em>发生，这意味着替换操作不应该影响彼此的索引。测试用例保证元素间不会<em><strong>重叠</strong></em>。</p>
+<p>例如，一个 <code>s = &quot;abc&quot;</code> ，  <code>indices = [0,1]</code> ， <code>sources = [&quot;ab&quot;，&quot;bc&quot;]</code> 的测试用例将不会生成，因为 <code>&quot;ab&quot;</code> 和 <code>&quot;bc&quot;</code> 替换重叠。<br>
+在对 <code>s</code> 执行所有替换操作后返回 <code>结果字符串</code> 。</p>
+<p><code>子字符串</code> 是字符串中连续的字符序列。</p>
+<p>示例 1：</p>
+<pre><code>输入：s = &quot;abcd&quot;, indexes = [0,2], sources = [&quot;a&quot;,&quot;cd&quot;], targets = [&quot;eee&quot;,&quot;ffff&quot;]
+输出：&quot;eeebffff&quot;
+解释：
+&quot;a&quot; 从 s 中的索引 0 开始，所以它被替换为 &quot;eee&quot;。
+&quot;cd&quot; 从 s 中的索引 2 开始，所以它被替换为 &quot;ffff&quot;。
+</code></pre>
+<p><img src="https://freephenix.github.io//post-images/1692069342884.png" alt="" loading="lazy"><br>
+示例 2：</p>
+<pre><code>输入：s = &quot;abcd&quot;, indexes = [0,2], sources = [&quot;ab&quot;,&quot;ec&quot;], targets = [&quot;eee&quot;,&quot;ffff&quot;]
+输出：&quot;eeecd&quot;
+解释：
+&quot;ab&quot; 从 s 中的索引 0 开始，所以它被替换为 &quot;eee&quot;。
+&quot;ec&quot; 没有从原始的 S 中的索引 2 开始，所以它没有被替换。
+</code></pre>
+<p><img src="https://freephenix.github.io//post-images/1692069347214.png" alt="" loading="lazy"><br>
+提示：</p>
+<ul>
+<li><code>1 &lt;= s.length &lt;= 1000</code></li>
+<li><code>k == indices.length == sources.length == targets.length</code></li>
+<li><code>1 &lt;= k &lt;= 100</code></li>
+<li><code>0 &lt;= indexes[i] &lt; s.length</code></li>
+<li><code>1 &lt;= sources[i].length, targets[i].length &lt;= 50</code></li>
+<li><code>s 仅由小写英文字母组成</code></li>
+<li><code>sources[i] 和 targets[i] 仅由小写英文字母组成</code></li>
+</ul>
+<h1 id="思路">思路</h1>
+<ul>
+<li>遍历并确认是否需要替换这里，开始我傻傻自己实现了一个，看了题解才意识到可以使用 <code>strings.HasPrefix</code> 这个内置函数，这一点在刷题里并不重要，但是在工作中，尤其是作为一个业务工程师，这个思维还是需要有的，莫要重复造轮子，除非不合适</li>
+<li>查找替换部分需要注意的就是，<code>targets</code>中的字符串并不一定长度和<code>sources</code>匹配，所以为了不影响原本字符串中的下标索引，需要拼结果时再插入，这也就是题目中为何要求“所有替换操作必须<em><strong>同时</strong></em>发生”。</li>
+</ul>
+<h1 id="代码">代码</h1>
+<pre><code class="language-golang">func findReplaceString(s string, indices []int, sources, targets []string) string {
+    n := len(s)
+    replaceStr := make([]string, n)
+    replaceLen := make([]int, n)
+    for i, indice := range indices {
+        if strings.HasPrefix(s[indice:], sources[i]) {
+            replaceStr[indice] = targets[i]
+            replaceLen[indice] = len(sources[i])
+        }
+    }
+
+    res := &quot;&quot;
+    for i := 0; i &lt; n; {
+        if replaceStr[i] == &quot;&quot; {
+            res += string(s[i])
+            i++
+        } else {
+            res += replaceStr[i]
+            i += replaceLen[i]
+        }
+    }
+    return res
+}
+
+</code></pre>
+
+                                </div>
+                    </article>
+                    <!--  -->
+                    
+                        <div class="next-post">
+                            <div class="next">下一篇</div>
+                            <a href="https://freephenix.github.io/lhZuUxvEJ/">
+                                <h3 class="post-title">
+                                    LeetCode-344. 反转字符串
+                                </h3>
+                            </a>
+                        </div>
+                        
+                            <div id="disqus_thread"></div>
+                            <div id="gitalk-container"></div>
+                </div>
+                <!-- middle -->
+                <div class="main-container-middle"></div>
+                <!-- right -->
+                <div id="sidebar" class="main-container-right">
+                    
+                        <!-- toc -->
+                        
+    <div class="toc-card i-card ">
+        <div class="toc-title i-card-title">目录</div>
+        <div class="toc-content">
+            <ul class="markdownIt-TOC">
+<li><a href="#%E9%A2%98%E7%9B%AE">题目</a></li>
+<li><a href="#%E6%80%9D%E8%B7%AF">思路</a></li>
+<li><a href="#%E4%BB%A3%E7%A0%81">代码</a></li>
+</ul>
+
+        </div>
+        <script>
+            function locateCatelogList() {
+                /*获取文章目录集合,可通过:header过滤器*/
+                var alis = $('.post-content :header');
+                /*获取侧边栏目录列表集合**/
+                var sidebar_alis = $('.markdownIt-TOC a');
+                /*获取滚动条到顶部的距离*/
+                var scroll_height = $(window).scrollTop();
+                for (var i = 0; i < alis.length; i++) {
+                    /*获取锚点集合中的元素分别到顶点的距离*/
+                    var a_height = $(alis[i]).offset().top;
+                    if (a_height < scroll_height) {
+                        /*高亮显示*/
+                        sidebar_alis.removeClass('on');
+                        $(sidebar_alis[i]).addClass('on');
+                    }
+                }
+            }
+            $(function() {
+                /*绑定滚动事件 */
+                $(window).bind('scroll', locateCatelogList);
+            });
+        </script>
+    </div>
+    
+                            
+
+                </div>
+
+
+
+
+            </div>
+
+
+            <div class="site-footer">
+  Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a> | 
+  <a class="rss" href="https://freephenix.github.io//atom.xml" target="_blank">RSS</a>
+</div>
+
+<script>
+  hljs.initHighlightingOnLoad()
+</script>
+
+
+    </div>
+    <script>
+        $('#sidebar').stickySidebar({
+            topSpacing: 80,
+            // bottomSpacing: 60
+        });
+    </script>
+    
+        
+            <script>
+    window.onload = function() {
+        var gitalk = new Gitalk({
+            clientID: '008503f8c8bca8787fbe',
+            clientSecret: '5f789f71e3288ff1866d17523348881053068eb4',
+            repo: 'freephenix.github.io',
+            owner: 'freephenix',
+            admin: ['freephenix'],
+            id: (location.pathname).substring(0, 49), // Ensure uniqueness and length less than 50
+            distractionFreeMode: false // Facebook-like distraction free mode
+        })
+
+        gitalk.render('gitalk-container')
+    }
+</script>
+                
+
+                    
+                                
+</body>
+
+</html>

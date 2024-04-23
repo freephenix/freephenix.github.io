@@ -1,0 +1,475 @@
+<html>
+
+<head>
+    <meta charset="utf-8" />
+<meta name="description" content="" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>
+    学习下分布式锁 | 半亩房顶
+</title>
+<link rel="shortcut icon" href="https://freephenix.github.io//favicon.ico?v=1713840769430">
+<!-- <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous"> -->
+<link href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+<link rel="stylesheet" href="https://freephenix.github.io//styles/main.css">
+<!-- js -->
+<script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.min.js"></script>
+<script src="https://freephenix.github.io//media/js/jquery.sticky-sidebar.min.js"></script>
+<script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
+<script src="https://cdn.bootcss.com/moment.js/2.23.0/moment.min.js"></script>
+
+
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-147240912-1"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+
+        function gtag() {
+            dataLayer.push(arguments);
+        }
+        gtag('js', new Date());
+
+        gtag('config', 'UA-147240912-1');
+    </script>
+    
+        
+            
+                <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+                <script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+                
+
+                    
+                            
+</head>
+
+<body>
+    <div class="main">
+        <div class="header">
+    <div class="nav">
+        <div class="logo">
+            <a href="https://freephenix.github.io/">
+                <img class="avatar" src="https://freephenix.github.io//images/avatar.png?v=1713840769430" alt="">
+            </a>
+            <div class="site-title">
+                <h1>
+                    半亩房顶
+                </h1>
+            </div>
+        </div>
+        <span class="menu-btn fa fa-align-justify"></span>
+        <div class="menu-container">
+            <ul>
+                
+                    
+                            <li>
+                                <a href="/" class="menu">
+                                    首页
+                                </a>
+                            </li>
+                            
+                                
+                    
+                            <li>
+                                <a href="/archives" class="menu">
+                                    归档
+                                </a>
+                            </li>
+                            
+                                
+                    
+                            <li>
+                                <a href="/tags" class="menu">
+                                    标签
+                                </a>
+                            </li>
+                            
+                                
+                    
+                            <li>
+                                <a href="https://freephenix.github.io//post/guan-yu-ban-mu-fang-ding/" class="menu">
+                                    关于
+                                </a>
+                            </li>
+                            
+                                
+            </ul>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function() {
+        $(".menu-btn").click(function() {
+            $(".menu-container").slideToggle();
+        });
+        $(window).resize(function() {
+
+            if (window.matchMedia('(min-width: 960px)').matches) {
+                $(".menu-container").css('display', 'block')
+            } else {
+                $(".menu-container").css('display', 'none')
+            }
+
+        });
+    });
+</script>
+
+            <div id="main-content" class="post-detail main-container">
+                <!-- left -->
+                <div id="content" class="main-container-left">
+                    <article class="post i-card">
+                        <h2 class="post-title">
+                            学习下分布式锁
+                        </h2>
+                        <div class="post-info">
+                            <time class="post-time">2021-05-17</time>
+                            
+                                <a href="https://freephenix.github.io/vU229VESy/" class="post-tag i-tag
+                            i-tag-other_3">
+                            #分布式锁
+                        </a>
+                                
+                                <a href="https://freephenix.github.io/wNbvE8pQD/" class="post-tag i-tag
+                            i-tag-primary">
+                            #MySQL
+                        </a>
+                                
+                                <a href="https://freephenix.github.io/yQozqrioz/" class="post-tag i-tag
+                            i-tag-">
+                            #Redis
+                        </a>
+                                
+                        </div>
+                        
+                            <div class="post-feature-image" style="background-image: url('https://freephenix.github.io//post-images/fen-bu-shi-suo.jpeg')"></div>
+                            
+                                <div class="post-content">
+                                    <p>什么是分布式锁？<br>
+分布式锁有什么特性？<br>
+分布式锁需要注意什么？<br>
+如何实现分布式锁？</p>
+<!-- more -->
+<h1 id="cap定理">CAP定理</h1>
+<p>分布式系统（distributed system）正变得越来越重要。<br>
+而分布式系统的最大难点，就是各个节点的状态同步。<br>
+CAP 定理是这方面的基本定理，也是理解分布式系统的起点。</p>
+<pre><code>Consistency：一致性。
+Availability：可用性。
+Partition tolerance：分区容错。
+</code></pre>
+<p>一般来说，分区容错无法避免，所以基本都是保证AP或者CP，那为什么AC无法同时做到呢？</p>
+<pre><code>其实答案也比较简单，假设推理一下就好：
+假设节点一 s1正常，但与节点二 s2之间的通信出现了错误。
+如果需要保证一致性，那么当s1有写入时，只能等待s2恢复并同步数据之后，s2才能恢复读写操作，此段时间内，s2自然是无法保证可用性的；
+反之亦然，当保证可用性时，一致性就无法保证。
+</code></pre>
+<p>PS. 现今大多数场景下，都是优先保证AP，退而求其次的只保证<code>最终一致性</code>。</p>
+<h1 id="什么是分布式锁">什么是分布式锁</h1>
+<p>联系上文，分布式锁的出现，就是为了在很多场景中，控制程序的执行顺序，防止共享资源被多个线程同时访问。总结下，就是保证<code>最终一致性</code>的一种解决方案。</p>
+<h1 id="分布式锁的特性">分布式锁的特性</h1>
+<p>1、<code>互斥性</code>：这个应该是分布式锁的基本特性，或者说也是锁的基本特性，保证资源（这里指共享代码段或者共享变量）同时只能有一个节点的某个线程访问<br>
+2、<code>可重入性</code>：同一个线程，允许重复多次加锁<br>
+3、<code>锁超时</code>：当锁超时，为了保证锁能正常使用，需要保证能够释放锁资源<br>
+4、<code>非阻塞</code>：支持获取锁的时候直接返回结果值（true or false），而不是在没有获取到锁的时候阻塞住线程的执行<br>
+5、<code>公平锁与非公平锁</code>：公平锁是指按照请求加锁的顺序获得锁，非公平锁请求加锁是无序的。</p>
+<p>这些是分布式锁的常见特性，不一定都要满足，比如非阻塞特性，是可以看场景需要决定是否添加</p>
+<h1 id="如何实现分布式锁">如何实现分布式锁</h1>
+<p>常见的有三种方式</p>
+<pre><code>基于数据库实现分布式锁；
+基于缓存（Redis等）实现分布式锁；
+基于Zookeeper实现分布式锁；
+</code></pre>
+<h2 id="基于数据库实现分布式锁">基于数据库实现分布式锁</h2>
+<blockquote>
+<p>基于MySql实现分布式锁有三种方式，分别是基于唯一索引，悲观锁与乐观锁<br>
+基于MySql实现分布式锁主要是利用MySql自身的行锁机制，保证对于某一行，同时只能由一个线程对其查询或者更新（这就实现了分布式锁的最基本的特性：互斥性），而能够访问该行的线程即可以认为是获取到分布式锁的线程。</p>
+</blockquote>
+<h3 id="基于唯一索引实现">基于唯一索引实现</h3>
+<pre><code>CREATE TABLE lock(
+  id int(11) NOT NULL AUTO_INCREMENT COMMENT ‘主键’,
+  lock_name varchar(64) NOT NULL DEFAULT ‘’ COMMENT ‘锁名’,
+  desc varchar(1024) NOT NULL DEFAULT ‘备注信息’,
+  update_time timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT ‘保存数据时间，自动生成’,
+  PRIMARY KEY (id),
+  UNIQUE KEY uidx_lock_name (lock_name) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT=‘锁定中的方法’;
+
+获取锁执行insert语句，如果插入成功则说明可以成功获取到锁
+insert into lock(lock_name,desc) values (‘lock_name’,‘desc’)
+
+释放锁则执行delete语句
+delete from lock where lock_name='lock_name'
+</code></pre>
+<p>1、利用数据库的唯一索引，天然实现唯一性<br>
+2、insert为非阻塞的，一旦插入失败就返回结果了，如果想要实现阻塞可以使用while循环;<br>
+3、要实现公平锁，可以引入一张表，记录因为插入失败而阻塞的线程，一旦锁被释放，被阻塞的线程可以根据插入的先后顺序来决定自己是否可以获取锁;<br>
+4、要实现可重入性，需要在锁表中增加一列，记录获取锁的服务节点信息与线程信息，获取锁的时候先查询数据库，如果当前机器的主机信息和线程信息在数据库可以查到的话，直接把锁分配给他就可以了;<br>
+5、要实现锁超时，需要在锁表增加一列，记录锁失效的时间，同时增加一个定时任务系统，定时扫描锁表中超时的记录，删除该条记录从而释放锁。</p>
+<h3 id="基于数据库排他锁实现">基于数据库排他锁实现</h3>
+<pre><code>transaction begin
+lock = sql(&quot;select * from resource_lock where resource_name = lockName for update&quot;)
+if lock == null {
+    sql(&quot;insert into resource_lock(reosurce_name,owner) values (lockName, 'ip')&quot;)
+}
+
+业务逻辑 ... 
+
+事务完成时即锁释放
+</code></pre>
+<p>1、需要事务资源、并且&quot;for update&quot;时，是占用了数据库的链接在等待了，很浪费资源，<br>
+2、只能通过设置innodb_lock_wait_timeout控制全局的锁超时时间，默认是50s<br>
+3、锁重入难以实现</p>
+<h3 id="基于数据库乐观锁实现">基于数据库乐观锁实现</h3>
+<pre><code>transaction begin
+lock = sql(&quot;select * from resource_lock where resource_name = lockName&quot;)
+if lock == null {
+    sql(&quot;insert into resource_lock(reosurce_name,owner) values (lockName, 'ip')&quot;)
+}
+version = lock.version
+
+业务逻辑 ... 
+
+count = sql(&quot;update resource_lock set version=version+1 where  resource_name = lockName and version=#{version}&quot;);
+if(count == 1) {
+    // 成功获取到分布式锁，可以提交本次事务
+} else {
+    // 使用while重复执行select，update来获取分布式锁资源或者直接回滚本地事务
+}
+</code></pre>
+<p>1、同样需要使用事务资源，只有当更新成功时提交事务，此时意味着没有其他人插入执行，从而保证一致性<br>
+2、乐观锁的基础是假设冲突不多，如果冲突一多，那么多个sql，事务资源等等都会是很严重的问题，所以需要特定场景才可以使用</p>
+<h2 id="基于缓存redis等实现分布式锁">基于缓存（Redis等）实现分布式锁</h2>
+<blockquote>
+<p>利用redis天然的支持分布式系统的特性以及某些命令的使用，可以较好的来实现分布式锁。redis的读写性能比较数据库来说也有极大的提升，目前也是一种较为流行的分布式锁解决方案。</p>
+</blockquote>
+<h3 id="setnx命令实现分布式锁">SetNX命令实现分布式锁</h3>
+<p><code>SETNX key value 将key的值设置为value，当且仅当key不存在的时候</code></p>
+<pre><code>func getLock(redis redisClient, key string, uuid string, expireTime int32) bool {
+    ret = redis.setnx(key, uuid)
+    if (ret) {
+        // setnx再设置过期时间非原子操作，此时如果出问题，那将会无法释放锁，出现死锁
+        redis.expire(expireTime)
+        return true
+    }
+    return false
+}
+</code></pre>
+<p>为了解决非原子操作，常用的方式有两种</p>
+<ul>
+<li>lua脚本</li>
+</ul>
+<pre><code>// 加锁脚本，KEYS[1] 要加锁的key，ARGV[1]是UUID随机值，ARGV[2]是过期时间
+SCRIPT_LOCK = &quot;if redis.call('setnx', KEYS[1], ARGV[1]) == 1 then redis.call('pexpire', KEYS[1], ARGV[2]) return 1 else return 0 end&quot;;
+
+// 解锁脚本，KEYS[1]要解锁的key，ARGV[1]是UUID随机值
+SCRIPT_UNLOCK = &quot;if redis.call('get', KEYS[1]) == ARGV[1] then return redis.call('del', KEYS[1]) else return 0 end&quot;;
+</code></pre>
+<ul>
+<li>设置value为锁过期时间</li>
+</ul>
+<pre><code>func getLock(redis redis.Client, key string, expire int32) {
+   expireTime = time() + expire;  // 设置锁的过期时间
+   
+   // 如果当前锁不存在，返回加锁成功
+   if (redis.setnx(key, expireTime)) {
+       return true;
+   }
+
+   // 如果锁存在，获取锁的过期时间
+   currentTime = redis.get(key);
+   if (currentTime != null &amp;&amp; currentTime &lt; time()) {
+       // 锁已过期，获取上一个锁的过期时间，并设置现在锁的过期时间
+       oldTime = redis.getSet(key, expireTime);
+       if (oldTime != null &amp;&amp; oldTime == currentTime) {
+           // 考虑多线程并发的情况，只有一个线程的设置值和当前值相同，它才有权利加锁
+           return true;
+       }
+   }
+   // 其他情况，一律返回加锁失败
+   return false;
+}
+
+// 释放锁
+func releaseLock(redis redis.Client, key string) {
+   redis.del(key);
+}
+</code></pre>
+<p>这种会存在两个问题</p>
+<ul>
+<li>过期时间可能被多个线程getSet 互相覆盖</li>
+<li>线程可能会删除掉其他的锁</li>
+</ul>
+<h3 id="set-key-value-ex-seconds-px-milliseconds-nxxx-命令实现分布式锁">SET key value [EX seconds] [PX milliseconds] [NX|XX] 命令实现分布式锁</h3>
+<blockquote>
+<p>SET key value [EX seconds] [PX milliseconds] [NX|XX]<br>
+可选参数<br>
+从 Redis 2.6.12 版本开始， SET 命令的行为可以通过一系列参数来修改：<br>
+EX second ：设置键的过期时间为 second 秒。 SET key value EX second 效果等同于 SETEX key second value 。<br>
+PX millisecond ：设置键的过期时间为 millisecond 毫秒。 SET key value PX millisecond 效果等同于 PSETEX key millisecond value 。<br>
+NX ：只在键不存在时，才对键进行设置操作。 SET key value NX 效果等同于 SETNX key value 。<br>
+XX ：只在键已经存在时，才对键进行设置操作。</p>
+</blockquote>
+<p>使用set命令，则可以将 NX 和 PX|EX 两个参数合并起来完成原子操作：</p>
+<pre><code>func getLock(key string, uuid string, expireTime int32) {
+   result = redis.set(key, uuid, &quot;NX&quot;, &quot;PX&quot;, expireTime);
+   if (result) {
+       return true;
+   }
+   return false;
+}
+// 而释放锁，可以使用lua脚本
+script = &quot;if redis.call('get', KEYS[1]) == ARGV[1] then return redis.call('del', KEYS[1]) else return 0 end&quot;;
+</code></pre>
+<h2 id="基于zookeeper实现分布式锁">基于Zookeeper实现分布式锁</h2>
+<blockquote>
+<p>Zookeeper 是一种提供「分布式服务协调」的中心化服务，类似于Unix文件系统结构，可以看作一棵树，每个节点叫做ZNode。ZNode中可以存储数据。ZNode节点分为两种类型：<br>
+<code>临时节点</code>：当客户端和服务端断开连接后，所创建的Znode(节点)会自动删除<br>
+根据节点是否有序分为普通临时节点与有序临时节点<br>
+<code>持久化节点</code>：当客户端和服务端断开连接后，所创建的Znode(节点)不会删除<br>
+根据节点是否有序分为普通持久化节点与有序持久化节点<br>
+Zookeeper还提供了Watcher机制，Zookeeper允许用户在指定节点上注册一些Watcher，并且在一些特定事件触发的时候(比如节点存储信息改变/节点被删除/节点新增（删除）子节点等)，ZooKeeper服务端会将事件通知到感兴趣的客户端上去，该机制是Zookeeper实现分布式协调服务的重要特性。</p>
+</blockquote>
+<figure data-type="image" tabindex="1"><img src="https://freephenix.github.io//post-images/1621265457500.png" alt="" loading="lazy"></figure>
+<p>基于zookeeper的特性，可以实现分布式锁：<br>
+首先创建持久化节点/lock_name1，每当有客户端来访问/lock_name1节点，就在该节点下创建一个临时有序子节点，由于临时有序节点是递增的，所以总有一个临时有序节点的序号是最小的，那么这个序号最小的节点就可以获得分布式锁。而其他未获取到锁请求则通过Watcher机制监听上一个比自己序号小的节点。<br>
+1、客户端C1拿到/lock_name1下面所有的子节点，比较序号，发现自己序号最小，所以得到锁。<br>
+2、客户端C2拿到/lock_name1下面所有的子节点，比较序号，发现自己的序号不是最小的，所以客户端C2并不会获取到锁，而是监听比自己序号小的上一个节点C1的状态。<br>
+3、客户端C3拿到/lock_name1下面所有的子节点，比较序号，发现自己的序号不是最小的，所以客户端C3并不会获取到锁，而是监听比自己序号小的上一个节点C2的状态。<br>
+…<br>
+n、客户端C1执行完毕，释放锁资源，同时C1节点被删除，而C2监控到C1节点状态发生变化，比较之后发现自己的序号最小，所以可以获取锁。</p>
+<p><code>总结</code>：zookeeper实现分布式锁主要也是使用了zookeeper的自身的特性，即使同一时刻多个请求过来，创建的节点的序号也是递增的且不会重复。而利用监听机制可以保证锁被释放之后其他节点可以获取到该信息从而有机会去获取锁。</p>
+<h1 id="总结">总结</h1>
+<p>以上几种方式，各有优劣，但我们在面临某一个需求时，最重要的是根据实际的需要来选择，而不是盲目的追求全面，加油，共勉</p>
+<h1 id="引用">引用</h1>
+<p><a href="https://www.ruanyifeng.com/blog/2018/07/cap.html">CAP定理的含义</a><br>
+<a href="https://blog.csdn.net/wuzhiwei549/article/details/80692278">三种实现分布式锁的方式</a><br>
+<a href="https://blog.csdn.net/wgwaaaa/article/details/108874263">分布式锁</a></p>
+
+                                </div>
+                    </article>
+                    <!--  -->
+                    
+                        <div class="next-post">
+                            <div class="next">下一篇</div>
+                            <a href="https://freephenix.github.io/mysql-you-hua-explain-fen-xi/">
+                                <h3 class="post-title">
+                                    MYSQL优化 - explain简单介绍
+                                </h3>
+                            </a>
+                        </div>
+                        
+                            <div id="disqus_thread"></div>
+                            <div id="gitalk-container"></div>
+                </div>
+                <!-- middle -->
+                <div class="main-container-middle"></div>
+                <!-- right -->
+                <div id="sidebar" class="main-container-right">
+                    
+                        <!-- toc -->
+                        
+    <div class="toc-card i-card ">
+        <div class="toc-title i-card-title">目录</div>
+        <div class="toc-content">
+            <ul class="markdownIt-TOC">
+<li><a href="#cap%E5%AE%9A%E7%90%86">CAP定理</a></li>
+<li><a href="#%E4%BB%80%E4%B9%88%E6%98%AF%E5%88%86%E5%B8%83%E5%BC%8F%E9%94%81">什么是分布式锁</a></li>
+<li><a href="#%E5%88%86%E5%B8%83%E5%BC%8F%E9%94%81%E7%9A%84%E7%89%B9%E6%80%A7">分布式锁的特性</a></li>
+<li><a href="#%E5%A6%82%E4%BD%95%E5%AE%9E%E7%8E%B0%E5%88%86%E5%B8%83%E5%BC%8F%E9%94%81">如何实现分布式锁</a>
+<ul>
+<li><a href="#%E5%9F%BA%E4%BA%8E%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AE%9E%E7%8E%B0%E5%88%86%E5%B8%83%E5%BC%8F%E9%94%81">基于数据库实现分布式锁</a>
+<ul>
+<li><a href="#%E5%9F%BA%E4%BA%8E%E5%94%AF%E4%B8%80%E7%B4%A2%E5%BC%95%E5%AE%9E%E7%8E%B0">基于唯一索引实现</a></li>
+<li><a href="#%E5%9F%BA%E4%BA%8E%E6%95%B0%E6%8D%AE%E5%BA%93%E6%8E%92%E4%BB%96%E9%94%81%E5%AE%9E%E7%8E%B0">基于数据库排他锁实现</a></li>
+<li><a href="#%E5%9F%BA%E4%BA%8E%E6%95%B0%E6%8D%AE%E5%BA%93%E4%B9%90%E8%A7%82%E9%94%81%E5%AE%9E%E7%8E%B0">基于数据库乐观锁实现</a></li>
+</ul>
+</li>
+<li><a href="#%E5%9F%BA%E4%BA%8E%E7%BC%93%E5%AD%98redis%E7%AD%89%E5%AE%9E%E7%8E%B0%E5%88%86%E5%B8%83%E5%BC%8F%E9%94%81">基于缓存（Redis等）实现分布式锁</a>
+<ul>
+<li><a href="#setnx%E5%91%BD%E4%BB%A4%E5%AE%9E%E7%8E%B0%E5%88%86%E5%B8%83%E5%BC%8F%E9%94%81">SetNX命令实现分布式锁</a></li>
+<li><a href="#set-key-value-ex-seconds-px-milliseconds-nxxx-%E5%91%BD%E4%BB%A4%E5%AE%9E%E7%8E%B0%E5%88%86%E5%B8%83%E5%BC%8F%E9%94%81">SET key value [EX seconds] [PX milliseconds] [NX|XX] 命令实现分布式锁</a></li>
+</ul>
+</li>
+<li><a href="#%E5%9F%BA%E4%BA%8Ezookeeper%E5%AE%9E%E7%8E%B0%E5%88%86%E5%B8%83%E5%BC%8F%E9%94%81">基于Zookeeper实现分布式锁</a></li>
+</ul>
+</li>
+<li><a href="#%E6%80%BB%E7%BB%93">总结</a></li>
+<li><a href="#%E5%BC%95%E7%94%A8">引用</a></li>
+</ul>
+
+        </div>
+        <script>
+            function locateCatelogList() {
+                /*获取文章目录集合,可通过:header过滤器*/
+                var alis = $('.post-content :header');
+                /*获取侧边栏目录列表集合**/
+                var sidebar_alis = $('.markdownIt-TOC a');
+                /*获取滚动条到顶部的距离*/
+                var scroll_height = $(window).scrollTop();
+                for (var i = 0; i < alis.length; i++) {
+                    /*获取锚点集合中的元素分别到顶点的距离*/
+                    var a_height = $(alis[i]).offset().top;
+                    if (a_height < scroll_height) {
+                        /*高亮显示*/
+                        sidebar_alis.removeClass('on');
+                        $(sidebar_alis[i]).addClass('on');
+                    }
+                }
+            }
+            $(function() {
+                /*绑定滚动事件 */
+                $(window).bind('scroll', locateCatelogList);
+            });
+        </script>
+    </div>
+    
+                            
+
+                </div>
+
+
+
+
+            </div>
+
+
+            <div class="site-footer">
+  Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a> | 
+  <a class="rss" href="https://freephenix.github.io//atom.xml" target="_blank">RSS</a>
+</div>
+
+<script>
+  hljs.initHighlightingOnLoad()
+</script>
+
+
+    </div>
+    <script>
+        $('#sidebar').stickySidebar({
+            topSpacing: 80,
+            // bottomSpacing: 60
+        });
+    </script>
+    
+        
+            <script>
+    window.onload = function() {
+        var gitalk = new Gitalk({
+            clientID: '008503f8c8bca8787fbe',
+            clientSecret: '5f789f71e3288ff1866d17523348881053068eb4',
+            repo: 'freephenix.github.io',
+            owner: 'freephenix',
+            admin: ['freephenix'],
+            id: (location.pathname).substring(0, 49), // Ensure uniqueness and length less than 50
+            distractionFreeMode: false // Facebook-like distraction free mode
+        })
+
+        gitalk.render('gitalk-container')
+    }
+</script>
+                
+
+                    
+                                
+</body>
+
+</html>

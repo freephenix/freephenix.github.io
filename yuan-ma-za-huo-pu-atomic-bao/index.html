@@ -1,0 +1,537 @@
+<html>
+
+<head>
+    <meta charset="utf-8" />
+<meta name="description" content="" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>
+    源码杂货铺：atomic包 | 半亩房顶
+</title>
+<link rel="shortcut icon" href="https://freephenix.github.io//favicon.ico?v=1713840769430">
+<!-- <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous"> -->
+<link href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+<link rel="stylesheet" href="https://freephenix.github.io//styles/main.css">
+<!-- js -->
+<script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.min.js"></script>
+<script src="https://freephenix.github.io//media/js/jquery.sticky-sidebar.min.js"></script>
+<script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
+<script src="https://cdn.bootcss.com/moment.js/2.23.0/moment.min.js"></script>
+
+
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-147240912-1"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+
+        function gtag() {
+            dataLayer.push(arguments);
+        }
+        gtag('js', new Date());
+
+        gtag('config', 'UA-147240912-1');
+    </script>
+    
+        
+            
+                <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+                <script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+                
+
+                    
+                            
+</head>
+
+<body>
+    <div class="main">
+        <div class="header">
+    <div class="nav">
+        <div class="logo">
+            <a href="https://freephenix.github.io/">
+                <img class="avatar" src="https://freephenix.github.io//images/avatar.png?v=1713840769430" alt="">
+            </a>
+            <div class="site-title">
+                <h1>
+                    半亩房顶
+                </h1>
+            </div>
+        </div>
+        <span class="menu-btn fa fa-align-justify"></span>
+        <div class="menu-container">
+            <ul>
+                
+                    
+                            <li>
+                                <a href="/" class="menu">
+                                    首页
+                                </a>
+                            </li>
+                            
+                                
+                    
+                            <li>
+                                <a href="/archives" class="menu">
+                                    归档
+                                </a>
+                            </li>
+                            
+                                
+                    
+                            <li>
+                                <a href="/tags" class="menu">
+                                    标签
+                                </a>
+                            </li>
+                            
+                                
+                    
+                            <li>
+                                <a href="https://freephenix.github.io//post/guan-yu-ban-mu-fang-ding/" class="menu">
+                                    关于
+                                </a>
+                            </li>
+                            
+                                
+            </ul>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function() {
+        $(".menu-btn").click(function() {
+            $(".menu-container").slideToggle();
+        });
+        $(window).resize(function() {
+
+            if (window.matchMedia('(min-width: 960px)').matches) {
+                $(".menu-container").css('display', 'block')
+            } else {
+                $(".menu-container").css('display', 'none')
+            }
+
+        });
+    });
+</script>
+
+            <div id="main-content" class="post-detail main-container">
+                <!-- left -->
+                <div id="content" class="main-container-left">
+                    <article class="post i-card">
+                        <h2 class="post-title">
+                            源码杂货铺：atomic包
+                        </h2>
+                        <div class="post-info">
+                            <time class="post-time">2021-01-29</time>
+                            
+                                <a href="https://freephenix.github.io/go/" class="post-tag i-tag
+                            i-tag-other_2">
+                            #Go
+                        </a>
+                                
+                                <a href="https://freephenix.github.io/k_l-BPxc0/" class="post-tag i-tag
+                            i-tag-warning">
+                            #源码
+                        </a>
+                                
+                        </div>
+                        
+                            <div class="post-feature-image" style="background-image: url('https://freephenix.github.io//post-images/yuan-ma-za-huo-pu-atomic-bao.jpg')"></div>
+                            
+                                <div class="post-content">
+                                    <p>原子(atomic)本意是&quot;不能被进一步分割的最小粒子&quot;，而原子操作(atomic operation)意为&quot;不可中断的一个或一系列操作&quot;。</p>
+<!-- more -->
+<h1 id="简介">简介</h1>
+<p>golang 中 atomic 类操作最终是使用 assembly 进行 cpu 指令调用实现的，本文只是简单介绍下，至于汇编代码，基本都还给老师了，能捡多少是多少，用到了继续深究</p>
+<h1 id="接口定义">接口定义</h1>
+<p>主要接口定义在 sync/atomic/doc.go文件中</p>
+<pre><code>// Copyright 2011 The Go Authors. All rights reserved.
+// Use of this source code is governed by a BSD-style
+// license that can be found in the LICENSE file.
+
+// Package atomic provides low-level atomic memory primitives
+// useful for implementing synchronization algorithms.
+//
+// These functions require great care to be used correctly.
+// Except for special, low-level applications, synchronization is better
+// done with channels or the facilities of the sync package.
+// Share memory by communicating;
+// don't communicate by sharing memory.
+//
+// The swap operation, implemented by the SwapT functions, is the atomic
+// equivalent of:
+//
+//	old = *addr
+//	*addr = new
+//	return old
+//
+// The compare-and-swap operation, implemented by the CompareAndSwapT
+// functions, is the atomic equivalent of:
+//
+//	if *addr == old {
+//		*addr = new
+//		return true
+//	}
+//	return false
+//
+// The add operation, implemented by the AddT functions, is the atomic
+// equivalent of:
+//
+//	*addr += delta
+//	return *addr
+//
+// The load and store operations, implemented by the LoadT and StoreT
+// functions, are the atomic equivalents of &quot;return *addr&quot; and
+// &quot;*addr = val&quot;.
+//
+package atomic
+
+import (
+	&quot;unsafe&quot;
+)
+
+// BUG(rsc): On x86-32, the 64-bit functions use instructions unavailable before the Pentium MMX.
+//
+// On non-Linux ARM, the 64-bit functions use instructions unavailable before the ARMv6k core.
+//
+// On ARM, x86-32, and 32-bit MIPS,
+// it is the caller's responsibility to arrange for 64-bit
+// alignment of 64-bit words accessed atomically. The first word in a
+// variable or in an allocated struct, array, or slice can be relied upon to be
+// 64-bit aligned.
+
+// SwapInt32 atomically stores new into *addr and returns the previous *addr value.
+func SwapInt32(addr *int32, new int32) (old int32)
+
+// SwapInt64 atomically stores new into *addr and returns the previous *addr value.
+func SwapInt64(addr *int64, new int64) (old int64)
+
+// SwapUint32 atomically stores new into *addr and returns the previous *addr value.
+func SwapUint32(addr *uint32, new uint32) (old uint32)
+
+// SwapUint64 atomically stores new into *addr and returns the previous *addr value.
+func SwapUint64(addr *uint64, new uint64) (old uint64)
+
+// SwapUintptr atomically stores new into *addr and returns the previous *addr value.
+func SwapUintptr(addr *uintptr, new uintptr) (old uintptr)
+
+// SwapPointer atomically stores new into *addr and returns the previous *addr value.
+func SwapPointer(addr *unsafe.Pointer, new unsafe.Pointer) (old unsafe.Pointer)
+
+// CompareAndSwapInt32 executes the compare-and-swap operation for an int32 value.
+func CompareAndSwapInt32(addr *int32, old, new int32) (swapped bool)
+
+// CompareAndSwapInt64 executes the compare-and-swap operation for an int64 value.
+func CompareAndSwapInt64(addr *int64, old, new int64) (swapped bool)
+
+// CompareAndSwapUint32 executes the compare-and-swap operation for a uint32 value.
+func CompareAndSwapUint32(addr *uint32, old, new uint32) (swapped bool)
+
+// CompareAndSwapUint64 executes the compare-and-swap operation for a uint64 value.
+func CompareAndSwapUint64(addr *uint64, old, new uint64) (swapped bool)
+
+// CompareAndSwapUintptr executes the compare-and-swap operation for a uintptr value.
+func CompareAndSwapUintptr(addr *uintptr, old, new uintptr) (swapped bool)
+
+// CompareAndSwapPointer executes the compare-and-swap operation for a unsafe.Pointer value.
+func CompareAndSwapPointer(addr *unsafe.Pointer, old, new unsafe.Pointer) (swapped bool)
+
+// AddInt32 atomically adds delta to *addr and returns the new value.
+func AddInt32(addr *int32, delta int32) (new int32)
+
+// AddUint32 atomically adds delta to *addr and returns the new value.
+// To subtract a signed positive constant value c from x, do AddUint32(&amp;x, ^uint32(c-1)).
+// In particular, to decrement x, do AddUint32(&amp;x, ^uint32(0)).
+func AddUint32(addr *uint32, delta uint32) (new uint32)
+
+// AddInt64 atomically adds delta to *addr and returns the new value.
+func AddInt64(addr *int64, delta int64) (new int64)
+
+// AddUint64 atomically adds delta to *addr and returns the new value.
+// To subtract a signed positive constant value c from x, do AddUint64(&amp;x, ^uint64(c-1)).
+// In particular, to decrement x, do AddUint64(&amp;x, ^uint64(0)).
+func AddUint64(addr *uint64, delta uint64) (new uint64)
+
+// AddUintptr atomically adds delta to *addr and returns the new value.
+func AddUintptr(addr *uintptr, delta uintptr) (new uintptr)
+
+// LoadInt32 atomically loads *addr.
+func LoadInt32(addr *int32) (val int32)
+
+// LoadInt64 atomically loads *addr.
+func LoadInt64(addr *int64) (val int64)
+
+// LoadUint32 atomically loads *addr.
+func LoadUint32(addr *uint32) (val uint32)
+
+// LoadUint64 atomically loads *addr.
+func LoadUint64(addr *uint64) (val uint64)
+
+// LoadUintptr atomically loads *addr.
+func LoadUintptr(addr *uintptr) (val uintptr)
+
+// LoadPointer atomically loads *addr.
+func LoadPointer(addr *unsafe.Pointer) (val unsafe.Pointer)
+
+// StoreInt32 atomically stores val into *addr.
+func StoreInt32(addr *int32, val int32)
+
+// StoreInt64 atomically stores val into *addr.
+func StoreInt64(addr *int64, val int64)
+
+// StoreUint32 atomically stores val into *addr.
+func StoreUint32(addr *uint32, val uint32)
+
+// StoreUint64 atomically stores val into *addr.
+func StoreUint64(addr *uint64, val uint64)
+
+// StoreUintptr atomically stores val into *addr.
+func StoreUintptr(addr *uintptr, val uintptr)
+
+// StorePointer atomically stores val into *addr.
+func StorePointer(addr *unsafe.Pointer, val unsafe.Pointer)
+
+// Helper for ARM.  Linker will discard on other systems
+func panic64() {
+	panic(&quot;sync/atomic: broken 64-bit atomic operations (buggy QEMU)&quot;)
+}
+</code></pre>
+<p>一大堆函数，不慌，因为正如开头注释中所说的，主要的就是分为5类函数</p>
+<h2 id="swap">Swap</h2>
+<p>将参数new的值换到参数addr地址中去，返回地址中存放的旧值</p>
+<h2 id="compareandswap">CompareAndSwap</h2>
+<p>如果参数addr指向的值与参数old相等，则将addr指向新值参数new，返回true，否则返回false</p>
+<h2 id="add">Add</h2>
+<p>将参数delta加到参数addr指向的值上，返回加和后新的值</p>
+<h2 id="load">Load</h2>
+<p>加载参数addr指向的值</p>
+<h2 id="store">Store</h2>
+<p>存储参数val的值到参数addr指向的地址中</p>
+<h1 id="代码实现">代码实现</h1>
+<p>那这里只有定义，实现在哪里呢？<br>
+sync/atomic/asm.s 中可以看到所有的这些方法，但是这里只是一个JMP，跳转到了 runtime∕internal∕atomic<br>
+追到runtime∕internal∕atomic会发现，这里有很多个atomic开头的文件，这里就是针对不同的cpu所需要选择的实际执行的代码了。其中go文件提供接口定义.s文件提供实现，具体的汇编代码分析请各位移步网上各位大神的分析，可以自行百度，或者看看引用文章吧。</p>
+<h1 id="value">value</h1>
+<p>golang 1.4之后追加了value这个结构，这是atmoic包中提供的一个可以原子保存和加载的结构体</p>
+<h2 id="结构体">结构体</h2>
+<pre><code>// A Value provides an atomic load and store of a consistently typed value.
+// The zero value for a Value returns nil from Load.
+// Once Store has been called, a Value must not be copied.
+// 一旦被使用过后，就会不能拷贝
+// A Value must not be copied after first use.
+type Value struct {
+	v interface{}
+}
+</code></pre>
+<p>并且，定义了这个结构体，ifaceWords，备注中说明，这个就是空接口的内部实现</p>
+<pre><code>// ifaceWords is interface{} internal representation.
+type ifaceWords struct {
+	typ  unsafe.Pointer
+	data unsafe.Pointer
+}
+</code></pre>
+<h2 id="函数">函数</h2>
+<p>首先是load方法，顾名思义，取最新store的值返回，没有存过则返回nil</p>
+<pre><code>// Load returns the value set by the most recent Store.
+// It returns nil if there has been no call to Store for this Value.
+func (v *Value) Load() (x interface{}) {
+	vp := (*ifaceWords)(unsafe.Pointer(v))
+	typ := LoadPointer(&amp;vp.typ)
+    // 如果当前的typ是 nil 或者^uintptr(0)，那就证明第一次写入还没有开始，或者还没完成
+	if typ == nil || uintptr(typ) == ^uintptr(0) {
+		// First store not yet completed.
+		return nil
+	}
+	data := LoadPointer(&amp;vp.data)
+	xp := (*ifaceWords)(unsafe.Pointer(&amp;x))
+	xp.typ = typ
+	xp.data = data
+	return
+}
+</code></pre>
+<p>然后是store函数</p>
+<pre><code>// Store sets the value of the Value to x.
+// All calls to Store for a given Value must use values of the same concrete type.
+// Store of an inconsistent type panics, as does Store(nil).
+func (v *Value) Store(x interface{}) {
+    // 不能存nil
+	if x == nil {
+		panic(&quot;sync/atomic: store of nil value into Value&quot;)
+	}
+	vp := (*ifaceWords)(unsafe.Pointer(v))
+	xp := (*ifaceWords)(unsafe.Pointer(&amp;x))
+	for {
+		typ := LoadPointer(&amp;vp.typ)
+		if typ == nil {
+            // 首次存入
+			// Attempt to start first store.
+			// Disable preemption so that other goroutines can use
+			// active spin wait to wait for completion; and so that
+			// GC does not see the fake type accidentally.
+            // runtime_procPin这个函数，会防止其他goroutinue抢占
+            // 并且使GC不会偶然间发现fake type，应该是指下面的CAS操作中
+            // 将vp.type 赋值unsafe.Pointer(^uintptr(0))
+			runtime_procPin()
+			if !CompareAndSwapPointer(&amp;vp.typ, nil, unsafe.Pointer(^uintptr(0))) {
+				runtime_procUnpin()
+				continue
+			}
+			// Complete first store.
+			StorePointer(&amp;vp.data, xp.data)
+			StorePointer(&amp;vp.typ, xp.typ)
+            // 解除锁定
+			runtime_procUnpin()
+			return
+		}
+        // 进入则表明有其他请求正在首次写入中
+		if uintptr(typ) == ^uintptr(0) {
+			// First store in progress. Wait.
+			// Since we disable preemption around the first store,
+			// we can wait with active spinning.
+			continue
+		}
+		// First store completed. Check type and overwrite data.
+        // 校验检查，上一次写入的类型与这一次要写入的类型是否一致，如果不一致则抛出异常
+        // 相同再写入数据
+		if typ != xp.typ {
+			panic(&quot;sync/atomic: store of inconsistently typed value into Value&quot;)
+		}
+		StorePointer(&amp;vp.data, xp.data)
+		return
+	}
+}
+</code></pre>
+<h2 id="引申">引申</h2>
+<p>这里用的都是原子操作，这由底层硬件支持，而策略上都是乐观锁，而悲观锁则由操作系统的调度器实现。悲观锁应当用来保护一段逻辑，对于一个变量更新的保护，而原子操作通常会更有效率，并且更能利用计算机多核的优势</p>
+<h1 id="小结">小结</h1>
+<p>到这里基本就结束啦，这里是简单的认识了下atomic包，希望在以后的工作学习中，多多打交道，真的有钻研汇编的那一天。</p>
+<h1 id="引用">引用</h1>
+<p><a href="https://github.com/cch123/golang-notes/blob/master/atomic.md">曹大golang笔记，atomic 详解</a><br>
+<a href="https://mp.weixin.qq.com/s/PQ06eL8kMWoGXodpnyjNcA">详解并发编程基础之原子操作(atomic包)</a><br>
+<a href="https://blog.betacat.io/post/golang-atomic-value-exploration/">Go 语言标准库中 atomic.Value 的前世今生</a></p>
+
+                                </div>
+                    </article>
+                    <!--  -->
+                    
+                        <div class="next-post">
+                            <div class="next">下一篇</div>
+                            <a href="https://freephenix.github.io/golang-la-ji-hui-shou-suan-fa-de-qian-shi-jin-sheng/">
+                                <h3 class="post-title">
+                                    Golang 垃圾回收算法
+                                </h3>
+                            </a>
+                        </div>
+                        
+                            <div id="disqus_thread"></div>
+                            <div id="gitalk-container"></div>
+                </div>
+                <!-- middle -->
+                <div class="main-container-middle"></div>
+                <!-- right -->
+                <div id="sidebar" class="main-container-right">
+                    
+                        <!-- toc -->
+                        
+    <div class="toc-card i-card ">
+        <div class="toc-title i-card-title">目录</div>
+        <div class="toc-content">
+            <ul class="markdownIt-TOC">
+<li><a href="#%E7%AE%80%E4%BB%8B">简介</a></li>
+<li><a href="#%E6%8E%A5%E5%8F%A3%E5%AE%9A%E4%B9%89">接口定义</a>
+<ul>
+<li><a href="#swap">Swap</a></li>
+<li><a href="#compareandswap">CompareAndSwap</a></li>
+<li><a href="#add">Add</a></li>
+<li><a href="#load">Load</a></li>
+<li><a href="#store">Store</a></li>
+</ul>
+</li>
+<li><a href="#%E4%BB%A3%E7%A0%81%E5%AE%9E%E7%8E%B0">代码实现</a></li>
+<li><a href="#value">value</a>
+<ul>
+<li><a href="#%E7%BB%93%E6%9E%84%E4%BD%93">结构体</a></li>
+<li><a href="#%E5%87%BD%E6%95%B0">函数</a></li>
+<li><a href="#%E5%BC%95%E7%94%B3">引申</a></li>
+</ul>
+</li>
+<li><a href="#%E5%B0%8F%E7%BB%93">小结</a></li>
+<li><a href="#%E5%BC%95%E7%94%A8">引用</a></li>
+</ul>
+
+        </div>
+        <script>
+            function locateCatelogList() {
+                /*获取文章目录集合,可通过:header过滤器*/
+                var alis = $('.post-content :header');
+                /*获取侧边栏目录列表集合**/
+                var sidebar_alis = $('.markdownIt-TOC a');
+                /*获取滚动条到顶部的距离*/
+                var scroll_height = $(window).scrollTop();
+                for (var i = 0; i < alis.length; i++) {
+                    /*获取锚点集合中的元素分别到顶点的距离*/
+                    var a_height = $(alis[i]).offset().top;
+                    if (a_height < scroll_height) {
+                        /*高亮显示*/
+                        sidebar_alis.removeClass('on');
+                        $(sidebar_alis[i]).addClass('on');
+                    }
+                }
+            }
+            $(function() {
+                /*绑定滚动事件 */
+                $(window).bind('scroll', locateCatelogList);
+            });
+        </script>
+    </div>
+    
+                            
+
+                </div>
+
+
+
+
+            </div>
+
+
+            <div class="site-footer">
+  Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a> | 
+  <a class="rss" href="https://freephenix.github.io//atom.xml" target="_blank">RSS</a>
+</div>
+
+<script>
+  hljs.initHighlightingOnLoad()
+</script>
+
+
+    </div>
+    <script>
+        $('#sidebar').stickySidebar({
+            topSpacing: 80,
+            // bottomSpacing: 60
+        });
+    </script>
+    
+        
+            <script>
+    window.onload = function() {
+        var gitalk = new Gitalk({
+            clientID: '008503f8c8bca8787fbe',
+            clientSecret: '5f789f71e3288ff1866d17523348881053068eb4',
+            repo: 'freephenix.github.io',
+            owner: 'freephenix',
+            admin: ['freephenix'],
+            id: (location.pathname).substring(0, 49), // Ensure uniqueness and length less than 50
+            distractionFreeMode: false // Facebook-like distraction free mode
+        })
+
+        gitalk.render('gitalk-container')
+    }
+</script>
+                
+
+                    
+                                
+</body>
+
+</html>

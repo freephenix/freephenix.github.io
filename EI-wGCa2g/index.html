@@ -1,0 +1,401 @@
+<html>
+
+<head>
+    <meta charset="utf-8" />
+<meta name="description" content="" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>
+    LeetCode-322. 零钱兑换 | 半亩房顶
+</title>
+<link rel="shortcut icon" href="https://freephenix.github.io//favicon.ico?v=1713840769430">
+<!-- <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous"> -->
+<link href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+<link rel="stylesheet" href="https://freephenix.github.io//styles/main.css">
+<!-- js -->
+<script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.min.js"></script>
+<script src="https://freephenix.github.io//media/js/jquery.sticky-sidebar.min.js"></script>
+<script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
+<script src="https://cdn.bootcss.com/moment.js/2.23.0/moment.min.js"></script>
+
+
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-147240912-1"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+
+        function gtag() {
+            dataLayer.push(arguments);
+        }
+        gtag('js', new Date());
+
+        gtag('config', 'UA-147240912-1');
+    </script>
+    
+        
+            
+                <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+                <script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+                
+
+                    
+                            
+</head>
+
+<body>
+    <div class="main">
+        <div class="header">
+    <div class="nav">
+        <div class="logo">
+            <a href="https://freephenix.github.io/">
+                <img class="avatar" src="https://freephenix.github.io//images/avatar.png?v=1713840769430" alt="">
+            </a>
+            <div class="site-title">
+                <h1>
+                    半亩房顶
+                </h1>
+            </div>
+        </div>
+        <span class="menu-btn fa fa-align-justify"></span>
+        <div class="menu-container">
+            <ul>
+                
+                    
+                            <li>
+                                <a href="/" class="menu">
+                                    首页
+                                </a>
+                            </li>
+                            
+                                
+                    
+                            <li>
+                                <a href="/archives" class="menu">
+                                    归档
+                                </a>
+                            </li>
+                            
+                                
+                    
+                            <li>
+                                <a href="/tags" class="menu">
+                                    标签
+                                </a>
+                            </li>
+                            
+                                
+                    
+                            <li>
+                                <a href="https://freephenix.github.io//post/guan-yu-ban-mu-fang-ding/" class="menu">
+                                    关于
+                                </a>
+                            </li>
+                            
+                                
+            </ul>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function() {
+        $(".menu-btn").click(function() {
+            $(".menu-container").slideToggle();
+        });
+        $(window).resize(function() {
+
+            if (window.matchMedia('(min-width: 960px)').matches) {
+                $(".menu-container").css('display', 'block')
+            } else {
+                $(".menu-container").css('display', 'none')
+            }
+
+        });
+    });
+</script>
+
+            <div id="main-content" class="post-detail main-container">
+                <!-- left -->
+                <div id="content" class="main-container-left">
+                    <article class="post i-card">
+                        <h2 class="post-title">
+                            LeetCode-322. 零钱兑换
+                        </h2>
+                        <div class="post-info">
+                            <time class="post-time">2023-12-05</time>
+                            
+                                <a href="https://freephenix.github.io/MmUDRZ-4m/" class="post-tag i-tag
+                            i-tag-banana">
+                            #DFS
+                        </a>
+                                
+                                <a href="https://freephenix.github.io/Rrql_MmMA/" class="post-tag i-tag
+                            i-tag-error">
+                            #贪心算法
+                        </a>
+                                
+                                <a href="https://freephenix.github.io/bURmaxGfQ/" class="post-tag i-tag
+                            i-tag-info">
+                            #动态规划
+                        </a>
+                                
+                                <a href="https://freephenix.github.io/YWFpnf3Gl/" class="post-tag i-tag
+                            i-tag-">
+                            #刷题
+                        </a>
+                                
+                                <a href="https://freephenix.github.io/70TrDOWqgi/" class="post-tag i-tag
+                            i-tag-banana">
+                            #面试
+                        </a>
+                                
+                                <a href="https://freephenix.github.io/go/" class="post-tag i-tag
+                            i-tag-other_4">
+                            #Go
+                        </a>
+                                
+                                <a href="https://freephenix.github.io/k1NaSbOoC/" class="post-tag i-tag
+                            i-tag-error">
+                            #LeetCode
+                        </a>
+                                
+                                <a href="https://freephenix.github.io/WucazjDbn/" class="post-tag i-tag
+                            i-tag-other_1">
+                            #算法
+                        </a>
+                                
+                        </div>
+                        
+                            <div class="post-feature-image" style="background-image: url('https://freephenix.github.io//post-images/EI-wGCa2g.jpeg')"></div>
+                            
+                                <div class="post-content">
+                                    <p>刷题使我快乐，满脸开心.jpg</p>
+<ul>
+<li>来源：力扣（LeetCode）</li>
+<li>链接：https://leetcode.cn/problems/coin-change/</li>
+<li>著作权归领扣网络所有。商业转载请联系官方授权，非商业转载请注明出处。</li>
+</ul>
+<!-- more -->
+<h1 id="题目">题目</h1>
+<p>给你一个整数数组 <code>coins</code> ，表示不同面额的硬币；以及一个整数 <code>amount</code> ，表示总金额。</p>
+<p>计算并返回可以凑成总金额所需的 <code>最少的硬币个数</code> 。如果没有任何一种硬币组合能组成总金额，返回 <code>-1</code>。</p>
+<p>你可以认为每种硬币的数量是<strong>无限</strong>的。</p>
+<p>示例 1：</p>
+<pre><code>输入：coins = [1, 2, 5], amount = 11
+输出：3 
+解释：11 = 5 + 5 + 1
+</code></pre>
+<p>示例 2：</p>
+<pre><code>输入：coins = [2], amount = 3
+输出：-1
+</code></pre>
+<p>示例 3：</p>
+<pre><code>输入：coins = [1], amount = 0
+输出：0
+</code></pre>
+<p>提示：</p>
+<ul>
+<li><code>1 &lt;= coins.length &lt;= 12</code></li>
+<li><code>1 &lt;= coins[i] &lt;= 231 - 1</code></li>
+<li><code>0 &lt;= amount &lt;= 104</code></li>
+</ul>
+<h1 id="思路">思路</h1>
+<p>最开始看到题目，直接就开始呼贪心代码，然后写完之后，发现会超时（后来看题解时候，发现开始还是有贪心剪枝可以过的，后来更新了用例就不得行了...)</p>
+<p>那就换思路！<br>
+然后就想到了这个感觉很像爬楼梯，类比下就是，我们每一次只能爬<code>coins</code>中给定数字个台阶，直到爬到指定的台阶数，然后求得最少爬台阶次数。</p>
+<p>那顺着这个思路，就上动态规划吧：</p>
+<ul>
+<li><code>dp[i]</code> 表示 <code>amount 为 </code>i` 时，最少爬台阶次数</li>
+<li>初始条件为<code>dp[0] = 0</code></li>
+</ul>
+<p>剩下就没啥要说的了，上代码，有个剪枝细节在备注里了~</p>
+<h1 id="代码">代码</h1>
+<h3 id="动态规划">动态规划</h3>
+<pre><code class="language-golang">func coinChange(coins []int, amount int) int {
+	if len(coins) &lt;= 0 {
+		return -1
+	}
+	if amount == 0 {
+		return 0
+	}
+
+	sort.Slice(coins, func(i, j int) bool {
+		return coins[i] &lt; coins[j]
+	})
+
+	max := amount + 1
+	dp := make([]int, amount+1)
+	for i := 1; i &lt;= amount; i++ {
+		dp[i] = max
+	}
+	for nowAmount := 1; nowAmount &lt;= amount; nowAmount++ {
+		for i := 0; i &lt; len(coins); i++ {
+			// 因为有了排序，所以一旦开始面值大于当前所求总和
+			// 后面的面值就不需要尝试了
+			if coins[i] &gt; nowAmount {
+				break
+			}
+			if dp[nowAmount-coins[i]]+1 &lt; dp[nowAmount] {
+				dp[nowAmount] = dp[nowAmount-coins[i]] + 1
+			}
+		}
+	}
+	if dp[amount] == max {
+		return -1
+	}
+	return dp[amount]
+}
+</code></pre>
+<h3 id="贪心">贪心</h3>
+<pre><code class="language-golang">func coinChange(coins []int, amount int) int {
+	if len(coins) &lt;= 0 {
+		return -1
+	}
+	if amount == 0 {
+		return 0
+	}
+
+	sort.Slice(coins, func(i, j int) bool {
+		return coins[i] &gt; coins[j]
+	})
+
+	res := amount + 1
+	var getNum func(coins []int, nowNum, remainRes int)
+	getNum = func(coins []int, nowNum, remainRes int) {
+		for i := 0; i &lt; len(coins); i++ {
+			if coins[i] == remainRes &amp;&amp; nowNum+1 &lt; res {
+				res = nowNum + 1
+			} else if remainRes &gt; coins[i] {
+				// 第二个剪枝，假设都用当前币种，所需数量依然大于现有结果，
+				// 那么就直接放弃，肯定结果数更大
+				if remainRes/coins[i] &gt; res-nowNum {
+					break
+				}
+				getNum(coins, nowNum+1, remainRes-coins[i])
+			}
+			// 第一个剪枝，对于超出结果的面值放弃，找更小面值硬币
+		}
+	}
+	getNum(coins, 0, amount)
+
+	if res == amount+1 {
+		return -1
+	}
+	return res
+}
+</code></pre>
+
+                                </div>
+                    </article>
+                    <!--  -->
+                    
+                        <div class="next-post">
+                            <div class="next">下一篇</div>
+                            <a href="https://freephenix.github.io/fRUvyfc_s/">
+                                <h3 class="post-title">
+                                    LeetCode-76. 最小覆盖子串
+                                </h3>
+                            </a>
+                        </div>
+                        
+                            <div id="disqus_thread"></div>
+                            <div id="gitalk-container"></div>
+                </div>
+                <!-- middle -->
+                <div class="main-container-middle"></div>
+                <!-- right -->
+                <div id="sidebar" class="main-container-right">
+                    
+                        <!-- toc -->
+                        
+    <div class="toc-card i-card ">
+        <div class="toc-title i-card-title">目录</div>
+        <div class="toc-content">
+            <ul class="markdownIt-TOC">
+<li><a href="#%E9%A2%98%E7%9B%AE">题目</a></li>
+<li><a href="#%E6%80%9D%E8%B7%AF">思路</a></li>
+<li><a href="#%E4%BB%A3%E7%A0%81">代码</a><br>
+*
+<ul>
+<li><a href="#%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92">动态规划</a></li>
+<li><a href="#%E8%B4%AA%E5%BF%83">贪心</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+        <script>
+            function locateCatelogList() {
+                /*获取文章目录集合,可通过:header过滤器*/
+                var alis = $('.post-content :header');
+                /*获取侧边栏目录列表集合**/
+                var sidebar_alis = $('.markdownIt-TOC a');
+                /*获取滚动条到顶部的距离*/
+                var scroll_height = $(window).scrollTop();
+                for (var i = 0; i < alis.length; i++) {
+                    /*获取锚点集合中的元素分别到顶点的距离*/
+                    var a_height = $(alis[i]).offset().top;
+                    if (a_height < scroll_height) {
+                        /*高亮显示*/
+                        sidebar_alis.removeClass('on');
+                        $(sidebar_alis[i]).addClass('on');
+                    }
+                }
+            }
+            $(function() {
+                /*绑定滚动事件 */
+                $(window).bind('scroll', locateCatelogList);
+            });
+        </script>
+    </div>
+    
+                            
+
+                </div>
+
+
+
+
+            </div>
+
+
+            <div class="site-footer">
+  Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a> | 
+  <a class="rss" href="https://freephenix.github.io//atom.xml" target="_blank">RSS</a>
+</div>
+
+<script>
+  hljs.initHighlightingOnLoad()
+</script>
+
+
+    </div>
+    <script>
+        $('#sidebar').stickySidebar({
+            topSpacing: 80,
+            // bottomSpacing: 60
+        });
+    </script>
+    
+        
+            <script>
+    window.onload = function() {
+        var gitalk = new Gitalk({
+            clientID: '008503f8c8bca8787fbe',
+            clientSecret: '5f789f71e3288ff1866d17523348881053068eb4',
+            repo: 'freephenix.github.io',
+            owner: 'freephenix',
+            admin: ['freephenix'],
+            id: (location.pathname).substring(0, 49), // Ensure uniqueness and length less than 50
+            distractionFreeMode: false // Facebook-like distraction free mode
+        })
+
+        gitalk.render('gitalk-container')
+    }
+</script>
+                
+
+                    
+                                
+</body>
+
+</html>

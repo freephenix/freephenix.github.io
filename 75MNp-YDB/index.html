@@ -1,0 +1,834 @@
+<html>
+
+<head>
+    <meta charset="utf-8" />
+<meta name="description" content="" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>
+    源码杂货铺：Sync.Pool | 半亩房顶
+</title>
+<link rel="shortcut icon" href="https://freephenix.github.io//favicon.ico?v=1713840769430">
+<!-- <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous"> -->
+<link href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+<link rel="stylesheet" href="https://freephenix.github.io//styles/main.css">
+<!-- js -->
+<script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.min.js"></script>
+<script src="https://freephenix.github.io//media/js/jquery.sticky-sidebar.min.js"></script>
+<script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
+<script src="https://cdn.bootcss.com/moment.js/2.23.0/moment.min.js"></script>
+
+
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-147240912-1"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+
+        function gtag() {
+            dataLayer.push(arguments);
+        }
+        gtag('js', new Date());
+
+        gtag('config', 'UA-147240912-1');
+    </script>
+    
+        
+            
+                <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+                <script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+                
+
+                    
+                            
+</head>
+
+<body>
+    <div class="main">
+        <div class="header">
+    <div class="nav">
+        <div class="logo">
+            <a href="https://freephenix.github.io/">
+                <img class="avatar" src="https://freephenix.github.io//images/avatar.png?v=1713840769430" alt="">
+            </a>
+            <div class="site-title">
+                <h1>
+                    半亩房顶
+                </h1>
+            </div>
+        </div>
+        <span class="menu-btn fa fa-align-justify"></span>
+        <div class="menu-container">
+            <ul>
+                
+                    
+                            <li>
+                                <a href="/" class="menu">
+                                    首页
+                                </a>
+                            </li>
+                            
+                                
+                    
+                            <li>
+                                <a href="/archives" class="menu">
+                                    归档
+                                </a>
+                            </li>
+                            
+                                
+                    
+                            <li>
+                                <a href="/tags" class="menu">
+                                    标签
+                                </a>
+                            </li>
+                            
+                                
+                    
+                            <li>
+                                <a href="https://freephenix.github.io//post/guan-yu-ban-mu-fang-ding/" class="menu">
+                                    关于
+                                </a>
+                            </li>
+                            
+                                
+            </ul>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function() {
+        $(".menu-btn").click(function() {
+            $(".menu-container").slideToggle();
+        });
+        $(window).resize(function() {
+
+            if (window.matchMedia('(min-width: 960px)').matches) {
+                $(".menu-container").css('display', 'block')
+            } else {
+                $(".menu-container").css('display', 'none')
+            }
+
+        });
+    });
+</script>
+
+            <div id="main-content" class="post-detail main-container">
+                <!-- left -->
+                <div id="content" class="main-container-left">
+                    <article class="post i-card">
+                        <h2 class="post-title">
+                            源码杂货铺：Sync.Pool
+                        </h2>
+                        <div class="post-info">
+                            <time class="post-time">2022-12-15</time>
+                            
+                                <a href="https://freephenix.github.io/go/" class="post-tag i-tag
+                            i-tag-info">
+                            #Go
+                        </a>
+                                
+                                <a href="https://freephenix.github.io/k_l-BPxc0/" class="post-tag i-tag
+                            i-tag-other_3">
+                            #源码
+                        </a>
+                                
+                        </div>
+                        
+                            <div class="post-feature-image" style="background-image: url('https://freephenix.github.io//post-images/75MNp-YDB.jpeg')"></div>
+                            
+                                <div class="post-content">
+                                    <p>近日，工作中用到了sync.Pool，所谓知己知彼，百战百胜，让我们了解它，掌握它，再去运用它吧！<br>
+代码源于 <code>go1.18.7</code></p>
+<!-- more -->
+<h1 id="代码">代码</h1>
+<h2 id="主要结构体">主要结构体</h2>
+<h3 id="poolgo-中结构体">pool.go 中结构体</h3>
+<p>首先是<code>pool.go</code>文件里的一些结构体，也就是最外层的Pool</p>
+<pre><code class="language-golang">// Pool 是一组可以单独保存和检索的临时对象。
+// 任何存在 Pool 中的对象都会在没有任何通知的情况下被自动的移除，所以如果 Pool 中是这个对象的唯一引用时，这个对象所使用的内存会被释放
+// Pool 是并发安全的，支持多个goroutine同时使用
+// Pool 旨在缓存分配了内存但是无用的对象，便于后续的重复利用，减轻GC的压力。因此，Pool 适用于简单的实现一个高效的、线程安全的空闲列表，但是它并不适合所有的空闲列表。
+// Pool 的一个适当用法是管理一组临时项，这些项在包的并发独立的客户端之间静默地进行共享，被这些客户端重用。 Pool 提供了一种在许多客户端之间共同使用分配出来内存的方法。
+// Pool 的一个很好的使用例子就是fmt包，它包含一个容量动态变化的临时打印缓冲区的存储空间。这个存储空间在负载变高时（比如多个goroutine同时打印时）扩张，在负载变低时缩小
+// 另一方面，用 Pool 作为短期使用对象的空闲列表并不适合，因为在这种情况下，并不能很好地分摊资源开销。单独实现一个这些短期使用对象的空闲列表会更有效率。
+// 首次使用后，不能复制 Pool
+type Pool struct {
+	noCopy noCopy
+
+	// 固定大小的每个 P 的 Pool，实际类型是 [P]poolLocal
+	local unsafe.Pointer
+	// size of the local array
+	localSize uintptr
+
+	// 上一个周期的 local
+	victim unsafe.Pointer
+	// size of victims array
+	victimSize uintptr
+
+	// 随意地声明了一个当调用 Get 方法将会返回nil时的初始化方法。
+	// 在调用 Get 方法的同时无法修改 New 方法。此方法在初始化Pool时需要重写。
+	New func() any
+}
+
+// Local per-P Pool appendix.
+type poolLocalInternal struct {
+	// P 的私有缓存区，使用时无需要加锁
+	private any
+	// 公共缓存区。本地 P 可以 pushHead/popHead；其他 P 则只能 popTail
+	shared poolChain
+}
+
+type poolLocal struct {
+	poolLocalInternal
+
+	// 将 poolLocal 补齐至两个缓存行的倍数，防止 false sharing,
+	// 每个缓存行具有 64 bytes，即 512 bit
+	// 目前我们的处理器一般拥有 32 * 1024 / 64 = 512 条缓存行
+	// 伪共享，仅占位用，防止在 cache line 上分配多个 poolLocalInternal
+	pad [128 - unsafe.Sizeof(poolLocalInternal{})%128]byte
+}
+</code></pre>
+<p>从这些代码里可以看到</p>
+<ul>
+<li>为了保证并发安全，使用了noCopy结构体，原理不再赘述，很多包中都有用到。</li>
+<li>因为是<code>1.18.7</code>版本的代码，所以能够看到一些泛型的新代码了，不过这些并不是我们要研究的重点。</li>
+<li>local 和 victim 是两个很引人注意的变量。victim 名字应该是取自于 victim cache（受害者缓存），源自于集成电路时代的一种硬件设计，后来因为技术革新没有大规模使用。刚开始看不太理解具体做什么的话可以先放一放往下继续看，看到Get方法的具体实现时，结合下面的解释，自然就明白到底victim是做什么的了。</li>
+</ul>
+<blockquote>
+<p>所谓受害者缓存（Victim Cache），是一个与直接匹配或低相联缓存并用的、容量很小的全相联缓存。当一个数据块被逐出缓存时，并不直接丢弃，而是暂先进入受害者缓存。如果受害者缓存已满，就替换掉其中一项。当进行缓存标签匹配时，在与索引指向标签匹配的同时，并行查看受害者缓存，如果在受害者缓存发现匹配，就将其此数据块与缓存中的不匹配数据块做交换，同时返回给处理器。 -- 维基百科</p>
+</blockquote>
+<ul>
+<li>private 和 share的设计，在很多地方都能看到类似的设计（例如GMP模型），主要是在少量快速取用和大量缓慢取用之间做的一个权衡</li>
+<li>poolLocal 中 pad，其实也较为常见，了解MESI（缓存一致性协议）的话，就能理解到，如果需要并发读写的两个变量在一个缓存行中，将会造成多么麻烦的后果，而pad就是为了防止这种机制触发，用空间换时间，提高效率</li>
+</ul>
+<h3 id="poolqueuego-中结构体">poolqueue.go 中结构体</h3>
+<p>下面再来看<code>poolqueue.go</code>中的结构体</p>
+<pre><code class="language-golang">// poolChain 是poolDequeue的动态大小版本的实现。
+// poolChain 被实现为poolDequeues的双向链表队列，每一个链表的长度都是前一个的两倍（有上限），一个链表被填满时，就会开新的链表。而取值只会在最后的链表中取，一旦最后的链表被拿空，则此链表将会被移除。
+type poolChain struct {
+	// 头指针用于放入，只会被生产者放入，是并发安全的
+	head *poolChainElt
+
+	// 尾指针是用来取用和释放的，会由消费者来操作，需要保证操作是原子的
+	tail *poolChainElt
+}
+
+type poolChainElt struct {
+	poolDequeue
+
+	// next 和 prev 用于连接poolChain中相邻的 poolChainElts
+	// next 是用于生产者写入新的值，所以只会从初始的nil 到 写入下一个poolDequeue的非nil
+	// prev 是用于消费者读取值取用的，所以只会从初始被写入时的上一个poolDequeue的非nil变为没有了上一个poolDequeue的nil
+	next, prev *poolChainElt
+}
+
+// poolDequeue是一个无锁化编程实现的非固定大小的单生产者、多消费者的队列。单个生产者可以从头部放入和取用，消费者只可以从尾部取用。
+//它还有一个额外的功能，就是清除未使用的插槽位，以避免不必要的对象长时间保留。这对于sync.Pool很重要，但通常不是文献中考虑的属性（这里没太明白）。
+type poolDequeue struct {
+	// headTail 由head和tail两个32位的指针打包组成，它们都是poolDequeue的下标。
+	// tail 含义是队列中最老的数据
+	// head 含义是下一个将要被填充的位置
+	// [tail, head)位置内的插槽是被消费者拥有使用的。直到所有的插槽都被清空时，消费者将会去上一个队列中操作、使用，也就意味着，此时，此队列的所有权会被移交给生产者。
+	// head指针在最高有效位上，以便我们可以原子的添加值到其中，并且溢出无害
+	headTail uint64
+
+	// vals 是存 any 的环形缓存区，其大小必须是2的幂
+	// 如果槽为空，则vals[i].typ为零，否则就为非零。一个槽仍在使用，直到尾部索引移过它并且typ设置为零。这由消费者原子地设置为零，由生产者原子地读取。
+	vals []eface
+}
+</code></pre>
+<ul>
+<li>看描述，poolDequeue像是最初版本的pool的share字段的实现，但是poolDequeue有明显的缺点，就是长度固定，每个poolDequeue就是一个固定的环形缓存区（指针），长度由常量决定</li>
+</ul>
+<pre><code>const dequeueBits = 32
+// dequeueLimit 最多为（1&lt;&lt;dequeueBits）/2，因为检测填充度取决于环绕环形缓冲区而不环绕索引。我们除以4， 以适合32位整数。
+const dequeueLimit = (1 &lt;&lt; dequeueBits) / 4 
+</code></pre>
+<ul>
+<li>在此版本实现中，poolDequeue之外，还套了一层poolChain，这样就可以解除长度的限制，增加容量，也正因此，需要增加一套创建新poolDequeue和释放空poolDequeue等管理操作</li>
+</ul>
+<h3 id="存储结构图">存储结构图</h3>
+<p>首先是会有一个最热的本地private区域，其次设立本地P和外部P两大块的share，这样的组织方式可以有层次的区分内存的速度和容量的平衡<br>
+图片来自<a href="https://blog.csdn.net/qcrao/article/details/105630345?spm=1001.2101.3001.6650.1&amp;utm_medium=distribute.pc_relevant.none-task-blog-2%7Edefault%7ECTRLIST%7ERate-1-105630345-blog-125528642.pc_relevant_multi_platform_whitelistv3&amp;depth_1-utm_source=distribute.pc_relevant.none-task-blog-2%7Edefault%7ECTRLIST%7ERate-1-105630345-blog-125528642.pc_relevant_multi_platform_whitelistv3&amp;utm_relevant_index=2">深度解密Go语言之sync.pool</a><br>
+<img src="https://freephenix.github.io//post-images/1671763251663.png" alt="" loading="lazy"></p>
+<h2 id="get方法">Get方法</h2>
+<p>具体操作的代码，主要在注释中说明作用和记录体会。首先记住这张图，对我们理解代码细节很有帮助<br>
+图片来自<a href="https://mp.weixin.qq.com/s?__biz=MzA4ODg0NDkzOA%3D%3D&amp;idx=1&amp;mid=2247487149&amp;scene=21&amp;sn=f38f2d72fd7112e19e97d5a2cd304430&amp;source=41#wechat_redirect">请问sync.Pool有什么缺点？</a><br>
+<img src="https://freephenix.github.io//post-images/1671763721139.png" alt="" loading="lazy"></p>
+<pre><code class="language-golang">func (p *Pool) Get() any {
+    // pin的逻辑后续再说，统一解释。锁定GMP的P，防止Goroutine切换和阻止gc
+    l, pid := p.pin()
+    // 优先取用private
+    x := l.private
+    l.private = nil
+    if x == nil {
+        // 尝试从shared队列中拿取
+        x, _ = l.shared.popHead()
+        if x == nil {
+            // shared队列中也没有，再从victim中拿取，上次GC遗留下来的“老”数据
+            x = p.getSlow(pid)
+        }
+    }
+    runtime_procUnpin()
+    // 实在获取不到，调用New函数生成新的值
+    if x == nil &amp;&amp; p.New != nil {
+        x = p.New()
+    }
+    return x
+}
+
+// Get() 中 shared.popHead() 调用的是poolChain 的 popHead()
+func (c *poolChain) popHead() (any, bool) {
+    d := c.head
+    for d != nil {
+        // 从poolDequeue的头部拿取一个，没有也无需移动指针，机制保证头部中是最有可能存在值的
+        if val, ok := d.popHead(); ok {
+            return val, ok
+        }
+        // 继续往上一个poolDequeue中寻找，直到本身是第一个节点，没有上一个节点后，返回nil退出
+        d = loadPoolChainElt(&amp;d.prev)
+    }
+    return nil, false
+}
+
+// poolChain 的 popHead() 中的 popHead() 调用的是 poolDequeue 的 popHead()
+func (d *poolDequeue) popHead() (any, bool) {
+    var slot *eface
+    for {
+        ptrs := atomic.LoadUint64(&amp;d.headTail)
+        // 分离头尾指针
+        head, tail := d.unpack(ptrs)
+        // 存满后并不会让头尾指针重叠，所以相等只会意味着环形缓冲区为空
+        if tail == head {
+            return nil, false
+        }
+        // 这里是获取本地share的值，会从头部获取值
+        head--
+        ptrs2 := d.pack(head, tail)
+        // 无锁化编程思维，使用‘乐观锁’方式，取得slot
+        if atomic.CompareAndSwapUint64(&amp;d.headTail, ptrs, ptrs2) {
+            slot = &amp;d.vals[head&amp;uint32(len(d.vals)-1)]
+            break
+        }
+    }
+
+    val := *(*any)(unsafe.Pointer(slot))
+    if val == dequeueNil(nil) {
+        val = nil
+    }
+    // 清空slot，这里直接使用赋空值的方式，在读取和写入的机制中，head位置只会有本地share读取时用到，而写入和其他P的share读取时都会是在tail位置操作
+    *slot = eface{}
+    return val, true
+}
+</code></pre>
+<p>上面的操作都是从本地private中获取值，均找不到时候，需要从其他的share中偷取，或者从victim中取</p>
+<pre><code class="language-golang">func (p *Pool) getSlow(pid int) any {
+	// See the comment in pin regarding ordering of the loads.
+	size := runtime_LoadAcquintptr(&amp;p.localSize) // load-acquire
+	locals := p.local                            // load-consume
+    // 根据P的个数，从下一个P的local处开始，一个个从其他P的share尾部偷
+	for i := 0; i &lt; int(size); i++ {
+		l := indexLocal(locals, (pid+i+1)%int(size))
+		if x, _ := l.shared.popTail(); x != nil {
+			return x
+		}
+	}
+
+	// 开始尝试读取victim中的数据，与上面不同的是，本次不是从`indexLocal(locals, (pid+i+1)%int(size))`的尾部偷，而是从`indexLocal(locals, (pid+i)%int(size))`的尾部开始偷取，这么做，是为了想让其中的值尽可能老化（放入和取值方向不同，所以可以做到让值不会经常被调用）
+	size = atomic.LoadUintptr(&amp;p.victimSize)
+	if uintptr(pid) &gt;= size {
+		return nil
+	}
+	locals = p.victim
+	l := indexLocal(locals, pid)
+	if x := l.private; x != nil {
+		l.private = nil
+		return x
+	}
+	for i := 0; i &lt; int(size); i++ {
+		l := indexLocal(locals, (pid+i)%int(size))
+		if x, _ := l.shared.popTail(); x != nil {
+			return x
+		}
+	}
+
+	// 到这里还没有返回，就是说明取不到值，也就是victim为空了，那就置victimSize为0，就不会再从这里去取值了
+	atomic.StoreUintptr(&amp;p.victimSize, 0)
+
+	return nil
+}
+
+// getSlow() 中的 share.popTail() 为 poolChain的 popTail()
+func (c *poolChain) popTail() (any, bool) {
+    d := loadPoolChainElt(&amp;c.tail)
+    if d == nil {
+        return nil, false
+    }
+
+    for {
+        // popHead中是顺着prev的方向遍历，next其实就是反向遍历，这里含义可能会有点迷糊
+        d2 := loadPoolChainElt(&amp;d.next)
+
+        if val, ok := d.popTail(); ok {
+            return val, ok
+        }
+        // d2为空，那就是这个poolChain是第一个了，不用再找了
+        if d2 == nil {
+            return nil, false
+        }
+
+        // 无锁操作，d中无值，清空d
+        if atomic.CompareAndSwapPointer((*unsafe.Pointer)(unsafe.Pointer(&amp;c.tail)), unsafe.Pointer(d), unsafe.Pointer(d2)) {
+            storePoolChainElt(&amp;d2.prev, nil)
+        }
+        d = d2
+    }
+}
+
+// poolChain的 popTail() 中的 popTail() 为 poolChain的 popTail()
+func (d *poolDequeue) popTail() (any, bool) {
+    var slot *eface
+    for {
+        ptrs := atomic.LoadUint64(&amp;d.headTail)
+        head, tail := d.unpack(ptrs)
+        if tail == head {
+            return nil, false
+        }
+        // 与popHead中不同，这里是tail往前寻找
+        ptrs2 := d.pack(head, tail+1)
+        if atomic.CompareAndSwapUint64(&amp;d.headTail, ptrs, ptrs2) {
+            slot = &amp;d.vals[tail&amp;uint32(len(d.vals)-1)]
+            break
+        }
+    }
+    val := *(*any)(unsafe.Pointer(slot))
+    if val == dequeueNil(nil) {
+        val = nil
+    }
+    // 与popHead中不同，这里置空了val，再原子操作置空了typ，typ会在pushHead中用到，判断typ是否为空，所以这里需要原子操作，因为在写入和读取中，tail位置是会有冲突操作的
+    slot.val = nil
+    atomic.StorePointer(&amp;slot.typ, nil)
+    return val, true
+}
+</code></pre>
+<h2 id="put方法">Put方法</h2>
+<pre><code class="language-golang">// Put adds x to the pool.
+func (p *Pool) Put(x any) {
+	// fail fast
+	if x == nil {
+		return
+	}
+    // race
+	// 绑定p，防止goroutine切换，同时阻止了GC，GC需要将各任务切换走完成抢占后才会开始STW
+	l, _ := p.pin()
+	// 优先检查private，清理传入的参数
+	if l.private == nil {
+		l.private = x
+		x = nil
+	}
+	// x不为nil，private已经有值，则放入share队列中
+	if x != nil {
+		l.shared.pushHead(x)
+	}
+	// 解除p绑定
+	runtime_procUnpin()
+	// race
+}
+
+// Put() 中的shared.pushHead() 为 poolChain 的 pushHead()
+func (c *poolChain) pushHead(val any) {
+	d := c.head
+	if d == nil {
+		// Initialize the chain.
+		const initSize = 8 // Must be a power of 2
+		d = new(poolChainElt)
+		d.vals = make([]eface, initSize)
+		c.head = d
+		storePoolChainElt(&amp;c.tail, d)
+	}
+
+	if d.pushHead(val) {
+		return
+	}
+
+	// 上面放入失败，意味着此 poolChain 已满，需要按两倍长度建立新的节点，有限长
+    The current dequeue is full. Allocate a new one of twice
+	// the size.
+	newSize := len(d.vals) * 2
+	if newSize &gt;= dequeueLimit {
+		// 限长
+		newSize = dequeueLimit
+	}
+
+	d2 := &amp;poolChainElt{prev: d}
+	d2.vals = make([]eface, newSize)
+	c.head = d2
+	storePoolChainElt(&amp;d.next, d2)
+	d2.pushHead(val)
+}
+
+// poolChain 的 pushHead() 中的 pushHead() 为 poolDequeue 的 pushHead()
+func (d *poolDequeue) pushHead(val any) bool {
+	ptrs := atomic.LoadUint64(&amp;d.headTail)
+	head, tail := d.unpack(ptrs)
+	if (tail+uint32(len(d.vals)))&amp;(1&lt;&lt;dequeueBits-1) == head {
+		// Queue is full.
+		return false
+	}
+	slot := &amp;d.vals[head&amp;uint32(len(d.vals)-1)]
+
+	// 置空值时，type也会为nil，如果值的typ不为nil, 则说明当前head中有值，因为刚才有判断进来时候的状态，所以可能有其他goroutine在操作
+	typ := atomic.LoadPointer(&amp;slot.typ)
+	if typ != nil {
+		// Another goroutine is still cleaning up the tail, so
+		// the queue is actually still full.
+		return false
+	}
+
+	// The head slot is free, so we own it.
+	if val == nil {
+		val = dequeueNil(nil)
+	}
+	*(*any)(unsafe.Pointer(slot)) = val
+
+	// 还记得拿取时候，拿走之后的操作是head--吗？现在push的话，需要把head++这里只是换了种方式
+	atomic.AddUint64(&amp;d.headTail, 1&lt;&lt;dequeueBits)
+	return true
+}
+</code></pre>
+<h2 id="pin方法">Pin方法</h2>
+<p>我们先来看下pool中pin的代码，然后逐步探索下，为什么pin之后P不会被抢占</p>
+<h3 id="poolgo">pool.go</h3>
+<pre><code class="language-golang">// pin函数会把g绑定到当前的P上，防止被抢占
+func (p *Pool) pin() (*poolLocal, int) {
+	pid := runtime_procPin()
+	// In pinSlow we store to local and then to localSize, here we load in opposite order.
+	// Since we've disabled preemption, GC cannot happen in between.
+	// Thus here we must observe local at least as large localSize.
+	// We can observe a newer/larger local, it is fine (we must observe its zero-initialized-ness).
+	s := runtime_LoadAcquintptr(&amp;p.localSize) // load-acquire
+	l := p.local                              // load-consume
+	if uintptr(pid) &lt; s {
+		return indexLocal(l, pid), pid
+	}
+	return p.pinSlow()
+}
+
+func (p *Pool) pinSlow() (*poolLocal, int) {
+	// Retry under the mutex.
+	// Can not lock the mutex while pinned.
+	runtime_procUnpin()
+	allPoolsMu.Lock()
+	defer allPoolsMu.Unlock()
+	pid := runtime_procPin()
+	// poolCleanup won't be called while we are pinned.
+	s := p.localSize
+	l := p.local
+	if uintptr(pid) &lt; s {
+		return indexLocal(l, pid), pid
+	}
+	if p.local == nil {
+		allPools = append(allPools, p)
+	}
+	// If GOMAXPROCS changes between GCs, we re-allocate the array and lose the old one.
+	size := runtime.GOMAXPROCS(0)
+	local := make([]poolLocal, size)
+	atomic.StorePointer(&amp;p.local, unsafe.Pointer(&amp;local[0])) // store-release
+	runtime_StoreReluintptr(&amp;p.localSize, uintptr(size))     // store-release
+	return &amp;local[pid], pid
+}
+</code></pre>
+<p>runtime中pin的代码如下</p>
+<h3 id="srcruntimeprocgo">src/runtime/proc.go</h3>
+<pre><code class="language-golang">// 可以看到，他是在对应m上，将locks字段加1
+func procPin() int {
+  _g_ := getg()
+  mp := _g_.m
+ 
+ 
+  mp.locks++
+  return int(mp.p.ptr().id)
+}
+
+// 那为什么这样就可以完成防止抢占了呢，来看下抢占的代码
+func preemptone(_p_ *p) bool {
+	mp := _p_.m.ptr()
+	if mp == nil || mp == getg().m {
+		return false
+	}
+	gp := mp.curg
+	if gp == nil || gp == mp.g0 {
+		return false
+	}
+
+	gp.preempt = true
+
+	// Every call in a goroutine checks for stack overflow by
+	// comparing the current stack pointer to gp-&gt;stackguard0.
+	// Setting gp-&gt;stackguard0 to StackPreempt folds
+	// preemption into the normal stack overflow check.
+	gp.stackguard0 = stackPreempt
+
+	// Request an async preemption of this P.
+	if preemptMSupported &amp;&amp; debug.asyncpreemptoff == 0 {
+		_p_.preempt = true
+		preemptM(mp)
+	}
+
+	return true
+}
+
+</code></pre>
+<p>可以看到，主要的操作就是这两条，并没有做什么实质的操作</p>
+<pre><code class="language-golang">    gp.preempt = true
+    gp.stackguard0 = stackPreempt
+
+</code></pre>
+<p>看注释，如此设置之后就可以让goroutine做栈溢出检测时发现有溢出，进而进行栈扩容，在扩容时进行调度</p>
+<h3 id="srcruntimepreemptgo">src/runtime/preempt.go</h3>
+<p>而扩容时的判断函数如下，可以看到，其中就有判断 M 的 locks字段，这样一来，就串起来了。pin时置了 M 中locks字段，阻止了 P 被抢占，也正因为如此，需要抢占所有 P 的 GC 过程自然也无法完成了。</p>
+<pre><code class="language-golang">func canPreemptM(mp *m) bool {
+	return mp.locks == 0 &amp;&amp; mp.mallocing == 0 &amp;&amp; mp.preemptoff == &quot;&quot; &amp;&amp; mp.p.ptr().status == _Prunning
+}
+</code></pre>
+<h2 id="poolcleanup方法">poolCleanup方法</h2>
+<p>先看<code>pool.go</code>中的代码，这里会做一个注册操作，将pool的清理函数注册到GC流程里，在STW阶段调用。清理函数会清理掉victim中的内容，然后将现有local中的内容赋值到victim中，降低GC压力，并逐步的将值移到local中（从victim取用后会放入local中），提高利用率。</p>
+<h3 id="poolgo-2">pool.go</h3>
+<pre><code class="language-golang">func poolCleanup() {
+	// This function is called with the world stopped, at the beginning of a garbage collection.
+	// It must not allocate and probably should not call any runtime functions.
+
+	// Because the world is stopped, no pool user can be in a
+	// pinned section (in effect, this has all Ps pinned).
+
+	// Drop victim caches from all pools.
+	for _, p := range oldPools {
+		p.victim = nil
+		p.victimSize = 0
+	}
+
+	// Move primary cache to victim cache.
+    // 之前老版本中，这里会直接将local清空，这样会增加GC压力，也必然会有更多的miss 和 New()
+	for _, p := range allPools {
+		p.victim = p.local
+		p.victimSize = p.localSize
+		p.local = nil
+		p.localSize = 0
+	}
+
+	// The pools with non-empty primary caches now have non-empty
+	// victim caches and no pools have primary caches.
+	oldPools, allPools = allPools, nil
+}
+
+func init() {
+	runtime_registerPoolCleanup(poolCleanup)
+}
+</code></pre>
+<h3 id="runtimemgcgo">runtime/mgc.go</h3>
+<pre><code class="language-golang">func sync_runtime_registerPoolCleanup(f func()) {
+    poolcleanup = f
+}
+
+func clearpools() {
+    // clear sync.Pools
+    if poolcleanup != nil {
+        poolcleanup()
+    }
+    // ...无关省略
+}
+
+// ...无关省略
+
+func gcStart(trigger gcTrigger) {
+    mp := acquirem()
+    if gp := getg(); gp == mp.g0 || mp.locks &gt; 1 || mp.preemptoff != &quot;&quot; {
+        releasem(mp)
+        return
+    }
+    releasem(mp)
+    // ...无关省略
+    gcBgMarkStartWorkers()
+
+    gcResetMarkState()
+    // ...无关省略
+    systemstack(stopTheWorldWithSema)
+    systemstack(func() {
+        finishsweep_m()
+    })
+        // clearpools before we start the GC. If we wait they memory will not be
+    // reclaimed until the next GC cycle.
+    // 清理pool内存
+    clearpools()
+    // ...无关省略
+}
+</code></pre>
+<h1 id="go-113中-syncpool-是如何优化的">Go 1.13中 sync.Pool 是如何优化的?</h1>
+<ul>
+<li>victim机制引入，防止缓存数量过多时，增加STW阶段工作量，同时也防止每次清理后命中率下降，过多调用New函数，增加额外消耗</li>
+<li>去掉代码中的锁，实现无锁化编程，提高并发效率，也减少了抢锁多次失败的资源消耗等问题</li>
+</ul>
+<h1 id="感悟">感悟</h1>
+<ul>
+<li>victim 是非常值得学习的一个应用，一举多得，其根本操作还是老生常谈的空间换时间，但是这种触类旁通的点睛之笔，真的是令人拍案叫绝</li>
+<li>无锁化编程是一种思维，在日益凸显的高并发生产环境下，这个思维越来越适用和优秀，也越发对我们提高了要求，努力吧！</li>
+</ul>
+<h1 id="引用">引用</h1>
+<ul>
+<li><a href="https://changkun.us/archives/2018/09/256/">欧神 源码分析</a></li>
+<li><a href="https://reading.hidevops.io/reading/20180817/2018-08-17-sync-pool-reading.pdf">Go 夜读</a></li>
+<li><a href="https://www.youtube.com/watch?v=jaepwn2PWPk&amp;list=PLe5svQwVF1L5bNxB0smO8gNfAZQYWdIpI">夜读第 14 期视频</a></li>
+<li><a href="https://juejin.im/post/5d4087276fb9a06adb7fbe4a">源码分析，伪共享</a></li>
+<li><a href="https://zhuanlan.zhihu.com/p/99710992">golang的对象池sync.pool源码解读</a></li>
+<li><a href="https://zhuanlan.zhihu.com/p/110140126">理解 Go 1.13 中 sync.Pool 的设计与实现</a></li>
+<li><a href="http://cbsheng.github.io/posts/golang%E6%A0%87%E5%87%86%E5%BA%93sync.pool%E5%8E%9F%E7%90%86%E5%8F%8A%E6%BA%90%E7%A0%81%E7%AE%80%E6%9E%90/">优缺点，图</a></li>
+<li><a href="http://xiaorui.cc/archives/5878">xiaorui 优化锁竞争</a></li>
+<li><a href="https://blog.cyeam.com/golang/2017/02/08/go-optimize-slice-pool">性能优化之路，自定义多种规格的缓存</a></li>
+<li><a href="https://mp.weixin.qq.com/s?__biz=MzA4ODg0NDkzOA==&amp;mid=2247487149&amp;idx=1&amp;sn=f38f2d72fd7112e19e97d5a2cd304430&amp;source=41#wechat_redirect">sync.Pool 有什么缺点</a></li>
+<li><a href="https://github.com/watermelo/dailyTrans/blob/master/golang/sync_pool_understand.md">1.12 和 1.13 的演变</a></li>
+<li><a href="https://www.jianshu.com/p/2e08332481c5">董泽润 演进</a></li>
+<li><a href="https://github.com/golang/go/issues/8005#issuecomment-190753527">noCopy</a></li>
+<li><a href="https://www.jianshu.com/p/dc4b5562aad2">董泽润 cpu cache</a></li>
+<li><a href="https://docs.kilvn.com/The-Golang-Standard-Library-by-Example/chapter16/16.01.html">gomemcache 例子</a></li>
+<li><a href="https://colobu.com/2019/10/08/how-is-sync-Pool-improved-in-Go-1-13/">鸟窝 1.13 优化</a></li>
+<li><a href="https://medium.com/a-journey-with-go/go-understand-the-design-of-sync-pool-2dde3024e277">A journey with go</a></li>
+<li><a href="https://www.akshaydeo.com/blog/2017/12/23/How-did-I-improve-latency-by-700-percent-using-syncPool/">封装了一个计数组件</a></li>
+<li>[伪共享](http://ifeve.com/falsesharing/</li>
+</ul>
+
+                                </div>
+                    </article>
+                    <!--  -->
+                    
+                        <div class="next-post">
+                            <div class="next">下一篇</div>
+                            <a href="https://freephenix.github.io/mLvuxGD65/">
+                                <h3 class="post-title">
+                                    套路如此常见，为何屡见不鲜？
+                                </h3>
+                            </a>
+                        </div>
+                        
+                            <div id="disqus_thread"></div>
+                            <div id="gitalk-container"></div>
+                </div>
+                <!-- middle -->
+                <div class="main-container-middle"></div>
+                <!-- right -->
+                <div id="sidebar" class="main-container-right">
+                    
+                        <!-- toc -->
+                        
+    <div class="toc-card i-card ">
+        <div class="toc-title i-card-title">目录</div>
+        <div class="toc-content">
+            <ul class="markdownIt-TOC">
+<li><a href="#%E4%BB%A3%E7%A0%81">代码</a>
+<ul>
+<li><a href="#%E4%B8%BB%E8%A6%81%E7%BB%93%E6%9E%84%E4%BD%93">主要结构体</a>
+<ul>
+<li><a href="#poolgo-%E4%B8%AD%E7%BB%93%E6%9E%84%E4%BD%93">pool.go 中结构体</a></li>
+<li><a href="#poolqueuego-%E4%B8%AD%E7%BB%93%E6%9E%84%E4%BD%93">poolqueue.go 中结构体</a></li>
+<li><a href="#%E5%AD%98%E5%82%A8%E7%BB%93%E6%9E%84%E5%9B%BE">存储结构图</a></li>
+</ul>
+</li>
+<li><a href="#get%E6%96%B9%E6%B3%95">Get方法</a></li>
+<li><a href="#put%E6%96%B9%E6%B3%95">Put方法</a></li>
+<li><a href="#pin%E6%96%B9%E6%B3%95">Pin方法</a>
+<ul>
+<li><a href="#poolgo">pool.go</a></li>
+<li><a href="#srcruntimeprocgo">src/runtime/proc.go</a></li>
+<li><a href="#srcruntimepreemptgo">src/runtime/preempt.go</a></li>
+</ul>
+</li>
+<li><a href="#poolcleanup%E6%96%B9%E6%B3%95">poolCleanup方法</a>
+<ul>
+<li><a href="#poolgo-2">pool.go</a></li>
+<li><a href="#runtimemgcgo">runtime/mgc.go</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#go-113%E4%B8%AD-syncpool-%E6%98%AF%E5%A6%82%E4%BD%95%E4%BC%98%E5%8C%96%E7%9A%84">Go 1.13中 sync.Pool 是如何优化的?</a></li>
+<li><a href="#%E6%84%9F%E6%82%9F">感悟</a></li>
+<li><a href="#%E5%BC%95%E7%94%A8">引用</a></li>
+</ul>
+
+        </div>
+        <script>
+            function locateCatelogList() {
+                /*获取文章目录集合,可通过:header过滤器*/
+                var alis = $('.post-content :header');
+                /*获取侧边栏目录列表集合**/
+                var sidebar_alis = $('.markdownIt-TOC a');
+                /*获取滚动条到顶部的距离*/
+                var scroll_height = $(window).scrollTop();
+                for (var i = 0; i < alis.length; i++) {
+                    /*获取锚点集合中的元素分别到顶点的距离*/
+                    var a_height = $(alis[i]).offset().top;
+                    if (a_height < scroll_height) {
+                        /*高亮显示*/
+                        sidebar_alis.removeClass('on');
+                        $(sidebar_alis[i]).addClass('on');
+                    }
+                }
+            }
+            $(function() {
+                /*绑定滚动事件 */
+                $(window).bind('scroll', locateCatelogList);
+            });
+        </script>
+    </div>
+    
+                            
+
+                </div>
+
+
+
+
+            </div>
+
+
+            <div class="site-footer">
+  Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a> | 
+  <a class="rss" href="https://freephenix.github.io//atom.xml" target="_blank">RSS</a>
+</div>
+
+<script>
+  hljs.initHighlightingOnLoad()
+</script>
+
+
+    </div>
+    <script>
+        $('#sidebar').stickySidebar({
+            topSpacing: 80,
+            // bottomSpacing: 60
+        });
+    </script>
+    
+        
+            <script>
+    window.onload = function() {
+        var gitalk = new Gitalk({
+            clientID: '008503f8c8bca8787fbe',
+            clientSecret: '5f789f71e3288ff1866d17523348881053068eb4',
+            repo: 'freephenix.github.io',
+            owner: 'freephenix',
+            admin: ['freephenix'],
+            id: (location.pathname).substring(0, 49), // Ensure uniqueness and length less than 50
+            distractionFreeMode: false // Facebook-like distraction free mode
+        })
+
+        gitalk.render('gitalk-container')
+    }
+</script>
+                
+
+                    
+                                
+</body>
+
+</html>

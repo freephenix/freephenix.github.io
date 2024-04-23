@@ -1,0 +1,355 @@
+<html>
+
+<head>
+    <meta charset="utf-8" />
+<meta name="description" content="" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>
+    LeetCode-470. 用 Rand7() 实现 Rand10() | 半亩房顶
+</title>
+<link rel="shortcut icon" href="https://freephenix.github.io//favicon.ico?v=1713840769430">
+<!-- <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous"> -->
+<link href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+<link rel="stylesheet" href="https://freephenix.github.io//styles/main.css">
+<!-- js -->
+<script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.min.js"></script>
+<script src="https://freephenix.github.io//media/js/jquery.sticky-sidebar.min.js"></script>
+<script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
+<script src="https://cdn.bootcss.com/moment.js/2.23.0/moment.min.js"></script>
+
+
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-147240912-1"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+
+        function gtag() {
+            dataLayer.push(arguments);
+        }
+        gtag('js', new Date());
+
+        gtag('config', 'UA-147240912-1');
+    </script>
+    
+        
+            
+                <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+                <script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+                
+
+                    
+                            
+</head>
+
+<body>
+    <div class="main">
+        <div class="header">
+    <div class="nav">
+        <div class="logo">
+            <a href="https://freephenix.github.io/">
+                <img class="avatar" src="https://freephenix.github.io//images/avatar.png?v=1713840769430" alt="">
+            </a>
+            <div class="site-title">
+                <h1>
+                    半亩房顶
+                </h1>
+            </div>
+        </div>
+        <span class="menu-btn fa fa-align-justify"></span>
+        <div class="menu-container">
+            <ul>
+                
+                    
+                            <li>
+                                <a href="/" class="menu">
+                                    首页
+                                </a>
+                            </li>
+                            
+                                
+                    
+                            <li>
+                                <a href="/archives" class="menu">
+                                    归档
+                                </a>
+                            </li>
+                            
+                                
+                    
+                            <li>
+                                <a href="/tags" class="menu">
+                                    标签
+                                </a>
+                            </li>
+                            
+                                
+                    
+                            <li>
+                                <a href="https://freephenix.github.io//post/guan-yu-ban-mu-fang-ding/" class="menu">
+                                    关于
+                                </a>
+                            </li>
+                            
+                                
+            </ul>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function() {
+        $(".menu-btn").click(function() {
+            $(".menu-container").slideToggle();
+        });
+        $(window).resize(function() {
+
+            if (window.matchMedia('(min-width: 960px)').matches) {
+                $(".menu-container").css('display', 'block')
+            } else {
+                $(".menu-container").css('display', 'none')
+            }
+
+        });
+    });
+</script>
+
+            <div id="main-content" class="post-detail main-container">
+                <!-- left -->
+                <div id="content" class="main-container-left">
+                    <article class="post i-card">
+                        <h2 class="post-title">
+                            LeetCode-470. 用 Rand7() 实现 Rand10()
+                        </h2>
+                        <div class="post-info">
+                            <time class="post-time">2023-12-18</time>
+                            
+                                <a href="https://freephenix.github.io/YWFpnf3Gl/" class="post-tag i-tag
+                            i-tag-success">
+                            #刷题
+                        </a>
+                                
+                                <a href="https://freephenix.github.io/70TrDOWqgi/" class="post-tag i-tag
+                            i-tag-other_1">
+                            #面试
+                        </a>
+                                
+                                <a href="https://freephenix.github.io/go/" class="post-tag i-tag
+                            i-tag-banana">
+                            #Go
+                        </a>
+                                
+                                <a href="https://freephenix.github.io/k1NaSbOoC/" class="post-tag i-tag
+                            i-tag-primary">
+                            #LeetCode
+                        </a>
+                                
+                                <a href="https://freephenix.github.io/WucazjDbn/" class="post-tag i-tag
+                            i-tag-banana">
+                            #算法
+                        </a>
+                                
+                        </div>
+                        
+                            <div class="post-feature-image" style="background-image: url('https://freephenix.github.io//post-images/MsCK6vWMR.jpeg')"></div>
+                            
+                                <div class="post-content">
+                                    <p>刷题使我快乐，满脸开心.jpg</p>
+<ul>
+<li>来源：力扣（LeetCode）</li>
+<li>链接：https://leetcode.cn/problems/implement-rand10-using-rand7/</li>
+<li>著作权归领扣网络所有。商业转载请联系官方授权，非商业转载请注明出处。</li>
+</ul>
+<!-- more -->
+<h1 id="题目">题目</h1>
+<p>给定方法 <code>rand7</code> 可生成 <code>[1,7]</code> 范围内的均匀随机整数，试写一个方法 <code>rand10</code> 生成 <code>[1,10]</code> 范围内的均匀随机整数。</p>
+<p>你只能调用 <code>rand7()</code> 且不能调用其他方法。请不要使用系统的 <code>Math.random()</code> 方法。</p>
+<p>每个测试用例将有一个内部参数 <code>n</code>，即你实现的函数 <code>rand10()</code> 在测试时将被调用的次数。请注意，这不是传递给 <code>rand10()</code> 的参数。</p>
+<p>示例 1:</p>
+<pre><code>输入: 1
+输出: [2]
+</code></pre>
+<p>示例 2:</p>
+<pre><code>输入: 2
+输出: [2,8]
+</code></pre>
+<p>示例 3:</p>
+<pre><code>输入: 3
+输出: [3,8,10]
+</code></pre>
+<p>提示:</p>
+<ul>
+<li><code>1 &lt;= n &lt;= 105</code></li>
+</ul>
+<p>进阶:</p>
+<ul>
+<li><code>rand7()</code>调用次数的 <code>期望值</code> 是多少 ?</li>
+<li>你能否尽量少调用 <code>rand7()</code> ?</li>
+</ul>
+<h1 id="思路">思路</h1>
+<p>首先需要明确，<code>rand7</code>的结果是不会全部用上并且均分到<code>10份</code>的，明确这一点之后，其实我们要保证的就是，我们生成的<code>1-10</code>的结果是<code>概率相等</code>的即可。<br>
+一次<code>rand7</code>不够<code>10</code>份，所以肯定不行，两次<code>rand7</code>理论上有<code>49</code>种情况，肯定是可以满足产出<code>10份</code>结果的，一种比较简单实现代码的方式呢，就是：</p>
+<ul>
+<li>第一个随机，找到奇偶性</li>
+<li>第二个随机，找到<code>1-5</code>，结合第一次随机的结果，得到<code>1-10</code>的最终结果</li>
+</ul>
+<p>到这里其实没太多要说的了，看看两个进阶：</p>
+<ul>
+<li>进阶一，纯数学问题了，惭愧，基本忘差不多了</li>
+<li>进阶二，那我理解就是对<code>49份</code>结果最大化的利用就好，这里放一份官方答案，代码比较优雅~</li>
+</ul>
+<p>至此，上代码</p>
+<h1 id="代码">代码</h1>
+<h3 id="不满足进阶二但是易懂">不满足进阶二，但是易懂</h3>
+<pre><code class="language-golang">func rand10() int {
+    // 只取1-5
+    num1 := rand7()
+    for num1 &gt; 5 {
+        num1 = rand7()
+    }
+    // 只取1-6
+    num2 := rand7()
+    for num2 == 7 {
+        num2 = rand7()
+    }
+    // 第二个数是偶数，那就返回6-10
+    if num2 % 2 == 0 {
+        return num1 + 5
+    } else {
+        // 第二个数是奇数，那就返回1-5
+        return num1
+    }
+}
+</code></pre>
+<h3 id="满足进阶二需要一定理解具体思路参见官方题解">满足进阶二，需要一定理解，具体思路参见官方题解</h3>
+<pre><code class="language-golang">func rand10() int {
+    for {
+        row := rand7()
+        col := rand7()
+        idx := (row-1)*7 + col
+        if idx &lt;= 40 {
+            return 1 + (idx-1)%10
+        }
+    }
+}
+
+作者：力扣官方题解
+链接：https://leetcode.cn/problems/implement-rand10-using-rand7/solutions/978527/yong-rand7-shi-xian-rand10-by-leetcode-s-qbmd/
+来源：力扣（LeetCode）
+著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。
+</code></pre>
+
+                                </div>
+                    </article>
+                    <!--  -->
+                    
+                        <div class="next-post">
+                            <div class="next">下一篇</div>
+                            <a href="https://freephenix.github.io/3Bm3oX3ux/">
+                                <h3 class="post-title">
+                                    LeetCode-221. 最大正方形
+                                </h3>
+                            </a>
+                        </div>
+                        
+                            <div id="disqus_thread"></div>
+                            <div id="gitalk-container"></div>
+                </div>
+                <!-- middle -->
+                <div class="main-container-middle"></div>
+                <!-- right -->
+                <div id="sidebar" class="main-container-right">
+                    
+                        <!-- toc -->
+                        
+    <div class="toc-card i-card ">
+        <div class="toc-title i-card-title">目录</div>
+        <div class="toc-content">
+            <ul class="markdownIt-TOC">
+<li><a href="#%E9%A2%98%E7%9B%AE">题目</a></li>
+<li><a href="#%E6%80%9D%E8%B7%AF">思路</a></li>
+<li><a href="#%E4%BB%A3%E7%A0%81">代码</a><br>
+*
+<ul>
+<li><a href="#%E4%B8%8D%E6%BB%A1%E8%B6%B3%E8%BF%9B%E9%98%B6%E4%BA%8C%E4%BD%86%E6%98%AF%E6%98%93%E6%87%82">不满足进阶二，但是易懂</a></li>
+<li><a href="#%E6%BB%A1%E8%B6%B3%E8%BF%9B%E9%98%B6%E4%BA%8C%E9%9C%80%E8%A6%81%E4%B8%80%E5%AE%9A%E7%90%86%E8%A7%A3%E5%85%B7%E4%BD%93%E6%80%9D%E8%B7%AF%E5%8F%82%E8%A7%81%E5%AE%98%E6%96%B9%E9%A2%98%E8%A7%A3">满足进阶二，需要一定理解，具体思路参见官方题解</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+        <script>
+            function locateCatelogList() {
+                /*获取文章目录集合,可通过:header过滤器*/
+                var alis = $('.post-content :header');
+                /*获取侧边栏目录列表集合**/
+                var sidebar_alis = $('.markdownIt-TOC a');
+                /*获取滚动条到顶部的距离*/
+                var scroll_height = $(window).scrollTop();
+                for (var i = 0; i < alis.length; i++) {
+                    /*获取锚点集合中的元素分别到顶点的距离*/
+                    var a_height = $(alis[i]).offset().top;
+                    if (a_height < scroll_height) {
+                        /*高亮显示*/
+                        sidebar_alis.removeClass('on');
+                        $(sidebar_alis[i]).addClass('on');
+                    }
+                }
+            }
+            $(function() {
+                /*绑定滚动事件 */
+                $(window).bind('scroll', locateCatelogList);
+            });
+        </script>
+    </div>
+    
+                            
+
+                </div>
+
+
+
+
+            </div>
+
+
+            <div class="site-footer">
+  Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a> | 
+  <a class="rss" href="https://freephenix.github.io//atom.xml" target="_blank">RSS</a>
+</div>
+
+<script>
+  hljs.initHighlightingOnLoad()
+</script>
+
+
+    </div>
+    <script>
+        $('#sidebar').stickySidebar({
+            topSpacing: 80,
+            // bottomSpacing: 60
+        });
+    </script>
+    
+        
+            <script>
+    window.onload = function() {
+        var gitalk = new Gitalk({
+            clientID: '008503f8c8bca8787fbe',
+            clientSecret: '5f789f71e3288ff1866d17523348881053068eb4',
+            repo: 'freephenix.github.io',
+            owner: 'freephenix',
+            admin: ['freephenix'],
+            id: (location.pathname).substring(0, 49), // Ensure uniqueness and length less than 50
+            distractionFreeMode: false // Facebook-like distraction free mode
+        })
+
+        gitalk.render('gitalk-container')
+    }
+</script>
+                
+
+                    
+                                
+</body>
+
+</html>

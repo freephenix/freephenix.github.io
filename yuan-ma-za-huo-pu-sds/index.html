@@ -1,0 +1,613 @@
+<html>
+
+<head>
+    <meta charset="utf-8" />
+<meta name="description" content="" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>
+    源码杂货铺：Redis-SDS | 半亩房顶
+</title>
+<link rel="shortcut icon" href="https://freephenix.github.io//favicon.ico?v=1713840769430">
+<!-- <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous"> -->
+<link href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+<link rel="stylesheet" href="https://freephenix.github.io//styles/main.css">
+<!-- js -->
+<script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.min.js"></script>
+<script src="https://freephenix.github.io//media/js/jquery.sticky-sidebar.min.js"></script>
+<script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
+<script src="https://cdn.bootcss.com/moment.js/2.23.0/moment.min.js"></script>
+
+
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-147240912-1"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+
+        function gtag() {
+            dataLayer.push(arguments);
+        }
+        gtag('js', new Date());
+
+        gtag('config', 'UA-147240912-1');
+    </script>
+    
+        
+            
+                <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+                <script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+                
+
+                    
+                            
+</head>
+
+<body>
+    <div class="main">
+        <div class="header">
+    <div class="nav">
+        <div class="logo">
+            <a href="https://freephenix.github.io/">
+                <img class="avatar" src="https://freephenix.github.io//images/avatar.png?v=1713840769430" alt="">
+            </a>
+            <div class="site-title">
+                <h1>
+                    半亩房顶
+                </h1>
+            </div>
+        </div>
+        <span class="menu-btn fa fa-align-justify"></span>
+        <div class="menu-container">
+            <ul>
+                
+                    
+                            <li>
+                                <a href="/" class="menu">
+                                    首页
+                                </a>
+                            </li>
+                            
+                                
+                    
+                            <li>
+                                <a href="/archives" class="menu">
+                                    归档
+                                </a>
+                            </li>
+                            
+                                
+                    
+                            <li>
+                                <a href="/tags" class="menu">
+                                    标签
+                                </a>
+                            </li>
+                            
+                                
+                    
+                            <li>
+                                <a href="https://freephenix.github.io//post/guan-yu-ban-mu-fang-ding/" class="menu">
+                                    关于
+                                </a>
+                            </li>
+                            
+                                
+            </ul>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function() {
+        $(".menu-btn").click(function() {
+            $(".menu-container").slideToggle();
+        });
+        $(window).resize(function() {
+
+            if (window.matchMedia('(min-width: 960px)').matches) {
+                $(".menu-container").css('display', 'block')
+            } else {
+                $(".menu-container").css('display', 'none')
+            }
+
+        });
+    });
+</script>
+
+            <div id="main-content" class="post-detail main-container">
+                <!-- left -->
+                <div id="content" class="main-container-left">
+                    <article class="post i-card">
+                        <h2 class="post-title">
+                            源码杂货铺：Redis-SDS
+                        </h2>
+                        <div class="post-info">
+                            <time class="post-time">2021-03-25</time>
+                            
+                                <a href="https://freephenix.github.io/yQozqrioz/" class="post-tag i-tag
+                            i-tag-error">
+                            #Redis
+                        </a>
+                                
+                                <a href="https://freephenix.github.io/k_l-BPxc0/" class="post-tag i-tag
+                            i-tag-other_2">
+                            #源码
+                        </a>
+                                
+                        </div>
+                        
+                            <div class="post-feature-image" style="background-image: url('https://freephenix.github.io//post-images/yuan-ma-za-huo-pu-sds.png')"></div>
+                            
+                                <div class="post-content">
+                                    <p>本文基于redis 5.0.3,<br>
+一起来看下，Redis动态字符串 SDS（simple dynamic string）都有哪些秘密</p>
+<!-- more -->
+<h1 id="简介">简介</h1>
+<p>SDS是redis中定义字符串对象，它比C中的字符串类型对象更为高效、安全。<br>
+SDS 在 Redis 中的主要作用有以下两个：<br>
+1、实现字符串对象（StringObject）<br>
+2、在 Redis 程序内部用作 char* 类型的替代品</p>
+<p>SDS特性如下：</p>
+<ul>
+<li>常数复杂度获取字符串长度</li>
+<li>杜绝缓冲区溢出</li>
+<li>减少内存重新分配次数</li>
+<li>二进制安全</li>
+<li>惰性空间释放</li>
+</ul>
+<p>那么下面我们就从源码出发，看看是如何实现的这几个特性。</p>
+<h1 id="sds结构体的定义">SDS结构体的定义</h1>
+<p>redis 4.0之前：</p>
+<pre><code>typedef char *sds;
+
+struct sdshdr {
+    // buf 已占用长度
+    int len;
+    // buf 剩余可用长度
+    int free;
+    // 实际保存字符串数据的地方
+    char buf[];
+};
+</code></pre>
+<p>redis 4.0以后（PR#2509）：</p>
+<pre><code>#define SDS_TYPE_5  0
+#define SDS_TYPE_8  1
+#define SDS_TYPE_16 2
+#define SDS_TYPE_32 3
+#define SDS_TYPE_64 4
+#define SDS_TYPE_MASK 7
+
+// sds结构体，使用不同的结构体来保存不同长度大小的字符串
+typedef char *sds;
+
+// __attribute__ ((__packed__)) 的作用是告诉GCC编译器，不要对此结构体做内存对齐。
+// 同时看到free字段没了，改成alloc，并增加flags字段
+struct __attribute__ ((__packed__)) sdshdr5 {
+    unsigned char flags; /* flags共8位，低三位保存类型标志，高5位保存字符串长度，小于32(2^5-1) */
+    char buf[]; // 保存具体的字符串
+};
+struct __attribute__ ((__packed__)) sdshdr8 {
+    uint8_t len; /* 字符串长度，buf已用的长度 */
+    uint8_t alloc; /* 为buf分配的总长度，alloc-len就是sds结构体剩余的空间 */
+    unsigned char flags; /* 低三位保存类型标志 */
+    char buf[];
+};
+struct __attribute__ ((__packed__)) sdshdr16 {
+    uint16_t len; /* used */
+    uint16_t alloc; /* excluding the header and null terminator */
+    unsigned char flags; /* 3 lsb of type, 5 unused bits */
+    char buf[];
+};
+struct __attribute__ ((__packed__)) sdshdr32 {
+    uint32_t len; /* used */
+    uint32_t alloc; /* excluding the header and null terminator */
+    unsigned char flags; /* 3 lsb of type, 5 unused bits */
+    char buf[];
+};
+struct __attribute__ ((__packed__)) sdshdr64 {
+    uint64_t len; /* used */
+    uint64_t alloc; /* excluding the header and null terminator */
+    unsigned char flags; /* 3 lsb of type, 5 unused bits */
+    char buf[];
+};
+</code></pre>
+<p>想要明白这个结构为什么变化，需要从原本的结构有什么缺点开始：</p>
+<h2 id="40之前sds的缺点">4.0之前SDS的缺点</h2>
+<ul>
+<li>1）内存浪费。共8 bytes header，即使很短的字符串也需要4字节的len字段</li>
+<li>2）字符串大小上限4G。len最大值：2^32 - 1，字符串大小上限：2^32 / 1024 / 1024 / 1024 = 4G</li>
+</ul>
+<h3 id="40-sds的修改点">4.0 SDS的修改点</h3>
+<p>PR作者antirez认为，大多数的SDS从未调整大小，且最小的SDS更是不经常调整大小，所以引入了5种SDS接口实现，主要是为了优化内存，节省空间，主要修改为如下两点<br>
+1、<code>关键字段就在于flags</code>，这个字段的低3位表明了SDS的类型，其他5位暂时预留。<br>
+2、引入sdshdr5，这种SDS是没有单独的len字段的，就是用了flags中的剩余5位存储字符串的长度，这样SDS的header头才一个字节，当然，如果需要增长长度，那就<code>升级</code>SDS的类型</p>
+<h3 id="40-sds的改进意义">4.0 SDS的改进意义</h3>
+<p>1、优化内存使用，节约了内存资源<br>
+2、支持了4g以上的SDS支持</p>
+<h1 id="sds-的一些操作函数">SDS 的一些操作函数</h1>
+<pre><code>/****************  获取SDS长度  ***************/
+#define SDS_TYPE_5  0
+#define SDS_TYPE_8  1
+#define SDS_TYPE_16 2
+#define SDS_TYPE_32 3
+#define SDS_TYPE_64 4
+
+#define SDS_TYPE_MASK 7
+#define SDS_TYPE_BITS 3
+
+#define SDS_HDR_VAR(T,s) struct sdshdr##T *sh = (void*)((s)-(sizeof(struct  sdshdr##T)));
+#define SDS_HDR(T,s) ((struct sdshdr##T *)((s)-(sizeof(struct sdshdr##T))))
+#define SDS_TYPE_5_LEN(f) ((f)&gt;&gt;SDS_TYPE_BITS)
+
+// 因为现在有5种SDS，那就需要在做操作时区分处理
+static inline size_t sdslen(const sds s) {
+    // 注意获取flags的方式，直接找flags的地址
+    // 对于`SDS_TYPE_8`及以上，有len字段就可以直接读取
+    // 而对于`SDS_TYPE_5`，则取`flags`高5位的值
+    unsigned char flags = s[-1];
+    switch(flags &amp; SDS_TYPE_MASK) {
+        case SDS_TYPE_5:
+            return SDS_TYPE_5_LEN(flags);
+        case SDS_TYPE_8:
+            return SDS_HDR(8,s)-&gt;len;
+        case SDS_TYPE_16:
+            return SDS_HDR(16,s)-&gt;len;
+        case SDS_TYPE_32:
+            return SDS_HDR(32,s)-&gt;len;
+        case SDS_TYPE_64:
+            return SDS_HDR(64,s)-&gt;len;
+    }
+    return 0;
+}
+
+/****************   创建SDS  ***************/
+sds sdsnewlen(const void *init, size_t initlen) {
+    void *sh;
+    sds s;
+    // 判断该用哪种长度类型的结构体
+    char type = sdsReqType(initlen);
+
+    // 虽然有SDS_TYPE_5，但其实不会使用它
+    if (type == SDS_TYPE_5 &amp;&amp; initlen == 0) type = SDS_TYPE_8;
+    // 获取结构体长度
+    int hdrlen = sdsHdrSize(type);
+    unsigned char *fp; /* flags pointer. */
+
+    // 分配内存 字符串长度+结构体长度
+    sh = s_malloc(hdrlen+initlen+1);
+    if (init==SDS_NOINIT)
+        init = NULL;
+    else if (!init)
+        memset(sh, 0, hdrlen+initlen+1);
+    if (sh == NULL) return NULL;
+    s = (char*)sh+hdrlen;
+    // 这里fp就是flags字段
+    fp = ((unsigned char*)s)-1;
+    // 接下来对结构体里的len、alloc、flags字段赋值吧
+    switch(type) {
+        case SDS_TYPE_5: {
+            *fp = type | (initlen &lt;&lt; SDS_TYPE_BITS);
+            break;
+        }
+        case SDS_TYPE_8: {
+            SDS_HDR_VAR(8,s);
+            sh-&gt;len = initlen;
+            sh-&gt;alloc = initlen;
+            *fp = type;
+            break;
+        }
+        case SDS_TYPE_16: {
+            SDS_HDR_VAR(16,s);
+            sh-&gt;len = initlen;
+            sh-&gt;alloc = initlen;
+            *fp = type;
+            break;
+        }
+        case SDS_TYPE_32: {
+            SDS_HDR_VAR(32,s);
+            sh-&gt;len = initlen;
+            sh-&gt;alloc = initlen;
+            *fp = type;
+            break;
+        }
+        case SDS_TYPE_64: {
+            SDS_HDR_VAR(64,s);
+            sh-&gt;len = initlen;
+            sh-&gt;alloc = initlen;
+            *fp = type;
+            break;
+        }
+    }
+    if (initlen &amp;&amp; init)
+    		// 字符串对象的内容需要初始化
+        memcpy(s, init, initlen);
+    s[initlen] = '\0';
+    return s;
+}
+
+// string_size就是目标字符串长度，比对一下，看用哪个长度的结构体
+static inline char sdsReqType(size_t string_size) {
+    if (string_size &lt; 1&lt;&lt;5)
+        return SDS_TYPE_5;
+    if (string_size &lt; 1&lt;&lt;8)
+        return SDS_TYPE_8;
+    if (string_size &lt; 1&lt;&lt;16)
+        return SDS_TYPE_16;
+#if (LONG_MAX == LLONG_MAX)
+    if (string_size &lt; 1ll&lt;&lt;32)
+        return SDS_TYPE_32;
+    return SDS_TYPE_64;
+#else
+    return SDS_TYPE_32;
+#endif
+}
+
+/****************   获取SDS可用长度  ***************/
+// 获取实际的结构体通过宏实现
+#define SDS_HDR_VAR(T,s) struct sdshdr##T *sh = (void*)((s)-(sizeof(struct sdshdr##T)));
+
+static inline size_t sdsavail(const sds s) {
+    unsigned char flags = s[-1];
+    switch(flags&amp;SDS_TYPE_MASK) {
+        case SDS_TYPE_5: {
+            return 0;
+        }
+        case SDS_TYPE_8: {
+            // 这里做宏替换
+            SDS_HDR_VAR(8,s);
+            return sh-&gt;alloc - sh-&gt;len;
+        }
+        // ...
+    }
+    return 0;
+}
+
+/****************   清理SDS  ***************/
+// 将len字段设置为0，但内存空间不释放。方便下次直接复用
+void sdsclear(sds s) {
+    sdssetlen(s, 0);
+    s[0] = '\0';
+}
+
+// free方法才是真正释放内容的方法
+void sdsfree(sds s) {
+    if (s == NULL) return;
+    // s[-1]就刚好指向了flags这个字段了
+    s_free((char*)s-sdsHdrSize(s[-1]));
+}
+</code></pre>
+<h1 id="sds的特性">SDS的特性</h1>
+<p>下面我们再来回顾下SDS的特性，并一一源码解析下</p>
+<ul>
+<li>
+<p>常数复杂度获取字符串长度<br>
+这一点想必通过上面的获取len函数 <code>sdslen</code> 的实现大家都看到了，除了<code>SDS_TYPE_5</code>，其他都是有对应字段直接返回的，当然即使<code>SDS_TYPE_5</code>，一个位运算的成本也是很低的</p>
+</li>
+<li>
+<p>杜绝缓冲区溢出<br>
+SDS在修改字符串时，会经由一个<code>sdsMakeRoomFor</code>函数判断是否需要扩容，是否能够满足修改需求，再进行修改，从而杜绝了缓冲区的溢出，当然，这个函数中也包含了扩容的逻辑，正好可以诠释下一个特性</p>
+</li>
+</ul>
+<pre><code>sds sdscatlen(sds s, const void *t, size_t len) {
+    size_t curlen = sdslen(s);
+
+    s = sdsMakeRoomFor(s,len);
+    if (s == NULL) return NULL;
+    memcpy(s+curlen, t, len);
+    sdssetlen(s, curlen+len);
+    s[curlen+len] = '\0';
+    return s;
+}
+
+sds sdscat(sds s, const char *t) {
+    return sdscatlen(s, t, strlen(t));
+}
+</code></pre>
+<ul>
+<li>减少内存重新分配次数<br>
+<code>sdsMakeRoomFor</code>函数实现如下，如果修改后长度小于1M，则空间乘2，如果大于1M，则增加1M，基于这个策略，内存分配次数会大大减少。当然在4.0之后，还会多了类型变更的操作，如 <code>SDS_TYPE_5</code> 变成 <code>SDS_TYPE_8</code></li>
+</ul>
+<pre><code>sds sdsMakeRoomFor(sds s, size_t addlen) {
+    void *sh, *newsh;
+    size_t avail = sdsavail(s);
+    size_t len, newlen;
+    char type, oldtype = s[-1] &amp; SDS_TYPE_MASK;
+    int hdrlen;
+
+    /* 只有有足够空间就马上返回，否则就继续执行分配空间的操作 */
+    if (avail &gt;= addlen) return s;
+
+    len = sdslen(s);
+    sh = (char*)s-sdsHdrSize(oldtype);
+    newlen = (len+addlen);
+    // SDS_MAX_PREALLOC == 1MB，如果修改后的长度小于1M，则分配的空间是原来的2倍，否则增加1MB的空间
+    if (newlen &lt; SDS_MAX_PREALLOC)
+        newlen *= 2;
+    else
+        newlen += SDS_MAX_PREALLOC;
+    // 重新计算type
+    type = sdsReqType(newlen);
+
+    // 只要有改动，SDS_TYPE_5就变为 SDS_TYPE_8
+    if (type == SDS_TYPE_5) type = SDS_TYPE_8;
+
+    hdrlen = sdsHdrSize(type);
+    if (oldtype==type) {
+        newsh = s_realloc(sh, hdrlen+newlen+1);
+        if (newsh == NULL) return NULL;
+        s = (char*)newsh+hdrlen;
+    } else {
+        /* 新增空间后超过当前类型的长度，使用malloc，并把原字符串拷贝过去 */
+        newsh = s_malloc(hdrlen+newlen+1);
+        if (newsh == NULL) return NULL;
+        memcpy((char*)newsh+hdrlen, s, len+1);
+        s_free(sh);
+        s = (char*)newsh+hdrlen;
+        // 给类型标志位赋值，基于对于内存结构的了解，直接修改内存
+        s[-1] = type; 
+        sdssetlen(s, len);
+    }
+    sdssetalloc(s, newlen);
+    return s;
+}
+</code></pre>
+<ul>
+<li>二进制安全<br>
+二进制安全指的是只关心二进制化的字符串，不关心具体格式。只会严格的按照二进制的数据存取，不会妄图以某种特殊格式解析数据。比如遇到’\0’字符不会停止解析。</li>
+</ul>
+<p>对于C字符串来说，strlen是判断遇到’\0’之前的字符数量。如果需要保存二进制的数据，就不能通过传统的C字符串来保存，因为获取不到它真实的长度。而sds字符串是通过len属性保存字符串的大小，所以它是二进制安全的。</p>
+<ul>
+<li>惰性空间释放<br>
+如果操作后减少了字符串的大小，比如下面的<code>sdstrim</code>函数，只是在最后修改len属性，不会马上释放多余的空间，而是继续保留多余的空间，这样在下次需要增加SDS字符串的大小时，就不需要再为其分配空间了。当然，如果之后检查到SDS的大小实在太大，也会调用<code>sdsRemoveFreeSpace</code>函数释放多余的空间。</li>
+</ul>
+<pre><code>sds sdstrim(sds s, const char *cset) {
+    char *start, *end, *sp, *ep;
+    size_t len;
+
+    sp = start = s;
+    ep = end = s+sdslen(s)-1;
+    /* 从头部和尾部逐个字符遍历往中间靠拢，如果字符在cest中，则继续前进 */
+    while(sp &lt;= end &amp;&amp; strchr(cset, *sp)) sp++;
+    while(ep &gt; sp &amp;&amp; strchr(cset, *ep)) ep--;
+    len = (sp &gt; ep) ? 0 : ((ep-sp)+1); // 全部被去除了，长度就是0
+    if (s != sp) memmove(s, sp, len); // 拷贝内容
+    s[len] = '\0';
+    sdssetlen(s,len);
+    return s;
+}
+</code></pre>
+<h1 id="总结">总结</h1>
+<p>SDS是redis中的一个基本结构，会有很多地方用到，比如kv中的key。希望这篇文章是我打开redis学习大门的一把钥匙。</p>
+<p>感觉很多时候，其实是相对不那么复杂的一个特性或者方案，但是起到的效果却是相当强大，这种情况下，我更需要做的是充分了解问题，然后做出合适的选择。基于一个个如此的思考、学习，期待自己终究能够做出创造性的“选择”，给他人提供帮助。</p>
+<h1 id="引用">引用</h1>
+<ul>
+<li><a href="https://www.jianshu.com/p/ba3b45aa826c">Redis3.2源码分析</a></li>
+<li><a href="https://www.jianshu.com/p/22ec8484f54c">Redis SDS源码解析，从1st commit到5.0.4（最新版）的演化</a></li>
+<li><a href="https://zhuanlan.zhihu.com/p/91483436">redis3.0 源码分析（一）数据结构 -- 字符串SDS</a></li>
+<li><a href="https://redisbook.readthedocs.io/en/latest/index.html">Redis 设计与实现</a></li>
+<li><a href="https://github.com/huangz1990/annotated_redis_source">带有详细注释的 Redis 2.6 源代码</a></li>
+<li><a href="https://github.com/redis/redis/tree/5.0.3">github-redis</a></li>
+<li><a href="http://cbsheng.github.io/posts/redis%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90%E4%B9%8Bsds%E5%AF%B9%E8%B1%A1/">Redis(5.0.3)源码分析之sds对象</a></li>
+<li><a href="https://www.hoohack.me/2017/11/13/read-redis-src-sds">［Redis源码阅读］sds字符串实现</a></li>
+</ul>
+
+                                </div>
+                    </article>
+                    <!--  -->
+                    
+                        <div class="next-post">
+                            <div class="next">下一篇</div>
+                            <a href="https://freephenix.github.io/yuan-ma-za-huo-pu-atomic-bao/">
+                                <h3 class="post-title">
+                                    源码杂货铺：atomic包
+                                </h3>
+                            </a>
+                        </div>
+                        
+                            <div id="disqus_thread"></div>
+                            <div id="gitalk-container"></div>
+                </div>
+                <!-- middle -->
+                <div class="main-container-middle"></div>
+                <!-- right -->
+                <div id="sidebar" class="main-container-right">
+                    
+                        <!-- toc -->
+                        
+    <div class="toc-card i-card ">
+        <div class="toc-title i-card-title">目录</div>
+        <div class="toc-content">
+            <ul class="markdownIt-TOC">
+<li><a href="#%E7%AE%80%E4%BB%8B">简介</a></li>
+<li><a href="#sds%E7%BB%93%E6%9E%84%E4%BD%93%E7%9A%84%E5%AE%9A%E4%B9%89">SDS结构体的定义</a>
+<ul>
+<li><a href="#40%E4%B9%8B%E5%89%8Dsds%E7%9A%84%E7%BC%BA%E7%82%B9">4.0之前SDS的缺点</a>
+<ul>
+<li><a href="#40-sds%E7%9A%84%E4%BF%AE%E6%94%B9%E7%82%B9">4.0 SDS的修改点</a></li>
+<li><a href="#40-sds%E7%9A%84%E6%94%B9%E8%BF%9B%E6%84%8F%E4%B9%89">4.0 SDS的改进意义</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#sds-%E7%9A%84%E4%B8%80%E4%BA%9B%E6%93%8D%E4%BD%9C%E5%87%BD%E6%95%B0">SDS 的一些操作函数</a></li>
+<li><a href="#sds%E7%9A%84%E7%89%B9%E6%80%A7">SDS的特性</a></li>
+<li><a href="#%E6%80%BB%E7%BB%93">总结</a></li>
+<li><a href="#%E5%BC%95%E7%94%A8">引用</a></li>
+</ul>
+
+        </div>
+        <script>
+            function locateCatelogList() {
+                /*获取文章目录集合,可通过:header过滤器*/
+                var alis = $('.post-content :header');
+                /*获取侧边栏目录列表集合**/
+                var sidebar_alis = $('.markdownIt-TOC a');
+                /*获取滚动条到顶部的距离*/
+                var scroll_height = $(window).scrollTop();
+                for (var i = 0; i < alis.length; i++) {
+                    /*获取锚点集合中的元素分别到顶点的距离*/
+                    var a_height = $(alis[i]).offset().top;
+                    if (a_height < scroll_height) {
+                        /*高亮显示*/
+                        sidebar_alis.removeClass('on');
+                        $(sidebar_alis[i]).addClass('on');
+                    }
+                }
+            }
+            $(function() {
+                /*绑定滚动事件 */
+                $(window).bind('scroll', locateCatelogList);
+            });
+        </script>
+    </div>
+    
+                            
+
+                </div>
+
+
+
+
+            </div>
+
+
+            <div class="site-footer">
+  Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a> | 
+  <a class="rss" href="https://freephenix.github.io//atom.xml" target="_blank">RSS</a>
+</div>
+
+<script>
+  hljs.initHighlightingOnLoad()
+</script>
+
+
+    </div>
+    <script>
+        $('#sidebar').stickySidebar({
+            topSpacing: 80,
+            // bottomSpacing: 60
+        });
+    </script>
+    
+        
+            <script>
+    window.onload = function() {
+        var gitalk = new Gitalk({
+            clientID: '008503f8c8bca8787fbe',
+            clientSecret: '5f789f71e3288ff1866d17523348881053068eb4',
+            repo: 'freephenix.github.io',
+            owner: 'freephenix',
+            admin: ['freephenix'],
+            id: (location.pathname).substring(0, 49), // Ensure uniqueness and length less than 50
+            distractionFreeMode: false // Facebook-like distraction free mode
+        })
+
+        gitalk.render('gitalk-container')
+    }
+</script>
+                
+
+                    
+                                
+</body>
+
+</html>

@@ -1,0 +1,373 @@
+<html>
+
+<head>
+    <meta charset="utf-8" />
+<meta name="description" content="" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>
+    LeetCode-240. 搜索二维矩阵 II | 半亩房顶
+</title>
+<link rel="shortcut icon" href="https://freephenix.github.io//favicon.ico?v=1713840769430">
+<!-- <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous"> -->
+<link href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+<link rel="stylesheet" href="https://freephenix.github.io//styles/main.css">
+<!-- js -->
+<script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.min.js"></script>
+<script src="https://freephenix.github.io//media/js/jquery.sticky-sidebar.min.js"></script>
+<script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
+<script src="https://cdn.bootcss.com/moment.js/2.23.0/moment.min.js"></script>
+
+
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-147240912-1"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+
+        function gtag() {
+            dataLayer.push(arguments);
+        }
+        gtag('js', new Date());
+
+        gtag('config', 'UA-147240912-1');
+    </script>
+    
+        
+            
+                <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+                <script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+                
+
+                    
+                            
+</head>
+
+<body>
+    <div class="main">
+        <div class="header">
+    <div class="nav">
+        <div class="logo">
+            <a href="https://freephenix.github.io/">
+                <img class="avatar" src="https://freephenix.github.io//images/avatar.png?v=1713840769430" alt="">
+            </a>
+            <div class="site-title">
+                <h1>
+                    半亩房顶
+                </h1>
+            </div>
+        </div>
+        <span class="menu-btn fa fa-align-justify"></span>
+        <div class="menu-container">
+            <ul>
+                
+                    
+                            <li>
+                                <a href="/" class="menu">
+                                    首页
+                                </a>
+                            </li>
+                            
+                                
+                    
+                            <li>
+                                <a href="/archives" class="menu">
+                                    归档
+                                </a>
+                            </li>
+                            
+                                
+                    
+                            <li>
+                                <a href="/tags" class="menu">
+                                    标签
+                                </a>
+                            </li>
+                            
+                                
+                    
+                            <li>
+                                <a href="https://freephenix.github.io//post/guan-yu-ban-mu-fang-ding/" class="menu">
+                                    关于
+                                </a>
+                            </li>
+                            
+                                
+            </ul>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function() {
+        $(".menu-btn").click(function() {
+            $(".menu-container").slideToggle();
+        });
+        $(window).resize(function() {
+
+            if (window.matchMedia('(min-width: 960px)').matches) {
+                $(".menu-container").css('display', 'block')
+            } else {
+                $(".menu-container").css('display', 'none')
+            }
+
+        });
+    });
+</script>
+
+            <div id="main-content" class="post-detail main-container">
+                <!-- left -->
+                <div id="content" class="main-container-left">
+                    <article class="post i-card">
+                        <h2 class="post-title">
+                            LeetCode-240. 搜索二维矩阵 II
+                        </h2>
+                        <div class="post-info">
+                            <time class="post-time">2023-12-20</time>
+                            
+                                <a href="https://freephenix.github.io/V6q0JESaH/" class="post-tag i-tag
+                            i-tag-">
+                            #矩阵
+                        </a>
+                                
+                                <a href="https://freephenix.github.io/YWFpnf3Gl/" class="post-tag i-tag
+                            i-tag-info">
+                            #刷题
+                        </a>
+                                
+                                <a href="https://freephenix.github.io/70TrDOWqgi/" class="post-tag i-tag
+                            i-tag-other_4">
+                            #面试
+                        </a>
+                                
+                                <a href="https://freephenix.github.io/go/" class="post-tag i-tag
+                            i-tag-warning">
+                            #Go
+                        </a>
+                                
+                                <a href="https://freephenix.github.io/k1NaSbOoC/" class="post-tag i-tag
+                            i-tag-">
+                            #LeetCode
+                        </a>
+                                
+                                <a href="https://freephenix.github.io/WucazjDbn/" class="post-tag i-tag
+                            i-tag-banana">
+                            #算法
+                        </a>
+                                
+                        </div>
+                        
+                            <div class="post-feature-image" style="background-image: url('https://freephenix.github.io//post-images/yfiXHrNXm.jpeg')"></div>
+                            
+                                <div class="post-content">
+                                    <p>刷题使我快乐，满脸开心.jpg</p>
+<ul>
+<li>来源：力扣（LeetCode）</li>
+<li>链接：https://leetcode.cn/problems/search-a-2d-matrix-ii/</li>
+<li>著作权归领扣网络所有。商业转载请联系官方授权，非商业转载请注明出处。</li>
+</ul>
+<!-- more -->
+<h1 id="题目">题目</h1>
+<p>编写一个<code>高效</code>的算法来搜索 <code>m x n</code> 矩阵 <code>matrix</code> 中的一个目标值 <code>target</code> 。该矩阵具有以下特性：</p>
+<ul>
+<li>每行的元素从左到右升序排列。</li>
+<li>每列的元素从上到下升序排列。</li>
+</ul>
+<p>示例 1：<br>
+<img src="https://freephenix.github.io//post-images/1703043408085.jpeg" alt="" loading="lazy"></p>
+<pre><code>输入：matrix = [[1,4,7,11,15],[2,5,8,12,19],[3,6,9,16,22],[10,13,14,17,24],[18,21,23,26,30]], target = 5
+输出：true
+</code></pre>
+<p>示例 2：<br>
+<img src="https://freephenix.github.io//post-images/1703043412286.jpeg" alt="" loading="lazy"></p>
+<pre><code>输入：matrix = [[1,4,7,11,15],[2,5,8,12,19],[3,6,9,16,22],[10,13,14,17,24],[18,21,23,26,30]], target = 20
+输出：false
+</code></pre>
+<p>提示：</p>
+<ul>
+<li><code>m == matrix.length</code></li>
+<li><code>n == matrix[i].length</code></li>
+<li><code>1 &lt;= n, m &lt;= 300</code></li>
+<li><code>-109 &lt;= matrix[i][j] &lt;= 109</code></li>
+<li>每行的所有元素从左到右升序排列</li>
+<li>每列的所有元素从上到下升序排列</li>
+<li><code>-109 &lt;= target &lt;= 109</code></li>
+</ul>
+<h1 id="思路">思路</h1>
+<p>第一反应是<code>二分法</code>，但是看着题目中<code>高效</code>那两个字，总觉得很是扎眼，所以感觉对于一个矩阵来说，总归应该有些更高效的才对。</p>
+<p>思路如下:</p>
+<ul>
+<li>数据顺序是有两个方向的，横向和纵向，那么理论上我们是能够通过一个点来排除两个方向上的数据的，但是打个比方，发现<code>[i][j]</code>点的值比<code>target</code>小，我们能够排除比这个点左边和上边的所有数据，但是接下来我们是往右移动还是往左移动呢？感觉这个问题其实也比较复杂，那有没有<code>没有歧义的移动方法</code>呢？</li>
+<li>然后就发现在这个矩阵中会有两个特殊的点，<code>左下角</code>和<code>右下角</code>，特殊之处在于，<code>比这两个点大的方向和比这俩个点小的数据，都只有一个方向</code>。这有一个方向，那么就<code>没有歧义</code>了，所以移动起来就只会有一种选择！</li>
+</ul>
+<p>如图展示下寻找步骤：<br>
+灰色部分被淘汰的数据<br>
+<img src="https://freephenix.github.io//post-images/1703062564935.png" alt="" loading="lazy"></p>
+<p>如此，每次判断都可以pass掉一行或者一列数据，而在寻找过程中，当前点位也始终会保持在<code>左下角</code>或<code>右下角</code>这个特殊位置上</p>
+<p>至此，上代码</p>
+<h1 id="代码">代码</h1>
+<h3 id="二分法">二分法</h3>
+<pre><code class="language-golang">func searchMatrix(matrix [][]int, target int) bool {
+    for _, row := range matrix {
+        // 逐层搜索
+        if binarySearch(row, target) {
+            return true
+        }
+    }
+    return false
+}
+
+// 二分法
+func binarySearch(nums []int, target int) bool {
+    n := len(nums)
+    if target &gt; nums[n-1] || target &lt; nums[0] {
+        return false
+    }
+    if target == nums[n-1] || target == nums[0] {
+        return true
+    }
+    left, right, mid := 0, n-1, 0
+    for left &lt;= right {
+        mid = (left + right) / 2
+        if nums[mid] == target {
+            return true
+        } else if target &gt; nums[mid] {
+            left = mid + 1
+        } else {
+            right = mid - 1
+        }
+    }
+    return false
+}
+</code></pre>
+<h3 id="z字形查找官解名">z字形查找（官解名）</h3>
+<pre><code>func searchMatrix(matrix [][]int, target int) bool {
+    m := len(matrix)
+    n := len(matrix[0])
+    i, j := m-1, 0
+    for i &gt;= 0 &amp;&amp; j &lt; n  {
+        if matrix[i][j] == target {
+            return true
+        } else if matrix[i][j] &gt; target {
+            i--
+        } else {
+            j++
+        }
+    }
+    return false
+}
+</code></pre>
+
+                                </div>
+                    </article>
+                    <!--  -->
+                    
+                        <div class="next-post">
+                            <div class="next">下一篇</div>
+                            <a href="https://freephenix.github.io/2-ZvoxpVK/">
+                                <h3 class="post-title">
+                                    LeetCode-112. 路径总和
+                                </h3>
+                            </a>
+                        </div>
+                        
+                            <div id="disqus_thread"></div>
+                            <div id="gitalk-container"></div>
+                </div>
+                <!-- middle -->
+                <div class="main-container-middle"></div>
+                <!-- right -->
+                <div id="sidebar" class="main-container-right">
+                    
+                        <!-- toc -->
+                        
+    <div class="toc-card i-card ">
+        <div class="toc-title i-card-title">目录</div>
+        <div class="toc-content">
+            <ul class="markdownIt-TOC">
+<li><a href="#%E9%A2%98%E7%9B%AE">题目</a></li>
+<li><a href="#%E6%80%9D%E8%B7%AF">思路</a></li>
+<li><a href="#%E4%BB%A3%E7%A0%81">代码</a><br>
+*
+<ul>
+<li><a href="#%E4%BA%8C%E5%88%86%E6%B3%95">二分法</a></li>
+<li><a href="#z%E5%AD%97%E5%BD%A2%E6%9F%A5%E6%89%BE%E5%AE%98%E8%A7%A3%E5%90%8D">z字形查找（官解名）</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+        <script>
+            function locateCatelogList() {
+                /*获取文章目录集合,可通过:header过滤器*/
+                var alis = $('.post-content :header');
+                /*获取侧边栏目录列表集合**/
+                var sidebar_alis = $('.markdownIt-TOC a');
+                /*获取滚动条到顶部的距离*/
+                var scroll_height = $(window).scrollTop();
+                for (var i = 0; i < alis.length; i++) {
+                    /*获取锚点集合中的元素分别到顶点的距离*/
+                    var a_height = $(alis[i]).offset().top;
+                    if (a_height < scroll_height) {
+                        /*高亮显示*/
+                        sidebar_alis.removeClass('on');
+                        $(sidebar_alis[i]).addClass('on');
+                    }
+                }
+            }
+            $(function() {
+                /*绑定滚动事件 */
+                $(window).bind('scroll', locateCatelogList);
+            });
+        </script>
+    </div>
+    
+                            
+
+                </div>
+
+
+
+
+            </div>
+
+
+            <div class="site-footer">
+  Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a> | 
+  <a class="rss" href="https://freephenix.github.io//atom.xml" target="_blank">RSS</a>
+</div>
+
+<script>
+  hljs.initHighlightingOnLoad()
+</script>
+
+
+    </div>
+    <script>
+        $('#sidebar').stickySidebar({
+            topSpacing: 80,
+            // bottomSpacing: 60
+        });
+    </script>
+    
+        
+            <script>
+    window.onload = function() {
+        var gitalk = new Gitalk({
+            clientID: '008503f8c8bca8787fbe',
+            clientSecret: '5f789f71e3288ff1866d17523348881053068eb4',
+            repo: 'freephenix.github.io',
+            owner: 'freephenix',
+            admin: ['freephenix'],
+            id: (location.pathname).substring(0, 49), // Ensure uniqueness and length less than 50
+            distractionFreeMode: false // Facebook-like distraction free mode
+        })
+
+        gitalk.render('gitalk-container')
+    }
+</script>
+                
+
+                    
+                                
+</body>
+
+</html>

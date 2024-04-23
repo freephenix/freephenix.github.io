@@ -1,0 +1,382 @@
+<html>
+
+<head>
+    <meta charset="utf-8" />
+<meta name="description" content="" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>
+    LeetCode-287. 寻找重复数 | 半亩房顶
+</title>
+<link rel="shortcut icon" href="https://freephenix.github.io//favicon.ico?v=1713840769430">
+<!-- <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous"> -->
+<link href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+<link rel="stylesheet" href="https://freephenix.github.io//styles/main.css">
+<!-- js -->
+<script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.min.js"></script>
+<script src="https://freephenix.github.io//media/js/jquery.sticky-sidebar.min.js"></script>
+<script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
+<script src="https://cdn.bootcss.com/moment.js/2.23.0/moment.min.js"></script>
+
+
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-147240912-1"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+
+        function gtag() {
+            dataLayer.push(arguments);
+        }
+        gtag('js', new Date());
+
+        gtag('config', 'UA-147240912-1');
+    </script>
+    
+        
+            
+                <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+                <script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+                
+
+                    
+                            
+</head>
+
+<body>
+    <div class="main">
+        <div class="header">
+    <div class="nav">
+        <div class="logo">
+            <a href="https://freephenix.github.io/">
+                <img class="avatar" src="https://freephenix.github.io//images/avatar.png?v=1713840769430" alt="">
+            </a>
+            <div class="site-title">
+                <h1>
+                    半亩房顶
+                </h1>
+            </div>
+        </div>
+        <span class="menu-btn fa fa-align-justify"></span>
+        <div class="menu-container">
+            <ul>
+                
+                    
+                            <li>
+                                <a href="/" class="menu">
+                                    首页
+                                </a>
+                            </li>
+                            
+                                
+                    
+                            <li>
+                                <a href="/archives" class="menu">
+                                    归档
+                                </a>
+                            </li>
+                            
+                                
+                    
+                            <li>
+                                <a href="/tags" class="menu">
+                                    标签
+                                </a>
+                            </li>
+                            
+                                
+                    
+                            <li>
+                                <a href="https://freephenix.github.io//post/guan-yu-ban-mu-fang-ding/" class="menu">
+                                    关于
+                                </a>
+                            </li>
+                            
+                                
+            </ul>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function() {
+        $(".menu-btn").click(function() {
+            $(".menu-container").slideToggle();
+        });
+        $(window).resize(function() {
+
+            if (window.matchMedia('(min-width: 960px)').matches) {
+                $(".menu-container").css('display', 'block')
+            } else {
+                $(".menu-container").css('display', 'none')
+            }
+
+        });
+    });
+</script>
+
+            <div id="main-content" class="post-detail main-container">
+                <!-- left -->
+                <div id="content" class="main-container-left">
+                    <article class="post i-card">
+                        <h2 class="post-title">
+                            LeetCode-287. 寻找重复数
+                        </h2>
+                        <div class="post-info">
+                            <time class="post-time">2024-04-09</time>
+                            
+                                <a href="https://freephenix.github.io/mZCdVSzNe/" class="post-tag i-tag
+                            i-tag-">
+                            #二分查找
+                        </a>
+                                
+                                <a href="https://freephenix.github.io/V1DFbmyKM/" class="post-tag i-tag
+                            i-tag-other_1">
+                            #链表
+                        </a>
+                                
+                                <a href="https://freephenix.github.io/YWFpnf3Gl/" class="post-tag i-tag
+                            i-tag-info">
+                            #刷题
+                        </a>
+                                
+                                <a href="https://freephenix.github.io/70TrDOWqgi/" class="post-tag i-tag
+                            i-tag-other_4">
+                            #面试
+                        </a>
+                                
+                                <a href="https://freephenix.github.io/go/" class="post-tag i-tag
+                            i-tag-other_2">
+                            #Go
+                        </a>
+                                
+                                <a href="https://freephenix.github.io/k1NaSbOoC/" class="post-tag i-tag
+                            i-tag-other_4">
+                            #LeetCode
+                        </a>
+                                
+                                <a href="https://freephenix.github.io/WucazjDbn/" class="post-tag i-tag
+                            i-tag-other_3">
+                            #算法
+                        </a>
+                                
+                        </div>
+                        
+                            <div class="post-feature-image" style="background-image: url('https://freephenix.github.io//post-images/kGmuBXxPA.jpeg')"></div>
+                            
+                                <div class="post-content">
+                                    <p>刷题使我快乐，满脸开心.jpg</p>
+<p>来源：力扣（LeetCode）<br>
+链接：https://leetcode.cn/problems/find-the-duplicate-number/<br>
+著作权归领扣网络所有。商业转载请联系官方授权，非商业转载请注明出处。</p>
+<!-- more -->
+<h1 id="题目">题目</h1>
+<p>给定一个包含 <code>n + 1</code> 个整数的数组 <code>nums</code> ，其数字都在 <code>[1, n]</code> 范围内（包括 <code>1</code> 和 <code>n</code>），可知至少存在一个重复的整数。</p>
+<p>假设 <code>nums</code> 只有 一个重复的整数 ，返回 <code>这个重复的数</code> 。</p>
+<p>你设计的解决方案必须 <code>不修改</code> 数组 <code>nums</code> 且只用常量级 <code>O(1)</code> 的额外空间。</p>
+<p>示例 1：</p>
+<pre><code>输入：nums = [1,3,4,2,2]
+输出：2
+</code></pre>
+<p>示例 2：</p>
+<pre><code>输入：nums = [3,1,3,4,2]
+输出：3
+</code></pre>
+<p>示例 3 :</p>
+<pre><code>输入：nums = [3,3,3,3,3]
+输出：3
+</code></pre>
+<p>提示：</p>
+<ul>
+<li><code>1 &lt;= n &lt;= 10^5</code></li>
+<li><code>nums.length == n + 1</code></li>
+<li><code>1 &lt;= nums[i] &lt;= n</code></li>
+<li><code>nums</code> 中 <code>只有一个整数</code> 出现 <code>两次或多次</code> ，其余整数均只出现 一次</li>
+</ul>
+<h1 id="思路">思路</h1>
+<p>这道题最关键的一句话就是</p>
+<blockquote>
+<p>包含 <code>n + 1</code> 个整数的数组 <code>nums</code> ，其数字都在 <code>[1, n]</code> 范围内</p>
+</blockquote>
+<p>这个条件带来两个重要信息</p>
+<ul>
+<li>根据抽屉原理，假如有 <code>n+1</code> 或多于 <code>n+1</code> 个元素放到 <code>n</code> 个集合中去，其中必定至少有一个集合里有两个元素，这个跟题目中保证的有重复元素还不太一样，因为这里的意思是，在原有的 <code>[1, n]</code> 范围内，会有一个多出来的数字是重复的。可能部分元素是缺失的，但是因为只有一个重复元素，所以缺失元素会被重复元素 <code>补位</code>，这个对于二分法很重要。</li>
+<li>直接将 <code>坐标</code> 和 <code>值</code> 建立了一种关系，至于其他的 <code>常量级额外空间</code>，<code>不修改数组</code>，则更像是推动你把 <code>坐标</code> 和 <code>值</code> 联系到一起去思考似的</li>
+</ul>
+<h3 id="二分法">二分法</h3>
+<p>任意找一个值 <code>mid</code>，统计数组中 <code>小于等于mid</code> 的数量，正常应该是 <code>不大于mid</code> 的，但如果这个数量 <code>大于mid</code> 那么说明，重复的值肯定是在 <code>mid</code> 左边。因为 <code>抽屉原理</code> ，是存在重复元素的，而重复数字混入才会使得某个区间内的数字变多。</p>
+<p>而又因为第二个信息，我们就可以用 <code>坐标</code> 来选取 <code>mid</code> ，通过每选取一个 <code>坐标</code> 就统计<code>小于等于mid</code> 的数量的方式，就可以无视原本乱序的数组，确认重复元素所在的 <code>坐标</code> 了。</p>
+<h3 id="等效链表法">等效链表法</h3>
+<p><a href="https://leetcode.cn/problems/find-the-duplicate-number/solutions/58841/287xun-zhao-zhong-fu-shu-by-kirsche/">等效链表法题解链接</a></p>
+<p>这个解法非常巧妙，可是比较难想到。<br>
+就是根据第二个信息，既然<code>坐标</code> 和 <code>值</code>在同一个范围内，那就把数组的值看做是 <code>要跳转到的下标</code>，形成一个 <code>肯定存在环</code> 的链表，这时思路就变成 <code>寻找有环链表的环入口</code> 了，参考这个题：<br>
+<a href="https://freephenix.github.io/PYGJIUv7o/">LeetCode-142. 环形链表 II</a></p>
+<p>思路就说到这里，上代码看注释～</p>
+<h1 id="代码">代码</h1>
+<h3 id="二分法-2">二分法</h3>
+<pre><code class="language-golang">func findDuplicate(nums []int) int {
+	left, right := 0, len(nums)-1
+	for left &lt; right {
+        // 用坐标当作锚点寻找重复数字所在区间
+		mid := (left + right) / 2
+		count := 0
+        // 统计数量方式可以无视数组无序
+		for _, num := range nums {
+			if num &lt;= mid {
+				count++
+			}
+		}
+        // 正常应该是小于等于，如果大于肯定是有重复元素在前半部分
+		if count &gt; mid {
+			right = mid
+		} else {
+			left = mid + 1
+		}
+	}
+	return left
+}
+</code></pre>
+<h3 id="等效链表快慢指针法">等效链表快慢指针法</h3>
+<pre><code class="language-golang">func findDuplicate(nums []int) int {
+    // 每走一步，间距就+1，某个间距等于 环长度倍数 时，就相遇了
+	slowP, fastP := 0, 0
+	for {
+		slowP = nums[slowP]
+		fastP = nums[nums[fastP]]
+		if slowP == fastP {
+			break
+		}
+	}
+    // 重置另一个的值，一起走就可以在环入口相遇
+    // 证明参考 LeetCode-142. 环形链表 II 的分析
+    slowP = 0
+    for {
+		slowP = nums[slowP]
+		fastP = nums[fastP]
+		if slowP == fastP {
+			break
+		}
+	}
+	return slowP
+}
+</code></pre>
+
+                                </div>
+                    </article>
+                    <!--  -->
+                    
+                        <div class="next-post">
+                            <div class="next">下一篇</div>
+                            <a href="https://freephenix.github.io/ENlqvznux/">
+                                <h3 class="post-title">
+                                    LeetCode-213. 打家劫舍 II
+                                </h3>
+                            </a>
+                        </div>
+                        
+                            <div id="disqus_thread"></div>
+                            <div id="gitalk-container"></div>
+                </div>
+                <!-- middle -->
+                <div class="main-container-middle"></div>
+                <!-- right -->
+                <div id="sidebar" class="main-container-right">
+                    
+                        <!-- toc -->
+                        
+    <div class="toc-card i-card ">
+        <div class="toc-title i-card-title">目录</div>
+        <div class="toc-content">
+            <ul class="markdownIt-TOC">
+<li><a href="#%E9%A2%98%E7%9B%AE">题目</a></li>
+<li><a href="#%E6%80%9D%E8%B7%AF">思路</a><br>
+*
+<ul>
+<li><a href="#%E4%BA%8C%E5%88%86%E6%B3%95">二分法</a></li>
+<li><a href="#%E7%AD%89%E6%95%88%E9%93%BE%E8%A1%A8%E6%B3%95">等效链表法</a></li>
+</ul>
+</li>
+<li><a href="#%E4%BB%A3%E7%A0%81">代码</a><br>
+*
+<ul>
+<li><a href="#%E4%BA%8C%E5%88%86%E6%B3%95-2">二分法</a></li>
+<li><a href="#%E7%AD%89%E6%95%88%E9%93%BE%E8%A1%A8%E5%BF%AB%E6%85%A2%E6%8C%87%E9%92%88%E6%B3%95">等效链表快慢指针法</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+        <script>
+            function locateCatelogList() {
+                /*获取文章目录集合,可通过:header过滤器*/
+                var alis = $('.post-content :header');
+                /*获取侧边栏目录列表集合**/
+                var sidebar_alis = $('.markdownIt-TOC a');
+                /*获取滚动条到顶部的距离*/
+                var scroll_height = $(window).scrollTop();
+                for (var i = 0; i < alis.length; i++) {
+                    /*获取锚点集合中的元素分别到顶点的距离*/
+                    var a_height = $(alis[i]).offset().top;
+                    if (a_height < scroll_height) {
+                        /*高亮显示*/
+                        sidebar_alis.removeClass('on');
+                        $(sidebar_alis[i]).addClass('on');
+                    }
+                }
+            }
+            $(function() {
+                /*绑定滚动事件 */
+                $(window).bind('scroll', locateCatelogList);
+            });
+        </script>
+    </div>
+    
+                            
+
+                </div>
+
+
+
+
+            </div>
+
+
+            <div class="site-footer">
+  Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a> | 
+  <a class="rss" href="https://freephenix.github.io//atom.xml" target="_blank">RSS</a>
+</div>
+
+<script>
+  hljs.initHighlightingOnLoad()
+</script>
+
+
+    </div>
+    <script>
+        $('#sidebar').stickySidebar({
+            topSpacing: 80,
+            // bottomSpacing: 60
+        });
+    </script>
+    
+        
+            <script>
+    window.onload = function() {
+        var gitalk = new Gitalk({
+            clientID: '008503f8c8bca8787fbe',
+            clientSecret: '5f789f71e3288ff1866d17523348881053068eb4',
+            repo: 'freephenix.github.io',
+            owner: 'freephenix',
+            admin: ['freephenix'],
+            id: (location.pathname).substring(0, 49), // Ensure uniqueness and length less than 50
+            distractionFreeMode: false // Facebook-like distraction free mode
+        })
+
+        gitalk.render('gitalk-container')
+    }
+</script>
+                
+
+                    
+                                
+</body>
+
+</html>

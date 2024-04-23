@@ -1,0 +1,530 @@
+<html>
+
+<head>
+    <meta charset="utf-8" />
+<meta name="description" content="" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>
+    Golang 垃圾回收算法 | 半亩房顶
+</title>
+<link rel="shortcut icon" href="https://freephenix.github.io//favicon.ico?v=1713840769430">
+<!-- <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous"> -->
+<link href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+<link rel="stylesheet" href="https://freephenix.github.io//styles/main.css">
+<!-- js -->
+<script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.min.js"></script>
+<script src="https://freephenix.github.io//media/js/jquery.sticky-sidebar.min.js"></script>
+<script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
+<script src="https://cdn.bootcss.com/moment.js/2.23.0/moment.min.js"></script>
+
+
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-147240912-1"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+
+        function gtag() {
+            dataLayer.push(arguments);
+        }
+        gtag('js', new Date());
+
+        gtag('config', 'UA-147240912-1');
+    </script>
+    
+        
+            
+                <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+                <script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+                
+
+                    
+                            
+</head>
+
+<body>
+    <div class="main">
+        <div class="header">
+    <div class="nav">
+        <div class="logo">
+            <a href="https://freephenix.github.io/">
+                <img class="avatar" src="https://freephenix.github.io//images/avatar.png?v=1713840769430" alt="">
+            </a>
+            <div class="site-title">
+                <h1>
+                    半亩房顶
+                </h1>
+            </div>
+        </div>
+        <span class="menu-btn fa fa-align-justify"></span>
+        <div class="menu-container">
+            <ul>
+                
+                    
+                            <li>
+                                <a href="/" class="menu">
+                                    首页
+                                </a>
+                            </li>
+                            
+                                
+                    
+                            <li>
+                                <a href="/archives" class="menu">
+                                    归档
+                                </a>
+                            </li>
+                            
+                                
+                    
+                            <li>
+                                <a href="/tags" class="menu">
+                                    标签
+                                </a>
+                            </li>
+                            
+                                
+                    
+                            <li>
+                                <a href="https://freephenix.github.io//post/guan-yu-ban-mu-fang-ding/" class="menu">
+                                    关于
+                                </a>
+                            </li>
+                            
+                                
+            </ul>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function() {
+        $(".menu-btn").click(function() {
+            $(".menu-container").slideToggle();
+        });
+        $(window).resize(function() {
+
+            if (window.matchMedia('(min-width: 960px)').matches) {
+                $(".menu-container").css('display', 'block')
+            } else {
+                $(".menu-container").css('display', 'none')
+            }
+
+        });
+    });
+</script>
+
+            <div id="main-content" class="post-detail main-container">
+                <!-- left -->
+                <div id="content" class="main-container-left">
+                    <article class="post i-card">
+                        <h2 class="post-title">
+                            Golang 垃圾回收算法
+                        </h2>
+                        <div class="post-info">
+                            <time class="post-time">2021-01-29</time>
+                            
+                                <a href="https://freephenix.github.io/go/" class="post-tag i-tag
+                            i-tag-error">
+                            #Go
+                        </a>
+                                
+                                <a href="https://freephenix.github.io/WucazjDbn/" class="post-tag i-tag
+                            i-tag-">
+                            #算法
+                        </a>
+                                
+                                <a href="https://freephenix.github.io/HgE3rCkXf/" class="post-tag i-tag
+                            i-tag-error">
+                            #垃圾回收
+                        </a>
+                                
+                        </div>
+                        
+                            <div class="post-feature-image" style="background-image: url('https://freephenix.github.io//post-images/golang-la-ji-hui-shou-suan-fa-de-qian-shi-jin-sheng.jpg')"></div>
+                            
+                                <div class="post-content">
+                                    <p>一提到Golang垃圾回收，三色原理，我们都能脱口而出，那么，它的历程是什么，v1.3、v1.5、v1.8做了什么里程碑式的变革？</p>
+<!-- more -->
+<h1 id="golang-垃圾回收里程碑">Golang 垃圾回收里程碑</h1>
+<ul>
+<li>go v1.3 标记-清除算法</li>
+<li>go v1.5 三色标记法</li>
+<li>go v1.8 混合写屏障机制</li>
+</ul>
+<h1 id="golang-v13-标记清除算法">Golang v1.3 标记清除算法</h1>
+<ul>
+<li>go v1.3之前的标记清除算法，还是大家深深诟病的那个，STW start - mark - sweep - STW done，程序在标记和清理的整个过程中都需要暂停业务程序</li>
+<li>gov1.3时做了简单的改进，整体的流程变成了 STW start - mark - STW done - sweep</li>
+</ul>
+<p>不过我们依然能够发现，STW依然会是一个如鲠在喉的存在，让我们继续看go v1.5之后怎么样了</p>
+<h1 id="golang-v15-三色标记法-屏障机制">Golang v1.5 三色标记法 &amp; 屏障机制</h1>
+<p>我们先来大致看一下三色标记法是什么步骤</p>
+<ul>
+<li>第一步：标记启动，对象中默认颜色就是白色，从白色集中向外遍历，遍历到的标位灰色，放入灰色集合</li>
+<li>第二步：标记过程，遍历灰色集合，将可达到的对象库存在灰色集合中，遍历完成的灰色标记为黑色，放入黑色集合</li>
+<li>第三步：标记终止，灰色集合中全部清空，则可以启动清扫，清扫完成后将所有节点置为白色，等待下一次GC</li>
+</ul>
+<p>这时候大家肯定会纳闷，STW还有没有，有的话在哪里？屏障机制什么时候启动、又是如何工作的？<br>
+下面我们分步骤来看看细节点</p>
+<h2 id="标记启动mark-setup-stw">标记启动（Mark Setup - STW）</h2>
+<p>首先要开启写屏障（Write Barrier），写屏障保证的是标记过程中数据完整性，因为标记过程中，应用和收集器是并行的。<br>
+为了打开写屏障，需要停止所有应用程序的工作，开启过程很快10-30微秒，但是如何保证应用程序能够很好的继续运行呢？那这里就需要提一下，到底在什么时候运行STW？(引申阅读：<a href="https://www.ardanlabs.com/blog/2018/08/scheduling-in-go-part1.html">程序调度系列文章</a>)<br>
+答案是在函数调用时，程序调用的时间点是每个goroutinue可以安全暂停的点，当然在并发场景下，即使如此也会有问题，毕竟我们多个goroutinue不可能在同一时间都执行函数调用，这个的解决方案在go 1.14中解决掉了，具体可以参照这个issues: <a href="https://github.com/golang/go/issues/24543">runtime: non-cooperative goroutine preemption</a>，大体方法是向调度器添加非合作抢占来支持安全切换未执行函数调用的goroutinue。</p>
+<h2 id="标记过程marking-concurrent">标记过程（Marking - Concurrent）</h2>
+<p>一旦开启了写屏障，就进入了标记阶段，收集器先要做的就是占用25%的CPU能力，使用goroutinue工作的收集器需要和现有goroutinue一起使用P和M。简单计算下，就是4个P的程序，其中一个完整的P将分配给收集器（<a href="https://blog.csdn.net/huigan/article/details/106134937">G-P-M</a>）</p>
+<p>开始标记时，收集器会从<code>root</code>出发，逐步遍历堆中的内存，完成标记工作，此时，剩余75%的P上依然可以正常运行goroutinue，并发(concurrent)执行。当然事实中不会一直如此顺利，如果有其中一个goroutinue迟迟不能完成收集，怎么办？这个时候，新的内存释放会被放缓，并且收集器会招募应用程序 Goroutines 来协助标记工作，这个叫做标记辅助（Mark Assist）。被抓壮丁的goroutinue占用时间直接取决于堆内存使用的量，当然，对于收集器来说，越少使用标记辅助，就会越好。</p>
+<h4 id="引申问题1扫描伊始的root都有哪些">引申问题1：扫描伊始的root都有哪些？</h4>
+<ul>
+<li>全局变量：程序在编译期就能确定的那些存在于程序整个生命周期的变量。</li>
+<li>执行栈：每个 goroutine 都包含自己的执行栈，这些执行栈上包含栈上的变量及指向分配的堆内存区块的指针。这里重点说下栈，golang中每个类型结构里都有一个<code>_type</code>:</li>
+</ul>
+<pre><code>type _type struct {
+    size       uintptr
+    ptrdata    uintptr // size of memory prefix holding all pointers
+    hash       uint32
+    tflag      tflag
+    align      uint8
+    fieldalign uint8
+    kind       uint8
+    alg        *typeAlg
+    // gcdata stores the GC type data for the garbage collector.
+    // If the KindGCProg bit is set in kind, gcdata is a GC program.
+    // Otherwise it is a ptrmask bitmap. See mbitmap.go for details.
+    gcdata    *byte
+    str       nameOff
+    ptrToThis typeOff
+}
+</code></pre>
+<p>其中的 gcData 就是为gc做准备的，存储着一个标记指针地址的bitmap，方便gc程序寻找对象。而在运行时，还会有另外一个机制，进一步扫描对象，挖掘引用关系，争取做到可达对象全覆盖： <code>scanobject </code>，它会利用新分配对象时调用的<code>mallocgc</code>函数准备好的<code>heapBitsSetType</code>，方便获取每个内存块中的指针，并扫描出对象。</p>
+<ul>
+<li>寄存器：寄存器的值可能表示一个指针，参与计算的这些指针可能指向某些赋值器分配的堆内存区块。</li>
+</ul>
+<h4 id="引申问题2如果内存分配速度超过了标记清除的速度怎么办">引申问题2：如果内存分配速度超过了标记清除的速度怎么办？</h4>
+<p>当 GC 触发后，会首先进入并发标记的阶段。并发标记会设置一个标志，并在 mallocgc 调用时进行检查。当存在新的内存分配时，会暂停分配内存过快的那些 goroutine，并将其转去执行一些辅助标记（Mark Assist）的工作，从而达到放缓继续分配、辅助 GC 的标记工作的目的。</p>
+<pre><code>func mallocgc(t typ.Type, size uint64){
+if enableMarkAssist {
+// 进行标记辅助，此时用户代码没有得到执行
+(...)
+}
+// 执行内存分配
+(...)
+}
+</code></pre>
+<h2 id="标记终止mark-termination-stw">标记终止（Mark Termination - STW）</h2>
+<p>当所有标记完成时，进入终止阶段，在这里阶段，会停止写屏障，清扫垃圾，并准备下一次的垃圾收集。停止标记工作一共历时60-90微秒，其实可以不用STW，但是这个时间延迟，最终决定了还是采用更为简便的STW来完成这个工作。<br>
+此时的清扫工作是并发执行的，这个工作本身是不需要受垃圾收集工作制约的。</p>
+<h2 id="写屏障机制">写屏障机制</h2>
+<p>写屏障主要的目标是解决掉被黑色引用的白色对象被清理的问题，那么v1.5的屏障机制就不难理解：<br>
+1、插入写屏障<br>
+满足强三色不变性，即被引用对象，会被强制标记为灰色。<br>
+2、删除写屏障<br>
+满足弱三色不变性，即被删除对象，如果自身为灰色或者白色，会被标记为灰色。<br>
+这个机制最大的问题在于，如果面临栈内存分配时，因为屏障机制增加的时间成本比较大，那么，这个机制是否可以优化？看v1.8！</p>
+<h1 id="golang-v18-混合写屏障机制">Golang v1.8 混合写屏障机制</h1>
+<p>在说v1.8改进之前，先说明下三色原理：</p>
+<ul>
+<li>强三色原理：<strong>黑色对象不会指向白色对象</strong>，所有的黑色对象都只能指向非白色对象就不会出现如上的情况，就不会出现以上的情况，这样所有的白色对象就不会被隐藏，从而保证是安全的。</li>
+<li>弱三色原理：<strong>所有黑色对象引用的白色对象，一定能被另外一个灰色对象引用</strong>，有了这个约束后，就算一个黑色对象隐藏了白色对象，那么这个白色对象还是被其他灰色对象调用的。</li>
+</ul>
+<h2 id="强三色原理">强三色原理</h2>
+<p>先来看看这个，应该如何实践这个原理呢？来段伪代码</p>
+<pre><code>writePointer(slot, ptr):
+    shade(ptr)
+    *slot = ptr
+</code></pre>
+<p>写入时候做shade操作，就是安全的保护指向，简单讲就是比如黑色指向白色时，将白色置灰，不让”黑色对象指向白色对象“，这个自然最彻底，但是如果此时对象在栈上，会比较难实现。作为一个外部的收集器，访问goroutinue内部的栈空间，难度可以想象，会比较复杂，很影响性能不说，为了保证栈上数据的可靠性，还需要借助STW实现对于栈空间的rescan，确保强三色原理满足，这个开销很大，那下面看看弱三色原理</p>
+<h2 id="弱三色原理">弱三色原理</h2>
+<p>通过上面可以看到，弱三色主要想要做的，是换一种方式，实现对于白对象的保护，先来伪代码</p>
+<pre><code>writePointer(slot, ptr):
+    shade(*slot)
+    if current stack is grey:
+        shade(ptr)
+    *slot = ptr
+</code></pre>
+<p>如果新建对象为黑色，而栈又没有写屏障保护，会打破黑色对象引用白色对象的约束，因此混合写保障了弱的三原色约束，这里有个前提就是新建对象都是标为黑色，这样如果栈中指针指向新创建的对象的话也不需要重新扫描栈，因为已经标记为黑色。<br>
+用弱三色原理的目的也很简单，这个方式节约了扫描栈空间的成本，极大缩减了STW的时间<br>
+至于弱三色原理的正确性证明，感兴趣的可以自行google</p>
+<p>v1.8之后，混合写屏障情况如下：<br>
+1、GC 在首次执行时，先将栈上的所有对象都标记为黑色。<br>
+2、GC 在执行过程中，在栈上新创建的对象，默认被标记为黑色。<br>
+3、将被删除的对象标记为灰色。<br>
+4、将被添加的对象标记为灰色。</p>
+<h4 id="引申问题3什么是写屏障-混合写屏障如何实现">引申问题3：什么是写屏障、混合写屏障，如何实现？</h4>
+<p>要讲清楚写屏障，就需要理解三色标记清除算法中的强弱不变性以及赋值器的颜色，理解他们需要一定的抽象思维。写屏障是一个在并发垃圾回收器中才会出现的概念，垃圾回收器的正确性体现在：不应出现对象的丢失，也不应错误的回收还不需要回收的对象。</p>
+<p>可以证明，当以下两个条件同时满足时会破坏垃圾回收器的正确性：</p>
+<p>条件 1: 赋值器修改对象图，导致某一黑色对象引用白色对象；<br>
+条件 2: 从灰色对象出发，到达白色对象的、未经访问过的路径被赋值器破坏。<br>
+只要能够避免其中任何一个条件，则不会出现对象丢失的情况，因为：</p>
+<p>如果条件 1 被避免，则所有白色对象均被灰色对象引用，没有白色对象会被遗漏；<br>
+如果条件 2 被避免，即便白色对象的指针被写入到黑色对象中，但从灰色对象出发，总存在一条没有访问过的路径，从而找到到达白色对象的路径，白色对象最终不会被遗漏。<br>
+我们不妨将三色不变性所定义的波面根据这两个条件进行削弱：</p>
+<p>当满足原有的三色不变性定义（或上面的两个条件都不满足时）的情况称为<code>强三色不变性</code>（strong tricolor invariant），即<code>强三色原理</code><br>
+当赋值器令黑色对象引用白色对象时（满足条件 1 时）的情况称为<code>弱三色不变性</code>（weak tricolor invariant），即<code>弱三色原理</code><br>
+当赋值器进一步破坏灰色对象到达白色对象的路径时（进一步满足条件 2 时），即打破弱三色不变性， 也就破坏了回收器的正确性；或者说，在破坏强弱三色不变性时必须引入额外的辅助操作。 弱三色不变形的好处在于：只要存在未访问的能够到达白色对象的路径，就可以将黑色对象指向白色对象。</p>
+<p>灰色赋值器的 Dijkstra 插入屏障的基本思想是避免满足条件 1：</p>
+<pre><code>// 灰色赋值器 Dijkstra 插入屏障
+func DijkstraWritePointer(slot *unsafe.Pointer, ptr unsafe.Pointer){
+    shade(ptr)
+*slot = ptr
+}
+</code></pre>
+<p><img src="https://freephenix.github.io//post-images/1618216785437.png" alt="" loading="lazy"><br>
+Dijkstra 插入屏障的好处在于可以立刻开始并发标记。但存在两个缺点：</p>
+<ul>
+<li>由于 Dijkstra 插入屏障的“保守”，在一次回收过程中可能会残留一部分对象没有回收成功，只有在下一个回收过程中才会被回收；</li>
+<li>在标记阶段中，每次进行指针赋值操作时，都需要引入写屏障，这无疑会增加大量性能开销；为了避免造成性能问题，Go 团队在最终实现时，没有为所有栈上的指针写操作，启用写屏障，而是当发生栈上的写操作时，将栈标记为灰色，但此举产生了灰色赋值器，将会需要标记终止阶段 STW 时对这些栈进行重新扫描。</li>
+</ul>
+<p>另一种比较经典的写屏障是黑色赋值器的 Yuasa 删除屏障。其基本思想是避免满足条件 2：</p>
+<pre><code>// 黑色赋值器 Yuasa 屏障
+func YuasaWritePointer(slot *unsafe.Pointer, ptr unsafe.Pointer){
+    shade(*slot)
+*slot = ptr
+}
+</code></pre>
+<p><img src="https://freephenix.github.io//post-images/1618216815589.png" alt="" loading="lazy"><br>
+Yuasa 删除屏障的优势则在于不需要标记结束阶段的重新扫描，结束时候能够准确的回收所有需要回收的白色对象。缺陷是 Yuasa 删除屏障会拦截写操作，进而导致波面的退后，产生“冗余”的扫描：</p>
+<p>Go 在 1.8 的时候为了简化 GC 的流程，同时减少标记终止阶段的重扫成本，将 Dijkstra 插入屏障和 Yuasa 删除屏障进行混合，形成混合写屏障。该屏障提出时的基本思想是：对正在被覆盖的对象进行着色，且如果当前栈未扫描完成，则同样对指针进行着色。</p>
+<pre><code>// 混合写屏障
+func HybridWritePointerSimple(slot *unsafe.Pointer, ptr unsafe.Pointer){
+    shade(*slot)
+    shade(ptr)
+*slot = ptr
+}
+</code></pre>
+<p>在这个实现中，如果无条件对引用双方进行着色，自然结合了 Dijkstra 和 Yuasa 写屏障的优势，但缺点也非常明显，因为着色成本是双倍的，而且编译器需要插入的代码也成倍增加，随之带来的结果就是编译后的二进制文件大小也进一步增加。为了针对写屏障的性能进行优化，Go 1.10 前后，Go 团队随后实现了批量写屏障机制。其基本想法是将需要着色的指针统一写入一个缓存，每当缓存满时统一对缓存中的所有<code>ptr</code>指针进行着色。</p>
+<h1 id="gc的触发方式">GC的触发方式</h1>
+<p>1、内存分配阈值，阈值=上次 GC 内存分配值 * 内存增长率，其中内存增长率由环境变量 GOGC 设定（GC Percentage），默认值为 100。每次内存分配时，都会先检查当前内存分配是否已经达到阈值，如果已达到阈值，就会触发 GC，即每当内存分配量将要增长一倍时则触发 GC。<br>
+2、定时触发，src/runtime/proc.go 文件中的 forcegcperiod 设定触发 GC 的时间间隔，默认值为 2 分钟。<br>
+3、手动触发，通过调用 runtime.GC() 方法，触发 GC。</p>
+<h1 id="需要关注哪些gc指标">需要关注哪些GC指标</h1>
+<p>Go 的 GC 被设计为成比例触发、大部分工作与赋值器并发、不分代、无内存移动且会主动向操作系统归还申请的内存。因此最主要关注的、能够影响赋值器的性能指标有：</p>
+<ul>
+<li>CPU 利用率：回收算法会在多大程度上拖慢程序？有时候，这个是通过回收占用的 CPU 时间与其它 CPU 时间的百分比来描述的。</li>
+<li>GC 停顿时间：回收器会造成多长时间的停顿？目前的 GC 中需要考虑 STW 和 Mark Assist 两个部分可能造成的停顿。</li>
+<li>GC 停顿频率：回收器造成的停顿频率是怎样的？目前的 GC 中需要考虑 STW 和 Mark Assist 两个部分可能造成的停顿。</li>
+<li>GC 可扩展性：当堆内存变大时，垃圾回收器的性能如何？但大部分的程序可能并不一定关心这个问题。</li>
+</ul>
+<h1 id="如何调优gc">如何调优GC</h1>
+<ul>
+<li>控制内存分配的速度，限制 goroutine 的数量，从而提高赋值器对 CPU 的利用率。</li>
+<li>减少并复用内存，例如使用 sync.Pool 来复用需要频繁创建临时对象，例如提前分配足够的内存来降低多余的拷贝。</li>
+<li>需要时，增大 GOGC 的值，降低 GC 的运行频率。</li>
+</ul>
+<h1 id="有了gc为什么还会有内存泄露">有了GC，为什么还会有内存泄露？</h1>
+<p>首先来看下内存泄露严谨些的解释：&quot;预期的能很快被释放的内存由于附着在了长期存活的内存上、或生命期意外地被延长，导致预计能够立即回收的内存而长时间得不到回收&quot;。</p>
+<h3 id="形式1预期能被快速释放的内存因被根对象引用而没有得到迅速释放">形式1：预期能被快速释放的内存因被根对象引用而没有得到迅速释放</h3>
+<p>当有一个全局对象时，可能不经意间将某个变量附着在其上，且忽略的将其进行释放，则该内存永远不会得到释放。</p>
+<pre><code>var cache = map[interface{}]interface{}{}
+func keepalloc() {
+    for i := 0; i &lt; 10000; i++ {
+        m := make([]byte, 1&lt;&lt;10)
+        cache[i] = m
+    }
+}
+</code></pre>
+<h3 id="形式2goroutine-泄漏">形式2：goroutine 泄漏</h3>
+<p>Goroutine 作为一种逻辑上理解的轻量级线程，需要维护执行用户代码的上下文信息。在运行过程中也需要消耗一定的内存来保存这类信息，而这些内存在目前版本的 Go 中是不会被释放的。因此，如果一个程序持续不断地产生新的 goroutine、且不结束已经创建的 goroutine 并复用这部分内存，就会造成内存泄漏的现象</p>
+<pre><code>func keepalloc2() {
+    for i := 0; i &lt; 100000; i++ {
+        go func() {
+            select {}
+        }()
+    }
+}
+</code></pre>
+<h1 id="一些补充点">一些补充点</h1>
+<h2 id="gc-percentage">GC Percentage</h2>
+<p>runtime中有GC Percentage的选项，这个配置数字默认是100表明，需要有新分配100%的堆内存时才会触发下一次GC，请谨慎，设置100会造成延迟</p>
+<h2 id="gc-trace">GC Trace</h2>
+<p>可以通过包含环境变量 GODEBUG 和 gctrace = 1选项来开启GC trace，这样每次GC时，就会将GC信息写入stderr。运行 GC trace可以告诉我们很多关于应用程序的健康状况和收集器的速度的信息。收集器的运行速度在收集过程中起着重要作用。</p>
+<h2 id="pacing">Pacing</h2>
+<p>收集器有一个决定GC间隔的算法，即调整GC步长，这个算法依赖于收集的程序信息和程序对堆内存的压力反馈（其实就是分配堆内存速度）</p>
+<h2 id="collector-latency-costs">Collector Latency Costs</h2>
+<p>GC有两部分的延误程序。<br>
+1、CPU占用，减少了CPU，应用程序此时肯定会受到影响。<br>
+2、STW，硬生生的暂停和上下文切换成本</p>
+<h1 id="演化历程的启发">演化历程的启发</h1>
+<ul>
+<li>Go 1：串行三色标记清扫</li>
+<li>Go 1.3：并行清扫，标记过程需要 STW，停顿时间在约几百毫秒</li>
+<li>Go 1.5：并发标记清扫，停顿时间在一百毫秒以内</li>
+<li>Go 1.6：使用 bitmap 来记录回收内存的位置，大幅优化垃圾回收器自身消耗的内存，停顿时间在十毫秒以内</li>
+<li>Go 1.7：停顿时间控制在两毫秒以内</li>
+<li>Go 1.8：混合写屏障，停顿时间在半个毫秒左右</li>
+<li>Go 1.9：彻底移除了栈的重扫描过程</li>
+<li>Go 1.12：整合了两个阶段的 Mark Termination，但引入了一个严重的 GC Bug 至今未修（见问题 20），尚无该 Bug 对 GC 性能影响的报告</li>
+<li>Go 1.13：着手解决向操作系统归还内存的，提出了新的 Scavenger</li>
+<li>Go 1.14：替代了仅存活了一个版本的 scavenger，全新的页分配器，优化分配内存过程的速率与现有的扩展性问题，并引入了异步抢占，解决了由于密集循环导致的 STW 时间过长的问题<br>
+通观GC的进化历程，我比较关注的有两个重要的点，<br>
+一是，通过一步步的不断改进，极大的缩减了STW，这个过程，缺失了每一环，都是有可能无法达到这个局面的。我想说的是，罗马不是一天建成的，我们应该不断积累自己的系统能力，不断完善和强大，为的是有一天，完成那些难以想象的事情。<br>
+二是，不要最优，要最简单，这跟go的设计理念相符。我们做项目也是如此，很多时候并不是没有更好的解法，只是，有很多利弊需要权衡，我们要选的，从来都是最适合的。</li>
+</ul>
+<h1 id="引用">引用</h1>
+<p><a href="https://www.cnblogs.com/Delo/articles/12553593.html">【转载】图解Go语言的gc算法——三色标记</a><br>
+<a href="https://studygolang.com/articles/27243?fr=sidebar">Golang三色标记、混合写屏障GC模式图文全分析</a><br>
+<a href="https://mp.weixin.qq.com/s/gkBg742lpBVRBhTPhOQ7hg">每位 Gopher 都应该了解的 Golang 语言的垃圾回收算法</a><br>
+<a href="https://my.oschina.net/u/4579381/blog/4347801">内存管理篇(三)：Go垃圾回收之三色标记算法</a><br>
+<a href="https://blog.csdn.net/erlib/article/details/51850912">为Go语言GC正名－20秒到100微妙的演变史</a><br>
+<a href="https://blog.csdn.net/bairongdong1/article/details/52216360">02.2跟雨痕看go源码- 并发清理与三色标记</a><br>
+<a href="https://blog.csdn.net/waltonhuang/article/details/105550331">三色标记算法 SATB</a><br>
+<a href="https://www.ardanlabs.com/blog/2018/12/garbage-collection-in-go-part1-semantics.html">Garbage Collection In Go : Part I - Semantics</a><br>
+<a href="https://www.ardanlabs.com/blog/2019/05/garbage-collection-in-go-part2-gctraces.html">Garbage Collection In Go : Part II - GC Traces</a><br>
+<a href="https://www.ardanlabs.com/blog/2019/07/garbage-collection-in-go-part3-gcpacing.html">Garbage Collection In Go : Part III - GC Pacing</a><br>
+<a href="https://www.jianshu.com/p/310257582232">golang 1.8 gc的演进</a><br>
+<a href="https://mp.weixin.qq.com/s/gkBg742lpBVRBhTPhOQ7hg">每位 Gopher 都应该了解的 Golang 语言的垃圾回收算法</a><br>
+<a href="https://www.bookstack.cn/read/qcrao-Go-Questions/spilt.9.GC-GC.md">什么是写屏障、混合写屏障，如何实现？</a><br>
+<a href="https://www.bookstack.cn/read/qcrao-Go-Questions/spilt.16.GC-GC.md">Go 历史各个版本在 GC 方面的改进？</a></p>
+
+                                </div>
+                    </article>
+                    <!--  -->
+                    
+                        <div class="next-post">
+                            <div class="next">下一篇</div>
+                            <a href="https://freephenix.github.io/yuan-ma-za-huo-pu-singleflight/">
+                                <h3 class="post-title">
+                                    源码杂货铺：singleflight
+                                </h3>
+                            </a>
+                        </div>
+                        
+                            <div id="disqus_thread"></div>
+                            <div id="gitalk-container"></div>
+                </div>
+                <!-- middle -->
+                <div class="main-container-middle"></div>
+                <!-- right -->
+                <div id="sidebar" class="main-container-right">
+                    
+                        <!-- toc -->
+                        
+    <div class="toc-card i-card ">
+        <div class="toc-title i-card-title">目录</div>
+        <div class="toc-content">
+            <ul class="markdownIt-TOC">
+<li><a href="#golang-%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6%E9%87%8C%E7%A8%8B%E7%A2%91">Golang 垃圾回收里程碑</a></li>
+<li><a href="#golang-v13-%E6%A0%87%E8%AE%B0%E6%B8%85%E9%99%A4%E7%AE%97%E6%B3%95">Golang v1.3 标记清除算法</a></li>
+<li><a href="#golang-v15-%E4%B8%89%E8%89%B2%E6%A0%87%E8%AE%B0%E6%B3%95-%E5%B1%8F%E9%9A%9C%E6%9C%BA%E5%88%B6">Golang v1.5 三色标记法 &amp; 屏障机制</a>
+<ul>
+<li><a href="#%E6%A0%87%E8%AE%B0%E5%90%AF%E5%8A%A8mark-setup-stw">标记启动（Mark Setup - STW）</a></li>
+<li><a href="#%E6%A0%87%E8%AE%B0%E8%BF%87%E7%A8%8Bmarking-concurrent">标记过程（Marking - Concurrent）</a><br>
+*
+<ul>
+<li><a href="#%E5%BC%95%E7%94%B3%E9%97%AE%E9%A2%981%E6%89%AB%E6%8F%8F%E4%BC%8A%E5%A7%8B%E7%9A%84root%E9%83%BD%E6%9C%89%E5%93%AA%E4%BA%9B">引申问题1：扫描伊始的root都有哪些？</a></li>
+<li><a href="#%E5%BC%95%E7%94%B3%E9%97%AE%E9%A2%982%E5%A6%82%E6%9E%9C%E5%86%85%E5%AD%98%E5%88%86%E9%85%8D%E9%80%9F%E5%BA%A6%E8%B6%85%E8%BF%87%E4%BA%86%E6%A0%87%E8%AE%B0%E6%B8%85%E9%99%A4%E7%9A%84%E9%80%9F%E5%BA%A6%E6%80%8E%E4%B9%88%E5%8A%9E">引申问题2：如果内存分配速度超过了标记清除的速度怎么办？</a></li>
+</ul>
+</li>
+<li><a href="#%E6%A0%87%E8%AE%B0%E7%BB%88%E6%AD%A2mark-termination-stw">标记终止（Mark Termination - STW）</a></li>
+<li><a href="#%E5%86%99%E5%B1%8F%E9%9A%9C%E6%9C%BA%E5%88%B6">写屏障机制</a></li>
+</ul>
+</li>
+<li><a href="#golang-v18-%E6%B7%B7%E5%90%88%E5%86%99%E5%B1%8F%E9%9A%9C%E6%9C%BA%E5%88%B6">Golang v1.8 混合写屏障机制</a>
+<ul>
+<li><a href="#%E5%BC%BA%E4%B8%89%E8%89%B2%E5%8E%9F%E7%90%86">强三色原理</a></li>
+<li><a href="#%E5%BC%B1%E4%B8%89%E8%89%B2%E5%8E%9F%E7%90%86">弱三色原理</a><br>
+*
+<ul>
+<li><a href="#%E5%BC%95%E7%94%B3%E9%97%AE%E9%A2%983%E4%BB%80%E4%B9%88%E6%98%AF%E5%86%99%E5%B1%8F%E9%9A%9C-%E6%B7%B7%E5%90%88%E5%86%99%E5%B1%8F%E9%9A%9C%E5%A6%82%E4%BD%95%E5%AE%9E%E7%8E%B0">引申问题3：什么是写屏障、混合写屏障，如何实现？</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#gc%E7%9A%84%E8%A7%A6%E5%8F%91%E6%96%B9%E5%BC%8F">GC的触发方式</a></li>
+<li><a href="#%E9%9C%80%E8%A6%81%E5%85%B3%E6%B3%A8%E5%93%AA%E4%BA%9Bgc%E6%8C%87%E6%A0%87">需要关注哪些GC指标</a></li>
+<li><a href="#%E5%A6%82%E4%BD%95%E8%B0%83%E4%BC%98gc">如何调优GC</a></li>
+<li><a href="#%E6%9C%89%E4%BA%86gc%E4%B8%BA%E4%BB%80%E4%B9%88%E8%BF%98%E4%BC%9A%E6%9C%89%E5%86%85%E5%AD%98%E6%B3%84%E9%9C%B2">有了GC，为什么还会有内存泄露？</a><br>
+*
+<ul>
+<li><a href="#%E5%BD%A2%E5%BC%8F1%E9%A2%84%E6%9C%9F%E8%83%BD%E8%A2%AB%E5%BF%AB%E9%80%9F%E9%87%8A%E6%94%BE%E7%9A%84%E5%86%85%E5%AD%98%E5%9B%A0%E8%A2%AB%E6%A0%B9%E5%AF%B9%E8%B1%A1%E5%BC%95%E7%94%A8%E8%80%8C%E6%B2%A1%E6%9C%89%E5%BE%97%E5%88%B0%E8%BF%85%E9%80%9F%E9%87%8A%E6%94%BE">形式1：预期能被快速释放的内存因被根对象引用而没有得到迅速释放</a></li>
+<li><a href="#%E5%BD%A2%E5%BC%8F2goroutine-%E6%B3%84%E6%BC%8F">形式2：goroutine 泄漏</a></li>
+</ul>
+</li>
+<li><a href="#%E4%B8%80%E4%BA%9B%E8%A1%A5%E5%85%85%E7%82%B9">一些补充点</a>
+<ul>
+<li><a href="#gc-percentage">GC Percentage</a></li>
+<li><a href="#gc-trace">GC Trace</a></li>
+<li><a href="#pacing">Pacing</a></li>
+<li><a href="#collector-latency-costs">Collector Latency Costs</a></li>
+</ul>
+</li>
+<li><a href="#%E6%BC%94%E5%8C%96%E5%8E%86%E7%A8%8B%E7%9A%84%E5%90%AF%E5%8F%91">演化历程的启发</a></li>
+<li><a href="#%E5%BC%95%E7%94%A8">引用</a></li>
+</ul>
+
+        </div>
+        <script>
+            function locateCatelogList() {
+                /*获取文章目录集合,可通过:header过滤器*/
+                var alis = $('.post-content :header');
+                /*获取侧边栏目录列表集合**/
+                var sidebar_alis = $('.markdownIt-TOC a');
+                /*获取滚动条到顶部的距离*/
+                var scroll_height = $(window).scrollTop();
+                for (var i = 0; i < alis.length; i++) {
+                    /*获取锚点集合中的元素分别到顶点的距离*/
+                    var a_height = $(alis[i]).offset().top;
+                    if (a_height < scroll_height) {
+                        /*高亮显示*/
+                        sidebar_alis.removeClass('on');
+                        $(sidebar_alis[i]).addClass('on');
+                    }
+                }
+            }
+            $(function() {
+                /*绑定滚动事件 */
+                $(window).bind('scroll', locateCatelogList);
+            });
+        </script>
+    </div>
+    
+                            
+
+                </div>
+
+
+
+
+            </div>
+
+
+            <div class="site-footer">
+  Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a> | 
+  <a class="rss" href="https://freephenix.github.io//atom.xml" target="_blank">RSS</a>
+</div>
+
+<script>
+  hljs.initHighlightingOnLoad()
+</script>
+
+
+    </div>
+    <script>
+        $('#sidebar').stickySidebar({
+            topSpacing: 80,
+            // bottomSpacing: 60
+        });
+    </script>
+    
+        
+            <script>
+    window.onload = function() {
+        var gitalk = new Gitalk({
+            clientID: '008503f8c8bca8787fbe',
+            clientSecret: '5f789f71e3288ff1866d17523348881053068eb4',
+            repo: 'freephenix.github.io',
+            owner: 'freephenix',
+            admin: ['freephenix'],
+            id: (location.pathname).substring(0, 49), // Ensure uniqueness and length less than 50
+            distractionFreeMode: false // Facebook-like distraction free mode
+        })
+
+        gitalk.render('gitalk-container')
+    }
+</script>
+                
+
+                    
+                                
+</body>
+
+</html>

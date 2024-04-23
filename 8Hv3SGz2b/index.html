@@ -1,0 +1,337 @@
+<html>
+
+<head>
+    <meta charset="utf-8" />
+<meta name="description" content="" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>
+    LeetCode-48. 旋转图像 | 半亩房顶
+</title>
+<link rel="shortcut icon" href="https://freephenix.github.io//favicon.ico?v=1713840769430">
+<!-- <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous"> -->
+<link href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+<link rel="stylesheet" href="https://freephenix.github.io//styles/main.css">
+<!-- js -->
+<script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.min.js"></script>
+<script src="https://freephenix.github.io//media/js/jquery.sticky-sidebar.min.js"></script>
+<script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
+<script src="https://cdn.bootcss.com/moment.js/2.23.0/moment.min.js"></script>
+
+
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-147240912-1"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+
+        function gtag() {
+            dataLayer.push(arguments);
+        }
+        gtag('js', new Date());
+
+        gtag('config', 'UA-147240912-1');
+    </script>
+    
+        
+            
+                <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+                <script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+                
+
+                    
+                            
+</head>
+
+<body>
+    <div class="main">
+        <div class="header">
+    <div class="nav">
+        <div class="logo">
+            <a href="https://freephenix.github.io/">
+                <img class="avatar" src="https://freephenix.github.io//images/avatar.png?v=1713840769430" alt="">
+            </a>
+            <div class="site-title">
+                <h1>
+                    半亩房顶
+                </h1>
+            </div>
+        </div>
+        <span class="menu-btn fa fa-align-justify"></span>
+        <div class="menu-container">
+            <ul>
+                
+                    
+                            <li>
+                                <a href="/" class="menu">
+                                    首页
+                                </a>
+                            </li>
+                            
+                                
+                    
+                            <li>
+                                <a href="/archives" class="menu">
+                                    归档
+                                </a>
+                            </li>
+                            
+                                
+                    
+                            <li>
+                                <a href="/tags" class="menu">
+                                    标签
+                                </a>
+                            </li>
+                            
+                                
+                    
+                            <li>
+                                <a href="https://freephenix.github.io//post/guan-yu-ban-mu-fang-ding/" class="menu">
+                                    关于
+                                </a>
+                            </li>
+                            
+                                
+            </ul>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function() {
+        $(".menu-btn").click(function() {
+            $(".menu-container").slideToggle();
+        });
+        $(window).resize(function() {
+
+            if (window.matchMedia('(min-width: 960px)').matches) {
+                $(".menu-container").css('display', 'block')
+            } else {
+                $(".menu-container").css('display', 'none')
+            }
+
+        });
+    });
+</script>
+
+            <div id="main-content" class="post-detail main-container">
+                <!-- left -->
+                <div id="content" class="main-container-left">
+                    <article class="post i-card">
+                        <h2 class="post-title">
+                            LeetCode-48. 旋转图像
+                        </h2>
+                        <div class="post-info">
+                            <time class="post-time">2023-12-13</time>
+                            
+                                <a href="https://freephenix.github.io/V6q0JESaH/" class="post-tag i-tag
+                            i-tag-primary">
+                            #矩阵
+                        </a>
+                                
+                                <a href="https://freephenix.github.io/YWFpnf3Gl/" class="post-tag i-tag
+                            i-tag-error">
+                            #刷题
+                        </a>
+                                
+                                <a href="https://freephenix.github.io/70TrDOWqgi/" class="post-tag i-tag
+                            i-tag-">
+                            #面试
+                        </a>
+                                
+                                <a href="https://freephenix.github.io/go/" class="post-tag i-tag
+                            i-tag-other_3">
+                            #Go
+                        </a>
+                                
+                                <a href="https://freephenix.github.io/k1NaSbOoC/" class="post-tag i-tag
+                            i-tag-banana">
+                            #LeetCode
+                        </a>
+                                
+                                <a href="https://freephenix.github.io/WucazjDbn/" class="post-tag i-tag
+                            i-tag-">
+                            #算法
+                        </a>
+                                
+                        </div>
+                        
+                            <div class="post-feature-image" style="background-image: url('https://freephenix.github.io//post-images/8Hv3SGz2b.jpeg')"></div>
+                            
+                                <div class="post-content">
+                                    <p>刷题使我快乐，满脸开心.jpg</p>
+<ul>
+<li>来源：力扣（LeetCode）</li>
+<li>链接：https://leetcode.cn/problems/rotate-image/</li>
+<li>著作权归领扣网络所有。商业转载请联系官方授权，非商业转载请注明出处。</li>
+</ul>
+<!-- more -->
+<h1 id="题目">题目</h1>
+<p>给定一个 <code>n × n</code> 的二维矩阵 <code>matrix</code> 表示一个图像。请你将图像顺时针旋转 <code>90</code> 度。</p>
+<p>你必须在 <code>原地</code> 旋转图像，这意味着你需要直接修改输入的二维矩阵。请不要 <code>使用另一个矩阵来旋转图像</code>。</p>
+<p>示例 1：<br>
+<img src="https://freephenix.github.io//post-images/1702451599253.jpeg" alt="" loading="lazy"></p>
+<pre><code>输入：matrix = [[1,2,3],[4,5,6],[7,8,9]]
+输出：[[7,4,1],[8,5,2],[9,6,3]]
+</code></pre>
+<p>示例 2：<br>
+<img src="https://freephenix.github.io//post-images/1702451603675.jpeg" alt="" loading="lazy"></p>
+<pre><code>输入：matrix = [[5,1,9,11],[2,4,8,10],[13,3,6,7],[15,14,12,16]]
+输出：[[15,13,2,5],[14,3,4,1],[12,6,8,9],[16,7,10,11]]
+</code></pre>
+<p>提示：</p>
+<ul>
+<li><code>n == matrix.length == matrix[i].length</code></li>
+<li><code>1 &lt;= n &lt;= 20</code></li>
+<li><code>-1000 &lt;= matrix[i][j] &lt;= 1000</code></li>
+</ul>
+<h1 id="思路">思路</h1>
+<p>我的思路比较原始，就是既然是要转，那总归会有一个转的规律，那从题中可以看出：</p>
+<blockquote>
+<p>每一层进行一个<code>90</code>度旋转之后，其实每个数据将要旋转到的位置其实是可以用<code>层</code>和<code>层内坐标</code>来描述的</p>
+</blockquote>
+<p>如下图：<br>
+<img src="https://freephenix.github.io//post-images/1702451800850.png" alt="" loading="lazy"><br>
+以第一层为例，每个数据旋转后的位置可以如下表示(<code>l</code>为层数，<code>i</code>为层内坐标)：</p>
+<ul>
+<li>[l][l+i] -&gt; [l+i][n-1-l]</li>
+<li>[l+i][n-1-l] -&gt; [n-1-l][n-1-l-i]</li>
+<li>[n-1-l][n-1-l-i] -&gt; [n-1-l-i][l]</li>
+<li>[n-1-l-i][l] -&gt; [l][l+i]</li>
+</ul>
+<blockquote>
+<p>这里<code>i</code>用的是一维数组的下标，用二维数组下标同理</p>
+</blockquote>
+<p>这样描述出来之后，剩下就是<code>层</code>和<code>层内坐标</code>的遍历了：</p>
+<ul>
+<li>首先是<code>层数</code>，这里易得，需要 <code>l &lt; n/2</code></li>
+<li>至于<code>层内坐标</code>，这里其实最大的限制就是，当前层倒数第一个元素是不需要遍历到的，因为它本身就是当前层一个元素将要到达的位置</li>
+</ul>
+<p>那么基本上代码就出来了，上代码</p>
+<h1 id="代码">代码</h1>
+<pre><code class="language-golang">func rotate(matrix [][]int) {
+    // 特殊情况快速返回
+	if len(matrix) == 1 {
+		return
+	}
+	n := len(matrix)
+    // 遍历层
+	for l := 0; l &lt; n/2; l++ {
+        // 遍历层内坐标
+		for i := 0; l+i &lt; n-l-1; i++ {
+            // 按旋转顺序移动数据
+			matrix[l][l+i], matrix[l+i][n-1-l], matrix[n-1-l][n-1-l-i], matrix[n-1-l-i][l] =
+				matrix[n-1-l-i][l], matrix[l][l+i], matrix[l+i][n-1-l], matrix[n-1-l][n-1-l-i]
+		}
+	}
+}
+</code></pre>
+
+                                </div>
+                    </article>
+                    <!--  -->
+                    
+                        <div class="next-post">
+                            <div class="next">下一篇</div>
+                            <a href="https://freephenix.github.io/Hz7N7KaIh/">
+                                <h3 class="post-title">
+                                    LeetCode-98. 验证二叉搜索树
+                                </h3>
+                            </a>
+                        </div>
+                        
+                            <div id="disqus_thread"></div>
+                            <div id="gitalk-container"></div>
+                </div>
+                <!-- middle -->
+                <div class="main-container-middle"></div>
+                <!-- right -->
+                <div id="sidebar" class="main-container-right">
+                    
+                        <!-- toc -->
+                        
+    <div class="toc-card i-card ">
+        <div class="toc-title i-card-title">目录</div>
+        <div class="toc-content">
+            <ul class="markdownIt-TOC">
+<li><a href="#%E9%A2%98%E7%9B%AE">题目</a></li>
+<li><a href="#%E6%80%9D%E8%B7%AF">思路</a></li>
+<li><a href="#%E4%BB%A3%E7%A0%81">代码</a></li>
+</ul>
+
+        </div>
+        <script>
+            function locateCatelogList() {
+                /*获取文章目录集合,可通过:header过滤器*/
+                var alis = $('.post-content :header');
+                /*获取侧边栏目录列表集合**/
+                var sidebar_alis = $('.markdownIt-TOC a');
+                /*获取滚动条到顶部的距离*/
+                var scroll_height = $(window).scrollTop();
+                for (var i = 0; i < alis.length; i++) {
+                    /*获取锚点集合中的元素分别到顶点的距离*/
+                    var a_height = $(alis[i]).offset().top;
+                    if (a_height < scroll_height) {
+                        /*高亮显示*/
+                        sidebar_alis.removeClass('on');
+                        $(sidebar_alis[i]).addClass('on');
+                    }
+                }
+            }
+            $(function() {
+                /*绑定滚动事件 */
+                $(window).bind('scroll', locateCatelogList);
+            });
+        </script>
+    </div>
+    
+                            
+
+                </div>
+
+
+
+
+            </div>
+
+
+            <div class="site-footer">
+  Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a> | 
+  <a class="rss" href="https://freephenix.github.io//atom.xml" target="_blank">RSS</a>
+</div>
+
+<script>
+  hljs.initHighlightingOnLoad()
+</script>
+
+
+    </div>
+    <script>
+        $('#sidebar').stickySidebar({
+            topSpacing: 80,
+            // bottomSpacing: 60
+        });
+    </script>
+    
+        
+            <script>
+    window.onload = function() {
+        var gitalk = new Gitalk({
+            clientID: '008503f8c8bca8787fbe',
+            clientSecret: '5f789f71e3288ff1866d17523348881053068eb4',
+            repo: 'freephenix.github.io',
+            owner: 'freephenix',
+            admin: ['freephenix'],
+            id: (location.pathname).substring(0, 49), // Ensure uniqueness and length less than 50
+            distractionFreeMode: false // Facebook-like distraction free mode
+        })
+
+        gitalk.render('gitalk-container')
+    }
+</script>
+                
+
+                    
+                                
+</body>
+
+</html>

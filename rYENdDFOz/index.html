@@ -1,0 +1,405 @@
+<html>
+
+<head>
+    <meta charset="utf-8" />
+<meta name="description" content="" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>
+    LeetCode-4. 寻找两个正序数组的中位数 | 半亩房顶
+</title>
+<link rel="shortcut icon" href="https://freephenix.github.io//favicon.ico?v=1713840769430">
+<!-- <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous"> -->
+<link href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+<link rel="stylesheet" href="https://freephenix.github.io//styles/main.css">
+<!-- js -->
+<script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.min.js"></script>
+<script src="https://freephenix.github.io//media/js/jquery.sticky-sidebar.min.js"></script>
+<script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
+<script src="https://cdn.bootcss.com/moment.js/2.23.0/moment.min.js"></script>
+
+
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-147240912-1"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+
+        function gtag() {
+            dataLayer.push(arguments);
+        }
+        gtag('js', new Date());
+
+        gtag('config', 'UA-147240912-1');
+    </script>
+    
+        
+            
+                <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+                <script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+                
+
+                    
+                            
+</head>
+
+<body>
+    <div class="main">
+        <div class="header">
+    <div class="nav">
+        <div class="logo">
+            <a href="https://freephenix.github.io/">
+                <img class="avatar" src="https://freephenix.github.io//images/avatar.png?v=1713840769430" alt="">
+            </a>
+            <div class="site-title">
+                <h1>
+                    半亩房顶
+                </h1>
+            </div>
+        </div>
+        <span class="menu-btn fa fa-align-justify"></span>
+        <div class="menu-container">
+            <ul>
+                
+                    
+                            <li>
+                                <a href="/" class="menu">
+                                    首页
+                                </a>
+                            </li>
+                            
+                                
+                    
+                            <li>
+                                <a href="/archives" class="menu">
+                                    归档
+                                </a>
+                            </li>
+                            
+                                
+                    
+                            <li>
+                                <a href="/tags" class="menu">
+                                    标签
+                                </a>
+                            </li>
+                            
+                                
+                    
+                            <li>
+                                <a href="https://freephenix.github.io//post/guan-yu-ban-mu-fang-ding/" class="menu">
+                                    关于
+                                </a>
+                            </li>
+                            
+                                
+            </ul>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function() {
+        $(".menu-btn").click(function() {
+            $(".menu-container").slideToggle();
+        });
+        $(window).resize(function() {
+
+            if (window.matchMedia('(min-width: 960px)').matches) {
+                $(".menu-container").css('display', 'block')
+            } else {
+                $(".menu-container").css('display', 'none')
+            }
+
+        });
+    });
+</script>
+
+            <div id="main-content" class="post-detail main-container">
+                <!-- left -->
+                <div id="content" class="main-container-left">
+                    <article class="post i-card">
+                        <h2 class="post-title">
+                            LeetCode-4. 寻找两个正序数组的中位数
+                        </h2>
+                        <div class="post-info">
+                            <time class="post-time">2023-11-20</time>
+                            
+                                <a href="https://freephenix.github.io/FRqn1m2hg/" class="post-tag i-tag
+                            i-tag-success">
+                            #数组
+                        </a>
+                                
+                                <a href="https://freephenix.github.io/HSYiuvxzO/" class="post-tag i-tag
+                            i-tag-success">
+                            #分治
+                        </a>
+                                
+                                <a href="https://freephenix.github.io/YWFpnf3Gl/" class="post-tag i-tag
+                            i-tag-warning">
+                            #刷题
+                        </a>
+                                
+                                <a href="https://freephenix.github.io/70TrDOWqgi/" class="post-tag i-tag
+                            i-tag-warning">
+                            #面试
+                        </a>
+                                
+                                <a href="https://freephenix.github.io/go/" class="post-tag i-tag
+                            i-tag-error">
+                            #Go
+                        </a>
+                                
+                                <a href="https://freephenix.github.io/k1NaSbOoC/" class="post-tag i-tag
+                            i-tag-banana">
+                            #LeetCode
+                        </a>
+                                
+                                <a href="https://freephenix.github.io/WucazjDbn/" class="post-tag i-tag
+                            i-tag-error">
+                            #算法
+                        </a>
+                                
+                        </div>
+                        
+                            <div class="post-feature-image" style="background-image: url('https://freephenix.github.io//post-images/rYENdDFOz.jpeg')"></div>
+                            
+                                <div class="post-content">
+                                    <p>刷题使我快乐，满脸开心.jpg</p>
+<ul>
+<li>来源：力扣（LeetCode）</li>
+<li>链接：https://leetcode.cn/problems/median-of-two-sorted-arrays/</li>
+<li>著作权归领扣网络所有。商业转载请联系官方授权，非商业转载请注明出处。</li>
+</ul>
+<!-- more -->
+<h1 id="题目">题目</h1>
+<p>给定两个大小分别为 <code>m</code> 和 <code>n</code> 的正序（从小到大）数组 <code>nums1</code> 和 <code>nums2</code>。请你找出并返回这两个正序数组的 <code>中位数</code> 。</p>
+<p>算法的时间复杂度应该为 <code>O(log (m+n))</code>。</p>
+<p>示例 1：</p>
+<pre><code>输入：nums1 = [1,3], nums2 = [2]
+输出：2.00000
+解释：合并数组 = [1,2,3] ，中位数 2
+</code></pre>
+<p>示例 2：</p>
+<pre><code>输入：nums1 = [1,2], nums2 = [3,4]
+输出：2.50000
+解释：合并数组 = [1,2,3,4] ，中位数 (2 + 3) / 2 = 2.5
+</code></pre>
+<p>提示：</p>
+<ul>
+<li><code>nums1.length == m</code></li>
+<li><code>nums2.length == n</code></li>
+<li><code>0 &lt;= m &lt;= 1000</code></li>
+<li><code>0 &lt;= n &lt;= 1000</code></li>
+<li><code>1 &lt;= m + n &lt;= 2000</code></li>
+<li><code>-106 &lt;= nums1[i], nums2[i] &lt;= 106</code></li>
+</ul>
+<h1 id="思路">思路</h1>
+<p>首先分享下我的思路：</p>
+<ul>
+<li>因为有序，不用事先排序了。</li>
+<li>起两个指针，初始都指向两个数组的起点</li>
+<li>然后循环比较两者指针指向值大小，小的后移一位，其中一个数组为空则移动另一个数组指针</li>
+<li>当移动<code>总个数/2</code>下取整次数时，此时找到的数（总个数为奇数），或者找到的数和前一个数（总个数为偶数）即为中位数或者中位数两边的数，计算即可返回结果。<br>
+但是，最大的问题是，这样时间复杂度是 <code>O(m+n)</code> 。</li>
+</ul>
+<p>如果要达到<code>O(log(m+n))</code>，那么就需要二分法。这里只说下思路具体分析参见<a href="https://leetcode.cn/problems/median-of-two-sorted-arrays/solutions/258842/xun-zhao-liang-ge-you-xu-shu-zu-de-zhong-wei-s-114/">官方题解~</a>。</p>
+<ul>
+<li>二分的思路来源于，将寻找中位数转变为找第<code>len/2</code>个数（或者<code>len/2</code> 和 <code>len/2-1</code>）</li>
+<li>而在有序的前提下，可以两边各取<code>len/2</code>个数的一半，而此位置中，比较小的一方及其元素其实是可以抛弃的，因为这些元素肯定是比比较大这一方的元素前面，如图中<code>2，3两个元素</code><br>
+<img src="https://freephenix.github.io//post-images/1700475637995.png" alt="" loading="lazy"></li>
+<li>那么然后就是在截断一方数组的前提下，寻找两个新的数组中，第<code>len/2-x</code>个数（<code>x</code>为刚才截取的元素个数）</li>
+<li>重复此步骤，直到一边数组为空，或者直到找两个数组中第一个数，那么就是返回更小的那一方即可</li>
+</ul>
+<p>这个方法的代码下面贴了一份，详见<a href="https://leetcode.cn/problems/median-of-two-sorted-arrays/solutions/258842/xun-zhao-liang-ge-you-xu-shu-zu-de-zhong-wei-s-114/">官方题解</a><br>
+思路不难，难点在于边界，，，共勉吧。</p>
+<p>至此，上代码</p>
+<h1 id="代码">代码</h1>
+<h3 id="遍历寻找中位数">遍历寻找中位数</h3>
+<pre><code class="language-golang">func findMedianSortedArrays(nums1 []int, nums2 []int) float64 {
+    m := len(nums1)
+    n := len(nums2)
+    p1, p2, left, right  := 0, 0, 0, 0
+    for i := 0; i &lt;= (m + n)/2; i++ {
+        left = right
+        if p1 &lt; m &amp;&amp; (p2 &gt;= n || nums1[p1] &lt; nums2[p2]) {
+            right = nums1[p1]
+            p1++
+        } else {
+            right = nums2[p2]
+            p2++
+        }
+    }
+    if (m + n)%2 == 0 {
+        return float64((left + right))/2
+    } else {
+        return float64(right)
+    }
+}
+</code></pre>
+<h3 id="二分法">二分法</h3>
+<pre><code class="language-golang">func findMedianSortedArrays(nums1 []int, nums2 []int) float64 {
+    totalLength := len(nums1) + len(nums2)
+    if totalLength%2 == 1 {
+        midIndex := totalLength/2
+        return float64(getKthElement(nums1, nums2, midIndex + 1))
+    } else {
+        midIndex1, midIndex2 := totalLength/2 - 1, totalLength/2
+        return float64(getKthElement(nums1, nums2, midIndex1 + 1) + getKthElement(nums1, nums2, midIndex2 + 1)) / 2.0
+    }
+    return 0
+}
+
+func getKthElement(nums1, nums2 []int, k int) int {
+    index1, index2 := 0, 0
+    for {
+        if index1 == len(nums1) {
+            return nums2[index2 + k - 1]
+        }
+        if index2 == len(nums2) {
+            return nums1[index1 + k - 1]
+        }
+        if k == 1 {
+            return min(nums1[index1], nums2[index2])
+        }
+        half := k/2
+        newIndex1 := min(index1 + half, len(nums1)) - 1
+        newIndex2 := min(index2 + half, len(nums2)) - 1
+        pivot1, pivot2 := nums1[newIndex1], nums2[newIndex2]
+        if pivot1 &lt;= pivot2 {
+            k -= (newIndex1 - index1 + 1)
+            index1 = newIndex1 + 1
+        } else {
+            k -= (newIndex2 - index2 + 1)
+            index2 = newIndex2 + 1
+        }
+    }
+    return 0
+}
+
+func min(x, y int) int {
+    if x &lt; y {
+        return x
+    }
+    return y
+}
+
+作者：力扣官方题解
+链接：https://leetcode.cn/problems/median-of-two-sorted-arrays/solutions/258842/xun-zhao-liang-ge-you-xu-shu-zu-de-zhong-wei-s-114/
+来源：力扣（LeetCode）
+著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。
+</code></pre>
+
+                                </div>
+                    </article>
+                    <!--  -->
+                    
+                        <div class="next-post">
+                            <div class="next">下一篇</div>
+                            <a href="https://freephenix.github.io/5uAljbvl_/">
+                                <h3 class="post-title">
+                                    LeetCode-82. 删除排序链表中的重复元素 II
+                                </h3>
+                            </a>
+                        </div>
+                        
+                            <div id="disqus_thread"></div>
+                            <div id="gitalk-container"></div>
+                </div>
+                <!-- middle -->
+                <div class="main-container-middle"></div>
+                <!-- right -->
+                <div id="sidebar" class="main-container-right">
+                    
+                        <!-- toc -->
+                        
+    <div class="toc-card i-card ">
+        <div class="toc-title i-card-title">目录</div>
+        <div class="toc-content">
+            <ul class="markdownIt-TOC">
+<li><a href="#%E9%A2%98%E7%9B%AE">题目</a></li>
+<li><a href="#%E6%80%9D%E8%B7%AF">思路</a></li>
+<li><a href="#%E4%BB%A3%E7%A0%81">代码</a><br>
+*
+<ul>
+<li><a href="#%E9%81%8D%E5%8E%86%E5%AF%BB%E6%89%BE%E4%B8%AD%E4%BD%8D%E6%95%B0">遍历寻找中位数</a></li>
+<li><a href="#%E4%BA%8C%E5%88%86%E6%B3%95">二分法</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+        <script>
+            function locateCatelogList() {
+                /*获取文章目录集合,可通过:header过滤器*/
+                var alis = $('.post-content :header');
+                /*获取侧边栏目录列表集合**/
+                var sidebar_alis = $('.markdownIt-TOC a');
+                /*获取滚动条到顶部的距离*/
+                var scroll_height = $(window).scrollTop();
+                for (var i = 0; i < alis.length; i++) {
+                    /*获取锚点集合中的元素分别到顶点的距离*/
+                    var a_height = $(alis[i]).offset().top;
+                    if (a_height < scroll_height) {
+                        /*高亮显示*/
+                        sidebar_alis.removeClass('on');
+                        $(sidebar_alis[i]).addClass('on');
+                    }
+                }
+            }
+            $(function() {
+                /*绑定滚动事件 */
+                $(window).bind('scroll', locateCatelogList);
+            });
+        </script>
+    </div>
+    
+                            
+
+                </div>
+
+
+
+
+            </div>
+
+
+            <div class="site-footer">
+  Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a> | 
+  <a class="rss" href="https://freephenix.github.io//atom.xml" target="_blank">RSS</a>
+</div>
+
+<script>
+  hljs.initHighlightingOnLoad()
+</script>
+
+
+    </div>
+    <script>
+        $('#sidebar').stickySidebar({
+            topSpacing: 80,
+            // bottomSpacing: 60
+        });
+    </script>
+    
+        
+            <script>
+    window.onload = function() {
+        var gitalk = new Gitalk({
+            clientID: '008503f8c8bca8787fbe',
+            clientSecret: '5f789f71e3288ff1866d17523348881053068eb4',
+            repo: 'freephenix.github.io',
+            owner: 'freephenix',
+            admin: ['freephenix'],
+            id: (location.pathname).substring(0, 49), // Ensure uniqueness and length less than 50
+            distractionFreeMode: false // Facebook-like distraction free mode
+        })
+
+        gitalk.render('gitalk-container')
+    }
+</script>
+                
+
+                    
+                                
+</body>
+
+</html>

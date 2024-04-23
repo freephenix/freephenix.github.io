@@ -1,0 +1,390 @@
+<html>
+
+<head>
+    <meta charset="utf-8" />
+<meta name="description" content="" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>
+    LeetCode-189. 轮转数组 | 半亩房顶
+</title>
+<link rel="shortcut icon" href="https://freephenix.github.io//favicon.ico?v=1713840769430">
+<!-- <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous"> -->
+<link href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+<link rel="stylesheet" href="https://freephenix.github.io//styles/main.css">
+<!-- js -->
+<script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.min.js"></script>
+<script src="https://freephenix.github.io//media/js/jquery.sticky-sidebar.min.js"></script>
+<script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
+<script src="https://cdn.bootcss.com/moment.js/2.23.0/moment.min.js"></script>
+
+
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-147240912-1"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+
+        function gtag() {
+            dataLayer.push(arguments);
+        }
+        gtag('js', new Date());
+
+        gtag('config', 'UA-147240912-1');
+    </script>
+    
+        
+            
+                <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+                <script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+                
+
+                    
+                            
+</head>
+
+<body>
+    <div class="main">
+        <div class="header">
+    <div class="nav">
+        <div class="logo">
+            <a href="https://freephenix.github.io/">
+                <img class="avatar" src="https://freephenix.github.io//images/avatar.png?v=1713840769430" alt="">
+            </a>
+            <div class="site-title">
+                <h1>
+                    半亩房顶
+                </h1>
+            </div>
+        </div>
+        <span class="menu-btn fa fa-align-justify"></span>
+        <div class="menu-container">
+            <ul>
+                
+                    
+                            <li>
+                                <a href="/" class="menu">
+                                    首页
+                                </a>
+                            </li>
+                            
+                                
+                    
+                            <li>
+                                <a href="/archives" class="menu">
+                                    归档
+                                </a>
+                            </li>
+                            
+                                
+                    
+                            <li>
+                                <a href="/tags" class="menu">
+                                    标签
+                                </a>
+                            </li>
+                            
+                                
+                    
+                            <li>
+                                <a href="https://freephenix.github.io//post/guan-yu-ban-mu-fang-ding/" class="menu">
+                                    关于
+                                </a>
+                            </li>
+                            
+                                
+            </ul>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function() {
+        $(".menu-btn").click(function() {
+            $(".menu-container").slideToggle();
+        });
+        $(window).resize(function() {
+
+            if (window.matchMedia('(min-width: 960px)').matches) {
+                $(".menu-container").css('display', 'block')
+            } else {
+                $(".menu-container").css('display', 'none')
+            }
+
+        });
+    });
+</script>
+
+            <div id="main-content" class="post-detail main-container">
+                <!-- left -->
+                <div id="content" class="main-container-left">
+                    <article class="post i-card">
+                        <h2 class="post-title">
+                            LeetCode-189. 轮转数组
+                        </h2>
+                        <div class="post-info">
+                            <time class="post-time">2024-04-11</time>
+                            
+                                <a href="https://freephenix.github.io/FRqn1m2hg/" class="post-tag i-tag
+                            i-tag-info">
+                            #数组
+                        </a>
+                                
+                                <a href="https://freephenix.github.io/YWFpnf3Gl/" class="post-tag i-tag
+                            i-tag-other_1">
+                            #刷题
+                        </a>
+                                
+                                <a href="https://freephenix.github.io/70TrDOWqgi/" class="post-tag i-tag
+                            i-tag-error">
+                            #面试
+                        </a>
+                                
+                                <a href="https://freephenix.github.io/go/" class="post-tag i-tag
+                            i-tag-error">
+                            #Go
+                        </a>
+                                
+                                <a href="https://freephenix.github.io/k1NaSbOoC/" class="post-tag i-tag
+                            i-tag-other_1">
+                            #LeetCode
+                        </a>
+                                
+                                <a href="https://freephenix.github.io/WucazjDbn/" class="post-tag i-tag
+                            i-tag-other_4">
+                            #算法
+                        </a>
+                                
+                        </div>
+                        
+                            <div class="post-feature-image" style="background-image: url('https://freephenix.github.io//post-images/hz0rA0jgG.jpeg')"></div>
+                            
+                                <div class="post-content">
+                                    <p>刷题使我快乐，满脸开心.jpg</p>
+<ul>
+<li>来源：力扣（LeetCode）</li>
+<li>链接：https://leetcode.cn/problems/rotate-array/</li>
+<li>著作权归领扣网络所有。商业转载请联系官方授权，非商业转载请注明出处。</li>
+</ul>
+<!-- more -->
+<h1 id="题目">题目</h1>
+<p>给定一个整数数组 <code>nums</code>，将数组中的元素向右轮转 <code>k</code> 个位置，其中 <code>k</code> 是非负数。</p>
+<p>示例 1:</p>
+<pre><code>输入: nums = [1,2,3,4,5,6,7], k = 3
+输出: [5,6,7,1,2,3,4]
+解释:
+向右轮转 1 步: [7,1,2,3,4,5,6]
+向右轮转 2 步: [6,7,1,2,3,4,5]
+向右轮转 3 步: [5,6,7,1,2,3,4]
+</code></pre>
+<p>示例 2:</p>
+<pre><code>输入：nums = [-1,-100,3,99], k = 2
+输出：[3,99,-1,-100]
+解释: 
+向右轮转 1 步: [99,-1,-100,3]
+向右轮转 2 步: [3,99,-1,-100]
+</code></pre>
+<p>提示：</p>
+<ul>
+<li><code>1 &lt;= nums.length &lt;= 10^5</code></li>
+<li><code>-2^31 &lt;= nums[i] &lt;= 2^31 - 1</code></li>
+<li><code>0 &lt;= k &lt;= 10^5</code></li>
+</ul>
+<p>进阶：</p>
+<ul>
+<li>尽可能想出更多的解决方案，至少有 <code>三种</code> 不同的方法可以解决这个问题。</li>
+<li>你可以使用空间复杂度为 <code>O(1)</code> 的 <code>原地</code> 算法解决这个问题吗？</li>
+</ul>
+<h1 id="思路">思路</h1>
+<h3 id="额外数组">额外数组</h3>
+<p>这个思路很简单，空间复杂度高一些记录下就好了</p>
+<h3 id="循环交替">循环交替</h3>
+<p>这个思路就是不断往后交换，直接把数字摆到它应该在的位置，会有几个注意点：</p>
+<ul>
+<li>用额外变量存下来下一个数字，便于持续往后计算</li>
+<li>记录初始点，用是否回到初始点决定是否需要往右移动一位继续往后交换</li>
+<li>记录总共摆放的次数，因为没有限制，会一直往后交换下去，其实我们简单画一下就明白，有可能交换回初始点时，很多位置就已经完成了，初始点右移是有可能把已经摆好位置的数字移动到错误位置，所以要限制总计交换次数</li>
+</ul>
+<h3 id="翻转数组">翻转数组</h3>
+<p>一图胜千言<br>
+<img src="https://freephenix.github.io//post-images/1712824520684.png" alt="" loading="lazy"></p>
+<p>大体思路就是这样了，上代码～</p>
+<h1 id="代码">代码</h1>
+<h3 id="交替">交替</h3>
+<pre><code class="language-golang">func rotate(nums []int, k int) {
+	// 整除就直接return
+	if k%len(nums) == 0 {
+		return
+	}
+	p := 0
+	// 把k取余，最多需要这么多起始点就够了
+	k = k % len(nums)
+    // 记录起始点
+	startP := 0
+    // 计算要摆放位置
+	nextP := 0
+    // 缓存下个要摆放的数字
+	back := 0
+    // 总计移动次数
+	count := 0
+    // 摆够了就不用继续了
+	for startP &lt; k &amp;&amp; count &lt; len(nums) {
+		p = startP
+		back = nums[p]
+		for count &lt; len(nums) {
+            // 计算下个摆放位置
+			nextP = (p + k) % len(nums)
+            // 存下个摆放数字
+			back, nums[nextP] = nums[nextP], back
+            // 步进
+			p = nextP
+            // 统计摆放次数
+			count++
+            // 回到起始点就换个起始点
+			if p == startP {
+				break
+			}
+		}
+        // 步进起始点
+		startP++
+	}
+}
+</code></pre>
+<h3 id="翻转">翻转</h3>
+<pre><code class="language-golang">func reverse(a []int) {
+	for i, j := 0, len(a)-1; i &lt; j; i, j = i+1, j-1 {
+		a[i], a[j] = a[j], a[i]
+	}
+}
+
+func rotate(nums []int, k int) {
+    // 计算旋转点
+	n := k % len(nums)
+    // 全量翻转
+	reverse(nums)
+    // 分别部分翻转
+	reverse(nums[:n])
+	reverse(nums[n:])
+}
+</code></pre>
+
+                                </div>
+                    </article>
+                    <!--  -->
+                    
+                        <div class="next-post">
+                            <div class="next">下一篇</div>
+                            <a href="https://freephenix.github.io/bktZmmpaE/">
+                                <h3 class="post-title">
+                                    LeetCode-347. 前 K 个高频元素
+                                </h3>
+                            </a>
+                        </div>
+                        
+                            <div id="disqus_thread"></div>
+                            <div id="gitalk-container"></div>
+                </div>
+                <!-- middle -->
+                <div class="main-container-middle"></div>
+                <!-- right -->
+                <div id="sidebar" class="main-container-right">
+                    
+                        <!-- toc -->
+                        
+    <div class="toc-card i-card ">
+        <div class="toc-title i-card-title">目录</div>
+        <div class="toc-content">
+            <ul class="markdownIt-TOC">
+<li><a href="#%E9%A2%98%E7%9B%AE">题目</a></li>
+<li><a href="#%E6%80%9D%E8%B7%AF">思路</a><br>
+*
+<ul>
+<li><a href="#%E9%A2%9D%E5%A4%96%E6%95%B0%E7%BB%84">额外数组</a></li>
+<li><a href="#%E5%BE%AA%E7%8E%AF%E4%BA%A4%E6%9B%BF">循环交替</a></li>
+<li><a href="#%E7%BF%BB%E8%BD%AC%E6%95%B0%E7%BB%84">翻转数组</a></li>
+</ul>
+</li>
+<li><a href="#%E4%BB%A3%E7%A0%81">代码</a><br>
+*
+<ul>
+<li><a href="#%E4%BA%A4%E6%9B%BF">交替</a></li>
+<li><a href="#%E7%BF%BB%E8%BD%AC">翻转</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+        <script>
+            function locateCatelogList() {
+                /*获取文章目录集合,可通过:header过滤器*/
+                var alis = $('.post-content :header');
+                /*获取侧边栏目录列表集合**/
+                var sidebar_alis = $('.markdownIt-TOC a');
+                /*获取滚动条到顶部的距离*/
+                var scroll_height = $(window).scrollTop();
+                for (var i = 0; i < alis.length; i++) {
+                    /*获取锚点集合中的元素分别到顶点的距离*/
+                    var a_height = $(alis[i]).offset().top;
+                    if (a_height < scroll_height) {
+                        /*高亮显示*/
+                        sidebar_alis.removeClass('on');
+                        $(sidebar_alis[i]).addClass('on');
+                    }
+                }
+            }
+            $(function() {
+                /*绑定滚动事件 */
+                $(window).bind('scroll', locateCatelogList);
+            });
+        </script>
+    </div>
+    
+                            
+
+                </div>
+
+
+
+
+            </div>
+
+
+            <div class="site-footer">
+  Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a> | 
+  <a class="rss" href="https://freephenix.github.io//atom.xml" target="_blank">RSS</a>
+</div>
+
+<script>
+  hljs.initHighlightingOnLoad()
+</script>
+
+
+    </div>
+    <script>
+        $('#sidebar').stickySidebar({
+            topSpacing: 80,
+            // bottomSpacing: 60
+        });
+    </script>
+    
+        
+            <script>
+    window.onload = function() {
+        var gitalk = new Gitalk({
+            clientID: '008503f8c8bca8787fbe',
+            clientSecret: '5f789f71e3288ff1866d17523348881053068eb4',
+            repo: 'freephenix.github.io',
+            owner: 'freephenix',
+            admin: ['freephenix'],
+            id: (location.pathname).substring(0, 49), // Ensure uniqueness and length less than 50
+            distractionFreeMode: false // Facebook-like distraction free mode
+        })
+
+        gitalk.render('gitalk-container')
+    }
+</script>
+                
+
+                    
+                                
+</body>
+
+</html>

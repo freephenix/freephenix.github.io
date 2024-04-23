@@ -1,0 +1,365 @@
+<html>
+
+<head>
+    <meta charset="utf-8" />
+<meta name="description" content="" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>
+    LeetCode-321. 拼接最大数 | 半亩房顶
+</title>
+<link rel="shortcut icon" href="https://freephenix.github.io//favicon.ico?v=1713840769430">
+<!-- <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous"> -->
+<link href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+<link rel="stylesheet" href="https://freephenix.github.io//styles/main.css">
+<!-- js -->
+<script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.min.js"></script>
+<script src="https://freephenix.github.io//media/js/jquery.sticky-sidebar.min.js"></script>
+<script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
+<script src="https://cdn.bootcss.com/moment.js/2.23.0/moment.min.js"></script>
+
+
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-147240912-1"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+
+        function gtag() {
+            dataLayer.push(arguments);
+        }
+        gtag('js', new Date());
+
+        gtag('config', 'UA-147240912-1');
+    </script>
+    
+        
+            
+                <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+                <script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+                
+
+                    
+                            
+</head>
+
+<body>
+    <div class="main">
+        <div class="header">
+    <div class="nav">
+        <div class="logo">
+            <a href="https://freephenix.github.io/">
+                <img class="avatar" src="https://freephenix.github.io//images/avatar.png?v=1713840769430" alt="">
+            </a>
+            <div class="site-title">
+                <h1>
+                    半亩房顶
+                </h1>
+            </div>
+        </div>
+        <span class="menu-btn fa fa-align-justify"></span>
+        <div class="menu-container">
+            <ul>
+                
+                    
+                            <li>
+                                <a href="/" class="menu">
+                                    首页
+                                </a>
+                            </li>
+                            
+                                
+                    
+                            <li>
+                                <a href="/archives" class="menu">
+                                    归档
+                                </a>
+                            </li>
+                            
+                                
+                    
+                            <li>
+                                <a href="/tags" class="menu">
+                                    标签
+                                </a>
+                            </li>
+                            
+                                
+                    
+                            <li>
+                                <a href="https://freephenix.github.io//post/guan-yu-ban-mu-fang-ding/" class="menu">
+                                    关于
+                                </a>
+                            </li>
+                            
+                                
+            </ul>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function() {
+        $(".menu-btn").click(function() {
+            $(".menu-container").slideToggle();
+        });
+        $(window).resize(function() {
+
+            if (window.matchMedia('(min-width: 960px)').matches) {
+                $(".menu-container").css('display', 'block')
+            } else {
+                $(".menu-container").css('display', 'none')
+            }
+
+        });
+    });
+</script>
+
+            <div id="main-content" class="post-detail main-container">
+                <!-- left -->
+                <div id="content" class="main-container-left">
+                    <article class="post i-card">
+                        <h2 class="post-title">
+                            LeetCode-321. 拼接最大数
+                        </h2>
+                        <div class="post-info">
+                            <time class="post-time">2023-09-28</time>
+                            
+                                <a href="https://freephenix.github.io/HSYiuvxzO/" class="post-tag i-tag
+                            i-tag-banana">
+                            #分治
+                        </a>
+                                
+                                <a href="https://freephenix.github.io/XoUX7Oq3f/" class="post-tag i-tag
+                            i-tag-other_4">
+                            #单调栈
+                        </a>
+                                
+                                <a href="https://freephenix.github.io/YWFpnf3Gl/" class="post-tag i-tag
+                            i-tag-success">
+                            #刷题
+                        </a>
+                                
+                                <a href="https://freephenix.github.io/70TrDOWqgi/" class="post-tag i-tag
+                            i-tag-error">
+                            #面试
+                        </a>
+                                
+                                <a href="https://freephenix.github.io/go/" class="post-tag i-tag
+                            i-tag-other_2">
+                            #Go
+                        </a>
+                                
+                                <a href="https://freephenix.github.io/k1NaSbOoC/" class="post-tag i-tag
+                            i-tag-other_3">
+                            #LeetCode
+                        </a>
+                                
+                                <a href="https://freephenix.github.io/WucazjDbn/" class="post-tag i-tag
+                            i-tag-">
+                            #算法
+                        </a>
+                                
+                        </div>
+                        
+                            <div class="post-feature-image" style="background-image: url('https://freephenix.github.io//post-images/EZfUiSTlC.jpeg')"></div>
+                            
+                                <div class="post-content">
+                                    <p>刷题使我快乐，满脸开心.jpg</p>
+<ul>
+<li>来源：力扣（LeetCode）</li>
+<li>链接：https://leetcode.cn/problems/create-maximum-number/</li>
+<li>著作权归领扣网络所有。商业转载请联系官方授权，非商业转载请注明出处。</li>
+</ul>
+<!-- more -->
+<h1 id="题目">题目</h1>
+<p>给定长度分别为 <code>m</code> 和 <code>n</code> 的两个数组，其元素由 <code>0-9</code> 构成，表示两个自然数各位上的数字。现在从这两个数组中选出 <code>k (k &lt;= m + n) </code>个数字拼接成一个新的数，要求从同一个数组中取出的数字保持其在原数组中的相对顺序。</p>
+<p>求满足该条件的最大数。结果返回一个表示该最大数的长度为 <code>k</code> 的数组。</p>
+<p>说明: 请尽可能地优化你算法的时间和空间复杂度。</p>
+<p>示例 1:</p>
+<pre><code>输入:
+nums1 = [3, 4, 6, 5]
+nums2 = [9, 1, 2, 5, 8, 3]
+k = 5
+输出:
+[9, 8, 6, 5, 3]
+</code></pre>
+<p>示例 2:</p>
+<pre><code>输入:
+nums1 = [6, 7]
+nums2 = [6, 0, 4]
+k = 5
+输出:
+[6, 7, 6, 0, 4]
+</code></pre>
+<p>示例 3:</p>
+<pre><code>输入:
+nums1 = [3, 9]
+nums2 = [8, 9]
+k = 3
+输出:
+[9, 8, 9]
+</code></pre>
+<h1 id="思路">思路</h1>
+<p>这道题跟<code>402</code>、<code>316</code>题类似，都可以考虑<code>*单调栈*</code>的思路。但是这道题加了一个难度，需要从两个数组中拼出一个最大数组，需要有一个分治的思维，把问题转化成：从两个数组中分别取出<code>i</code>、<code>j</code>长的两个数组，拼装合并起来之后，取最大的一个，条件是，<code>i &lt;= len(nums1)</code> 且 <code>j &lt;= len(nums2)</code>、<code>i + j = k</code> 。而至于拼装等功能函数，其实还是比较简单的</p>
+<h1 id="代码">代码</h1>
+<pre><code class="language-golang">func maxSubsequence(a []int, k int) (s []int) {
+    removeNum := len(a)-k
+    for _, v := range a {
+        for len(s) &gt; 0 &amp;&amp; removeNum &gt; 0 &amp;&amp; v &gt; s[len(s)-1] {
+            s = s[:len(s)-1]
+            removeNum--
+        }
+        s = append(s, v)
+    }
+    if len(s) &gt; k {
+        s = s[:k]
+    }
+    return
+}
+
+func biggerSlice(a, b []int) bool {
+    for i := 0; i &lt; len(a) &amp;&amp; i &lt; len(b); i++ {
+        if a[i] != b[i] {
+            return a[i] &lt; b[i]
+        }
+    }
+    return len(a) &lt; len(b)
+}
+
+func merge(a, b []int) []int {
+    merged := make([]int, len(a)+len(b))
+    for i := range merged {
+        if biggerSlice(a, b) {
+            merged[i], b = b[0], b[1:]
+        } else {
+            merged[i], a = a[0], a[1:]
+        }
+    }
+    return merged
+}
+
+func maxNumber(nums1, nums2 []int, k int) (res []int) {
+    start := 0
+    if k &gt; len(nums2) {
+        start = k - len(nums2)
+    }
+    for i := start; i &lt;= k &amp;&amp; i &lt;= len(nums1); i++ {
+        s1 := maxSubsequence(nums1, i)
+        s2 := maxSubsequence(nums2, k-i)
+        merged := merge(s1, s2)
+        if biggerSlice(res, merged) {
+            res = merged
+        }
+    }
+    return
+}
+</code></pre>
+
+                                </div>
+                    </article>
+                    <!--  -->
+                    
+                        <div class="next-post">
+                            <div class="next">下一篇</div>
+                            <a href="https://freephenix.github.io/7RNqYAWI_/">
+                                <h3 class="post-title">
+                                    LeetCode-316. 去除重复字母
+                                </h3>
+                            </a>
+                        </div>
+                        
+                            <div id="disqus_thread"></div>
+                            <div id="gitalk-container"></div>
+                </div>
+                <!-- middle -->
+                <div class="main-container-middle"></div>
+                <!-- right -->
+                <div id="sidebar" class="main-container-right">
+                    
+                        <!-- toc -->
+                        
+    <div class="toc-card i-card ">
+        <div class="toc-title i-card-title">目录</div>
+        <div class="toc-content">
+            <ul class="markdownIt-TOC">
+<li><a href="#%E9%A2%98%E7%9B%AE">题目</a></li>
+<li><a href="#%E6%80%9D%E8%B7%AF">思路</a></li>
+<li><a href="#%E4%BB%A3%E7%A0%81">代码</a></li>
+</ul>
+
+        </div>
+        <script>
+            function locateCatelogList() {
+                /*获取文章目录集合,可通过:header过滤器*/
+                var alis = $('.post-content :header');
+                /*获取侧边栏目录列表集合**/
+                var sidebar_alis = $('.markdownIt-TOC a');
+                /*获取滚动条到顶部的距离*/
+                var scroll_height = $(window).scrollTop();
+                for (var i = 0; i < alis.length; i++) {
+                    /*获取锚点集合中的元素分别到顶点的距离*/
+                    var a_height = $(alis[i]).offset().top;
+                    if (a_height < scroll_height) {
+                        /*高亮显示*/
+                        sidebar_alis.removeClass('on');
+                        $(sidebar_alis[i]).addClass('on');
+                    }
+                }
+            }
+            $(function() {
+                /*绑定滚动事件 */
+                $(window).bind('scroll', locateCatelogList);
+            });
+        </script>
+    </div>
+    
+                            
+
+                </div>
+
+
+
+
+            </div>
+
+
+            <div class="site-footer">
+  Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a> | 
+  <a class="rss" href="https://freephenix.github.io//atom.xml" target="_blank">RSS</a>
+</div>
+
+<script>
+  hljs.initHighlightingOnLoad()
+</script>
+
+
+    </div>
+    <script>
+        $('#sidebar').stickySidebar({
+            topSpacing: 80,
+            // bottomSpacing: 60
+        });
+    </script>
+    
+        
+            <script>
+    window.onload = function() {
+        var gitalk = new Gitalk({
+            clientID: '008503f8c8bca8787fbe',
+            clientSecret: '5f789f71e3288ff1866d17523348881053068eb4',
+            repo: 'freephenix.github.io',
+            owner: 'freephenix',
+            admin: ['freephenix'],
+            id: (location.pathname).substring(0, 49), // Ensure uniqueness and length less than 50
+            distractionFreeMode: false // Facebook-like distraction free mode
+        })
+
+        gitalk.render('gitalk-container')
+    }
+</script>
+                
+
+                    
+                                
+</body>
+
+</html>

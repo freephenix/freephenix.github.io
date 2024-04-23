@@ -1,0 +1,372 @@
+<html>
+
+<head>
+    <meta charset="utf-8" />
+<meta name="description" content="" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>
+    LeetCode-84. 柱状图中最大的矩形 | 半亩房顶
+</title>
+<link rel="shortcut icon" href="https://freephenix.github.io//favicon.ico?v=1713840769430">
+<!-- <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous"> -->
+<link href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+<link rel="stylesheet" href="https://freephenix.github.io//styles/main.css">
+<!-- js -->
+<script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.min.js"></script>
+<script src="https://freephenix.github.io//media/js/jquery.sticky-sidebar.min.js"></script>
+<script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
+<script src="https://cdn.bootcss.com/moment.js/2.23.0/moment.min.js"></script>
+
+
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-147240912-1"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+
+        function gtag() {
+            dataLayer.push(arguments);
+        }
+        gtag('js', new Date());
+
+        gtag('config', 'UA-147240912-1');
+    </script>
+    
+        
+            
+                <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+                <script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+                
+
+                    
+                            
+</head>
+
+<body>
+    <div class="main">
+        <div class="header">
+    <div class="nav">
+        <div class="logo">
+            <a href="https://freephenix.github.io/">
+                <img class="avatar" src="https://freephenix.github.io//images/avatar.png?v=1713840769430" alt="">
+            </a>
+            <div class="site-title">
+                <h1>
+                    半亩房顶
+                </h1>
+            </div>
+        </div>
+        <span class="menu-btn fa fa-align-justify"></span>
+        <div class="menu-container">
+            <ul>
+                
+                    
+                            <li>
+                                <a href="/" class="menu">
+                                    首页
+                                </a>
+                            </li>
+                            
+                                
+                    
+                            <li>
+                                <a href="/archives" class="menu">
+                                    归档
+                                </a>
+                            </li>
+                            
+                                
+                    
+                            <li>
+                                <a href="/tags" class="menu">
+                                    标签
+                                </a>
+                            </li>
+                            
+                                
+                    
+                            <li>
+                                <a href="https://freephenix.github.io//post/guan-yu-ban-mu-fang-ding/" class="menu">
+                                    关于
+                                </a>
+                            </li>
+                            
+                                
+            </ul>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function() {
+        $(".menu-btn").click(function() {
+            $(".menu-container").slideToggle();
+        });
+        $(window).resize(function() {
+
+            if (window.matchMedia('(min-width: 960px)').matches) {
+                $(".menu-container").css('display', 'block')
+            } else {
+                $(".menu-container").css('display', 'none')
+            }
+
+        });
+    });
+</script>
+
+            <div id="main-content" class="post-detail main-container">
+                <!-- left -->
+                <div id="content" class="main-container-left">
+                    <article class="post i-card">
+                        <h2 class="post-title">
+                            LeetCode-84. 柱状图中最大的矩形
+                        </h2>
+                        <div class="post-info">
+                            <time class="post-time">2024-04-22</time>
+                            
+                                <a href="https://freephenix.github.io/XoUX7Oq3f/" class="post-tag i-tag
+                            i-tag-other_4">
+                            #单调栈
+                        </a>
+                                
+                                <a href="https://freephenix.github.io/W730uBydc/" class="post-tag i-tag
+                            i-tag-error">
+                            #栈
+                        </a>
+                                
+                                <a href="https://freephenix.github.io/YWFpnf3Gl/" class="post-tag i-tag
+                            i-tag-primary">
+                            #刷题
+                        </a>
+                                
+                                <a href="https://freephenix.github.io/70TrDOWqgi/" class="post-tag i-tag
+                            i-tag-primary">
+                            #面试
+                        </a>
+                                
+                                <a href="https://freephenix.github.io/go/" class="post-tag i-tag
+                            i-tag-other_1">
+                            #Go
+                        </a>
+                                
+                                <a href="https://freephenix.github.io/k1NaSbOoC/" class="post-tag i-tag
+                            i-tag-success">
+                            #LeetCode
+                        </a>
+                                
+                                <a href="https://freephenix.github.io/WucazjDbn/" class="post-tag i-tag
+                            i-tag-other_3">
+                            #算法
+                        </a>
+                                
+                        </div>
+                        
+                            <div class="post-feature-image" style="background-image: url('https://freephenix.github.io//post-images/Iy-hoNZ5g.jpeg')"></div>
+                            
+                                <div class="post-content">
+                                    <p>刷题使我快乐，满脸开心.jpg</p>
+<ul>
+<li>来源：力扣（LeetCode）</li>
+<li>链接：https://leetcode.cn/problems/largest-rectangle-in-histogram/</li>
+<li>著作权归领扣网络所有。商业转载请联系官方授权，非商业转载请注明出处。</li>
+</ul>
+<!-- more -->
+<h1 id="题目">题目</h1>
+<p>给定 <code>n</code> 个非负整数，用来表示柱状图中各个柱子的高度。每个柱子彼此相邻，且宽度为 <code>1</code> 。</p>
+<p>求在该柱状图中，能够勾勒出来的矩形的最大面积。</p>
+<p>示例 1:<br>
+<img src="https://freephenix.github.io//post-images/1713772653164.jpeg" alt="" loading="lazy"></p>
+<pre><code>输入：heights = [2,1,5,6,2,3]
+输出：10
+解释：最大的矩形为图中红色区域，面积为 10
+</code></pre>
+<p>示例 2：<br>
+<img src="https://freephenix.github.io//post-images/1713772657683.jpeg" alt="" loading="lazy"></p>
+<pre><code>输入： heights = [2,4]
+输出： 4
+</code></pre>
+<p>提示：</p>
+<ul>
+<li><code>1 &lt;= heights.length &lt;=10^5</code></li>
+<li><code>0 &lt;= heights[i] &lt;= 10^4</code></li>
+</ul>
+<h1 id="思路">思路</h1>
+<p>其实这个问题跟接雨水很相近，我的思路都是</p>
+<blockquote>
+<p>对于每个高度都有对应的左右边界，可以求得此高度下的最大矩形面积</p>
+</blockquote>
+<p>那么我们的思路就转变成了求得<code>每个高度的左右边界</code></p>
+<h3 id="单调栈">单调栈</h3>
+<p>在我们运用单调栈思路，从左到右遍历元素时</p>
+<blockquote>
+<p>可以将比 <code>当前元素对应高度</code> 高的元素都弹出，这样就很容易求得 <code>当前元素对应高度</code> 的 <code>左边界</code></p>
+</blockquote>
+<ul>
+<li>
+<p>如下图 <code>(图一)</code> 示例，此时弹出 <code>位置0</code> 后，栈内没有其他元素了，<code>当前元素</code> <code>位置1</code> 的 <code>左边界</code> 也就是初始化值 <code>-1</code><br>
+<img src="https://freephenix.github.io//post-images/1713771475077.png" alt="" loading="lazy"></p>
+</li>
+<li>
+<p>如下图 <code>(图二)</code> 示例，如果此时栈内还有其他元素，那么 <code>当前元素</code> <code>位置2</code> 的 <code>左边界</code> 就是剩下元素中的 <code>栈顶元素</code> <code>位置1</code><br>
+<img src="https://freephenix.github.io//post-images/1713771454387.png" alt="" loading="lazy"></p>
+</li>
+</ul>
+<blockquote>
+<p>并且在 <code>栈顶元素</code> 弹出栈时， <code>当前元素</code> 其实也正是 <code>栈顶元素</code> 的 <code>右边界</code></p>
+</blockquote>
+<ul>
+<li>同样如 <code>(图一)</code> 示例，此时将要出栈的 <code>栈顶元素</code> <code>位置0</code>，他的 <code>右边界</code> 也就正是 即将入栈的 <code>当前元素</code> <code>位置1</code></li>
+</ul>
+<p>思路大体就是这样了，细节在注释～</p>
+<h1 id="代码">代码</h1>
+<pre><code class="language-golang">func largestRectangleArea(heights []int) int {
+	n := len(heights)
+	// 对于每个高度来说，找到能不低于当前高度的左右边界时，就可以求的此高度下的最大面积了
+	// 初始化左右边界数据
+	left := make([]int, n)
+	right := make([]int, n)
+	// 初始化左右边界数据，当数据在 heights数组中 最终找不到边界时，初始化值就是其左右边界
+	for i := 0; i &lt; n; i++ {
+		left[i] = -1
+		right[i] = n
+	}
+
+	pointStack := []int{}
+	for i := 0; i &lt; n; i++ {
+		// 如果 栈顶元素对应高度 大于 当前元素对应高度，那么 当前元素 就是 栈顶元素 的右边界
+		// 参考图一
+		for len(pointStack) &gt; 0 &amp;&amp; heights[i] &lt;= heights[pointStack[len(pointStack)-1]] {
+			right[pointStack[len(pointStack)-1]] = i
+			pointStack = pointStack[:len(pointStack)-1]
+		}
+		// 弹出完毕后 栈顶元素对应高度 小于 当前元素对应高度，那么 栈顶元素 就是 当前元素 的左边界
+		// 参考图一、图二
+        // 这里因为已经在初始化里写入了 -1，所以图一的 左边界 情况没有具体的代码体现
+		if len(pointStack) &gt; 0 {
+			left[i] = pointStack[len(pointStack)-1]
+		}
+		// 当前元素 处理完毕，入栈处理下一个元素
+		pointStack = append(pointStack, i)
+	}
+	res := 0
+	for i := 0; i &lt; n; i++ {
+		// 底边长 不包含左右边界本身，所以需要 再减1
+		res = max(res, (right[i]-left[i]-1)*heights[i])
+	}
+	return res
+}
+</code></pre>
+
+                                </div>
+                    </article>
+                    <!--  -->
+                    
+                        <div class="next-post">
+                            <div class="next">下一篇</div>
+                            <a href="https://freephenix.github.io/YTeVDByGW/">
+                                <h3 class="post-title">
+                                    LeetCode-96. 不同的二叉搜索树
+                                </h3>
+                            </a>
+                        </div>
+                        
+                            <div id="disqus_thread"></div>
+                            <div id="gitalk-container"></div>
+                </div>
+                <!-- middle -->
+                <div class="main-container-middle"></div>
+                <!-- right -->
+                <div id="sidebar" class="main-container-right">
+                    
+                        <!-- toc -->
+                        
+    <div class="toc-card i-card ">
+        <div class="toc-title i-card-title">目录</div>
+        <div class="toc-content">
+            <ul class="markdownIt-TOC">
+<li><a href="#%E9%A2%98%E7%9B%AE">题目</a></li>
+<li><a href="#%E6%80%9D%E8%B7%AF">思路</a><br>
+*
+<ul>
+<li><a href="#%E5%8D%95%E8%B0%83%E6%A0%88">单调栈</a></li>
+</ul>
+</li>
+<li><a href="#%E4%BB%A3%E7%A0%81">代码</a></li>
+</ul>
+
+        </div>
+        <script>
+            function locateCatelogList() {
+                /*获取文章目录集合,可通过:header过滤器*/
+                var alis = $('.post-content :header');
+                /*获取侧边栏目录列表集合**/
+                var sidebar_alis = $('.markdownIt-TOC a');
+                /*获取滚动条到顶部的距离*/
+                var scroll_height = $(window).scrollTop();
+                for (var i = 0; i < alis.length; i++) {
+                    /*获取锚点集合中的元素分别到顶点的距离*/
+                    var a_height = $(alis[i]).offset().top;
+                    if (a_height < scroll_height) {
+                        /*高亮显示*/
+                        sidebar_alis.removeClass('on');
+                        $(sidebar_alis[i]).addClass('on');
+                    }
+                }
+            }
+            $(function() {
+                /*绑定滚动事件 */
+                $(window).bind('scroll', locateCatelogList);
+            });
+        </script>
+    </div>
+    
+                            
+
+                </div>
+
+
+
+
+            </div>
+
+
+            <div class="site-footer">
+  Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a> | 
+  <a class="rss" href="https://freephenix.github.io//atom.xml" target="_blank">RSS</a>
+</div>
+
+<script>
+  hljs.initHighlightingOnLoad()
+</script>
+
+
+    </div>
+    <script>
+        $('#sidebar').stickySidebar({
+            topSpacing: 80,
+            // bottomSpacing: 60
+        });
+    </script>
+    
+        
+            <script>
+    window.onload = function() {
+        var gitalk = new Gitalk({
+            clientID: '008503f8c8bca8787fbe',
+            clientSecret: '5f789f71e3288ff1866d17523348881053068eb4',
+            repo: 'freephenix.github.io',
+            owner: 'freephenix',
+            admin: ['freephenix'],
+            id: (location.pathname).substring(0, 49), // Ensure uniqueness and length less than 50
+            distractionFreeMode: false // Facebook-like distraction free mode
+        })
+
+        gitalk.render('gitalk-container')
+    }
+</script>
+                
+
+                    
+                                
+</body>
+
+</html>

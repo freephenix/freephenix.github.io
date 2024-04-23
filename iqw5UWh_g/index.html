@@ -1,0 +1,374 @@
+<html>
+
+<head>
+    <meta charset="utf-8" />
+<meta name="description" content="" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>
+    LeetCode-662. 二叉树最大宽度 | 半亩房顶
+</title>
+<link rel="shortcut icon" href="https://freephenix.github.io//favicon.ico?v=1713840769430">
+<!-- <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous"> -->
+<link href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+<link rel="stylesheet" href="https://freephenix.github.io//styles/main.css">
+<!-- js -->
+<script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.min.js"></script>
+<script src="https://freephenix.github.io//media/js/jquery.sticky-sidebar.min.js"></script>
+<script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
+<script src="https://cdn.bootcss.com/moment.js/2.23.0/moment.min.js"></script>
+
+
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-147240912-1"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+
+        function gtag() {
+            dataLayer.push(arguments);
+        }
+        gtag('js', new Date());
+
+        gtag('config', 'UA-147240912-1');
+    </script>
+    
+        
+            
+                <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+                <script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+                
+
+                    
+                            
+</head>
+
+<body>
+    <div class="main">
+        <div class="header">
+    <div class="nav">
+        <div class="logo">
+            <a href="https://freephenix.github.io/">
+                <img class="avatar" src="https://freephenix.github.io//images/avatar.png?v=1713840769430" alt="">
+            </a>
+            <div class="site-title">
+                <h1>
+                    半亩房顶
+                </h1>
+            </div>
+        </div>
+        <span class="menu-btn fa fa-align-justify"></span>
+        <div class="menu-container">
+            <ul>
+                
+                    
+                            <li>
+                                <a href="/" class="menu">
+                                    首页
+                                </a>
+                            </li>
+                            
+                                
+                    
+                            <li>
+                                <a href="/archives" class="menu">
+                                    归档
+                                </a>
+                            </li>
+                            
+                                
+                    
+                            <li>
+                                <a href="/tags" class="menu">
+                                    标签
+                                </a>
+                            </li>
+                            
+                                
+                    
+                            <li>
+                                <a href="https://freephenix.github.io//post/guan-yu-ban-mu-fang-ding/" class="menu">
+                                    关于
+                                </a>
+                            </li>
+                            
+                                
+            </ul>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function() {
+        $(".menu-btn").click(function() {
+            $(".menu-container").slideToggle();
+        });
+        $(window).resize(function() {
+
+            if (window.matchMedia('(min-width: 960px)').matches) {
+                $(".menu-container").css('display', 'block')
+            } else {
+                $(".menu-container").css('display', 'none')
+            }
+
+        });
+    });
+</script>
+
+            <div id="main-content" class="post-detail main-container">
+                <!-- left -->
+                <div id="content" class="main-container-left">
+                    <article class="post i-card">
+                        <h2 class="post-title">
+                            LeetCode-662. 二叉树最大宽度
+                        </h2>
+                        <div class="post-info">
+                            <time class="post-time">2023-12-25</time>
+                            
+                                <a href="https://freephenix.github.io/QFVGe5Wby/" class="post-tag i-tag
+                            i-tag-warning">
+                            #二叉树
+                        </a>
+                                
+                                <a href="https://freephenix.github.io/V7NQ7-8mSs/" class="post-tag i-tag
+                            i-tag-other_2">
+                            #BFS
+                        </a>
+                                
+                                <a href="https://freephenix.github.io/YWFpnf3Gl/" class="post-tag i-tag
+                            i-tag-other_1">
+                            #刷题
+                        </a>
+                                
+                                <a href="https://freephenix.github.io/70TrDOWqgi/" class="post-tag i-tag
+                            i-tag-info">
+                            #面试
+                        </a>
+                                
+                                <a href="https://freephenix.github.io/go/" class="post-tag i-tag
+                            i-tag-other_1">
+                            #Go
+                        </a>
+                                
+                                <a href="https://freephenix.github.io/k1NaSbOoC/" class="post-tag i-tag
+                            i-tag-warning">
+                            #LeetCode
+                        </a>
+                                
+                                <a href="https://freephenix.github.io/WucazjDbn/" class="post-tag i-tag
+                            i-tag-other_3">
+                            #算法
+                        </a>
+                                
+                        </div>
+                        
+                            <div class="post-feature-image" style="background-image: url('https://freephenix.github.io//post-images/iqw5UWh_g.jpeg')"></div>
+                            
+                                <div class="post-content">
+                                    <p>刷题使我快乐，满脸开心.jpg</p>
+<ul>
+<li>来源：力扣（LeetCode）</li>
+<li>链接：https://leetcode.cn/problems/maximum-width-of-binary-tree/</li>
+<li>著作权归领扣网络所有。商业转载请联系官方授权，非商业转载请注明出处。</li>
+</ul>
+<!-- more -->
+<h1 id="题目">题目</h1>
+<p>给你一棵二叉树的根节点 <code>root</code> ，返回树的 <code>最大宽度</code> 。</p>
+<p>树的 <code>最大宽度</code> 是所有层中最大的 <code>宽度</code> 。</p>
+<p>每一层的 <code>宽度</code> 被定义为该层最左和最右的<strong>非空节点</strong>（即，两个端点）之间的长度。将这个二叉树视作与满二叉树结构相同，两端点间会出现一些延伸到这一层的 <code>null</code> 节点，这些 <code>null</code> 节点也计入长度。</p>
+<p>题目数据保证答案将会在  <code>32 位</code> 带符号整数范围内。</p>
+<p>示例 1：<br>
+<img src="https://freephenix.github.io//post-images/1703491998968.jpeg" alt="" loading="lazy"></p>
+<pre><code>输入：root = [1,3,2,5,3,null,9]
+输出：4
+解释：最大宽度出现在树的第 3 层，宽度为 4 (5,3,null,9) 。
+</code></pre>
+<p>示例 2：<br>
+<img src="https://freephenix.github.io//post-images/1703492004431.jpeg" alt="" loading="lazy"></p>
+<pre><code>输入：root = [1,3,2,5,null,null,9,6,null,7]
+输出：7
+解释：最大宽度出现在树的第 4 层，宽度为 7 (6,null,null,null,null,null,7) 。
+</code></pre>
+<p>示例 3：<br>
+<img src="https://freephenix.github.io//post-images/1703492008635.jpeg" alt="" loading="lazy"></p>
+<pre><code>输入：root = [1,3,2,5]
+输出：2
+解释：最大宽度出现在树的第 2 层，宽度为 2 (3,2) 。
+</code></pre>
+<p>提示：</p>
+<ul>
+<li>树中节点的数目范围是 <code>[1, 3000]</code></li>
+<li><code>-100 &lt;= Node.val &lt;= 100</code></li>
+</ul>
+<h1 id="思路">思路</h1>
+<p>首先是理解题意，这里直白点翻译下<em>最大宽度</em>：</p>
+<blockquote>
+<p>每层中，最左端非空节点和最右端非空节点之间，假设是满二叉树情况下的距离。</p>
+</blockquote>
+<p>要素有两个：</p>
+<ul>
+<li>最左端非空节点 和 最右端非空节点</li>
+<li>满二叉树情况下的距离</li>
+</ul>
+<p>这里乍一听可能有点思路丢失，但是如果对二叉树特征了解的话</p>
+<blockquote>
+<p>其实满二叉树的情况下，每个节点的下标都是可以根据父节点计算的<br>
+也就是说<br>
+只要找最左、最右非空节点，每层的<strong>宽度</strong>就是可计算的</p>
+</blockquote>
+<p>所以问题转变成了</p>
+<blockquote>
+<p>带着父节点的下标寻找最左、最右非空节点</p>
+</blockquote>
+<p>私以为这种情况下</p>
+<ul>
+<li><code>BFS</code>的心智负担是比较小的，而且复杂度也不会太差</li>
+<li>带着父节点下标这个问题，构造一个包含节点和对应下标值的结构体就好了~</li>
+</ul>
+<p>代码也基本就出来了。老样子，细节在代码注释</p>
+<h1 id="代码">代码</h1>
+<pre><code class="language-golang">type TreeNodeIndex struct {
+	Node  *TreeNode
+	Index int
+}
+
+func widthOfBinaryTree(root *TreeNode) int {
+	nodeIdxs := []*TreeNodeIndex{{root, 0}}
+	temp := make([]*TreeNodeIndex, 0)
+	res := 0
+    // 遍历完整棵树的条件
+	for len(nodeIdxs) != 0 {
+        // 按这里代码的顺序，左节点在前，右节点在后，所以用后面的减前面的
+        // 提交时候才发现golang语言里，这个max函数是默认提供的
+		res = max(nodeIdxs[len(nodeIdxs)-1].Index-nodeIdxs[0].Index+1, res)
+		for _, nodeIdx := range nodeIdxs {
+            // 优先放入左节点
+			if nodeIdx.Node.Left != nil {
+				temp = append(temp, &amp;TreeNodeIndex{
+					Node:  nodeIdx.Node.Left,
+                    // 左右子节点下标均可计算得出
+					Index: 2*nodeIdx.Index + 1,
+				})
+			}
+			if nodeIdx.Node.Right != nil {
+				temp = append(temp, &amp;TreeNodeIndex{
+					Node:  nodeIdx.Node.Right,
+					Index: 2*nodeIdx.Index + 2,
+				})
+			}
+		}
+        // 更新每层节点列表
+		nodeIdxs = temp
+		temp = nil
+	}
+	return res
+}
+</code></pre>
+
+                                </div>
+                    </article>
+                    <!--  -->
+                    
+                        <div class="next-post">
+                            <div class="next">下一篇</div>
+                            <a href="https://freephenix.github.io/zLfo6Z2li/">
+                                <h3 class="post-title">
+                                    LeetCode-718. 最长重复子数组
+                                </h3>
+                            </a>
+                        </div>
+                        
+                            <div id="disqus_thread"></div>
+                            <div id="gitalk-container"></div>
+                </div>
+                <!-- middle -->
+                <div class="main-container-middle"></div>
+                <!-- right -->
+                <div id="sidebar" class="main-container-right">
+                    
+                        <!-- toc -->
+                        
+    <div class="toc-card i-card ">
+        <div class="toc-title i-card-title">目录</div>
+        <div class="toc-content">
+            <ul class="markdownIt-TOC">
+<li><a href="#%E9%A2%98%E7%9B%AE">题目</a></li>
+<li><a href="#%E6%80%9D%E8%B7%AF">思路</a></li>
+<li><a href="#%E4%BB%A3%E7%A0%81">代码</a></li>
+</ul>
+
+        </div>
+        <script>
+            function locateCatelogList() {
+                /*获取文章目录集合,可通过:header过滤器*/
+                var alis = $('.post-content :header');
+                /*获取侧边栏目录列表集合**/
+                var sidebar_alis = $('.markdownIt-TOC a');
+                /*获取滚动条到顶部的距离*/
+                var scroll_height = $(window).scrollTop();
+                for (var i = 0; i < alis.length; i++) {
+                    /*获取锚点集合中的元素分别到顶点的距离*/
+                    var a_height = $(alis[i]).offset().top;
+                    if (a_height < scroll_height) {
+                        /*高亮显示*/
+                        sidebar_alis.removeClass('on');
+                        $(sidebar_alis[i]).addClass('on');
+                    }
+                }
+            }
+            $(function() {
+                /*绑定滚动事件 */
+                $(window).bind('scroll', locateCatelogList);
+            });
+        </script>
+    </div>
+    
+                            
+
+                </div>
+
+
+
+
+            </div>
+
+
+            <div class="site-footer">
+  Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a> | 
+  <a class="rss" href="https://freephenix.github.io//atom.xml" target="_blank">RSS</a>
+</div>
+
+<script>
+  hljs.initHighlightingOnLoad()
+</script>
+
+
+    </div>
+    <script>
+        $('#sidebar').stickySidebar({
+            topSpacing: 80,
+            // bottomSpacing: 60
+        });
+    </script>
+    
+        
+            <script>
+    window.onload = function() {
+        var gitalk = new Gitalk({
+            clientID: '008503f8c8bca8787fbe',
+            clientSecret: '5f789f71e3288ff1866d17523348881053068eb4',
+            repo: 'freephenix.github.io',
+            owner: 'freephenix',
+            admin: ['freephenix'],
+            id: (location.pathname).substring(0, 49), // Ensure uniqueness and length less than 50
+            distractionFreeMode: false // Facebook-like distraction free mode
+        })
+
+        gitalk.render('gitalk-container')
+    }
+</script>
+                
+
+                    
+                                
+</body>
+
+</html>

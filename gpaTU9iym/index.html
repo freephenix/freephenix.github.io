@@ -1,0 +1,359 @@
+<html>
+
+<head>
+    <meta charset="utf-8" />
+<meta name="description" content="" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>
+    LeetCode-239. 滑动窗口最大值 | 半亩房顶
+</title>
+<link rel="shortcut icon" href="https://freephenix.github.io//favicon.ico?v=1713840769430">
+<!-- <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous"> -->
+<link href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+<link rel="stylesheet" href="https://freephenix.github.io//styles/main.css">
+<!-- js -->
+<script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.min.js"></script>
+<script src="https://freephenix.github.io//media/js/jquery.sticky-sidebar.min.js"></script>
+<script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
+<script src="https://cdn.bootcss.com/moment.js/2.23.0/moment.min.js"></script>
+
+
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-147240912-1"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+
+        function gtag() {
+            dataLayer.push(arguments);
+        }
+        gtag('js', new Date());
+
+        gtag('config', 'UA-147240912-1');
+    </script>
+    
+        
+            
+                <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+                <script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+                
+
+                    
+                            
+</head>
+
+<body>
+    <div class="main">
+        <div class="header">
+    <div class="nav">
+        <div class="logo">
+            <a href="https://freephenix.github.io/">
+                <img class="avatar" src="https://freephenix.github.io//images/avatar.png?v=1713840769430" alt="">
+            </a>
+            <div class="site-title">
+                <h1>
+                    半亩房顶
+                </h1>
+            </div>
+        </div>
+        <span class="menu-btn fa fa-align-justify"></span>
+        <div class="menu-container">
+            <ul>
+                
+                    
+                            <li>
+                                <a href="/" class="menu">
+                                    首页
+                                </a>
+                            </li>
+                            
+                                
+                    
+                            <li>
+                                <a href="/archives" class="menu">
+                                    归档
+                                </a>
+                            </li>
+                            
+                                
+                    
+                            <li>
+                                <a href="/tags" class="menu">
+                                    标签
+                                </a>
+                            </li>
+                            
+                                
+                    
+                            <li>
+                                <a href="https://freephenix.github.io//post/guan-yu-ban-mu-fang-ding/" class="menu">
+                                    关于
+                                </a>
+                            </li>
+                            
+                                
+            </ul>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function() {
+        $(".menu-btn").click(function() {
+            $(".menu-container").slideToggle();
+        });
+        $(window).resize(function() {
+
+            if (window.matchMedia('(min-width: 960px)').matches) {
+                $(".menu-container").css('display', 'block')
+            } else {
+                $(".menu-container").css('display', 'none')
+            }
+
+        });
+    });
+</script>
+
+            <div id="main-content" class="post-detail main-container">
+                <!-- left -->
+                <div id="content" class="main-container-left">
+                    <article class="post i-card">
+                        <h2 class="post-title">
+                            LeetCode-239. 滑动窗口最大值
+                        </h2>
+                        <div class="post-info">
+                            <time class="post-time">2023-11-28</time>
+                            
+                                <a href="https://freephenix.github.io/lb4w2Y2WQ/" class="post-tag i-tag
+                            i-tag-">
+                            #单调队列
+                        </a>
+                                
+                                <a href="https://freephenix.github.io/YWFpnf3Gl/" class="post-tag i-tag
+                            i-tag-primary">
+                            #刷题
+                        </a>
+                                
+                                <a href="https://freephenix.github.io/70TrDOWqgi/" class="post-tag i-tag
+                            i-tag-other_2">
+                            #面试
+                        </a>
+                                
+                                <a href="https://freephenix.github.io/go/" class="post-tag i-tag
+                            i-tag-other_1">
+                            #Go
+                        </a>
+                                
+                                <a href="https://freephenix.github.io/k1NaSbOoC/" class="post-tag i-tag
+                            i-tag-warning">
+                            #LeetCode
+                        </a>
+                                
+                                <a href="https://freephenix.github.io/WucazjDbn/" class="post-tag i-tag
+                            i-tag-other_4">
+                            #算法
+                        </a>
+                                
+                        </div>
+                        
+                            <div class="post-feature-image" style="background-image: url('https://freephenix.github.io//post-images/gpaTU9iym.jpeg')"></div>
+                            
+                                <div class="post-content">
+                                    <p>刷题使我快乐，满脸开心.jpg</p>
+<ul>
+<li>来源：力扣（LeetCode）</li>
+<li>链接：https://leetcode.cn/problems/sliding-window-maximum/</li>
+<li>著作权归领扣网络所有。商业转载请联系官方授权，非商业转载请注明出处。</li>
+</ul>
+<!-- more -->
+<h1 id="题目">题目</h1>
+<p>给你一个整数数组 <code>nums</code>，有一个大小为 <code>k</code> 的滑动窗口从数组的最左侧移动到数组的最右侧。你只可以看到在滑动窗口内的 <code>k</code> 个数字。滑动窗口每次只向右移动一位。</p>
+<p>返回 <code>滑动窗口中的最大值</code> 。</p>
+<p>示例 1：</p>
+<pre><code>输入：nums = [1,3,-1,-3,5,3,6,7], k = 3
+输出：[3,3,5,5,6,7]
+解释：
+滑动窗口的位置                最大值
+---------------               -----
+[1  3  -1] -3  5  3  6  7       3
+ 1 [3  -1  -3] 5  3  6  7       3
+ 1  3 [-1  -3  5] 3  6  7       5
+ 1  3  -1 [-3  5  3] 6  7       5
+ 1  3  -1  -3 [5  3  6] 7       6
+ 1  3  -1  -3  5 [3  6  7]      7
+</code></pre>
+<p>示例 2：</p>
+<pre><code>输入：nums = [1], k = 1
+输出：[1]
+</code></pre>
+<p>提示：</p>
+<ul>
+<li><code>1 &lt;= nums.length &lt;= 105</code></li>
+<li><code>-104 &lt;= nums[i] &lt;= 104</code></li>
+<li><code>1 &lt;= k &lt;= nums.length</code></li>
+</ul>
+<h1 id="思路">思路</h1>
+<p>感觉一涉及到单调栈、单调队列这种，很容易就标上一个<code>困难</code>。想了下原因，可能是在于这种思维往往需要构造出一个<code>平时难以见到的数据结构</code>，增加了心智负担，所以标为了<code>困难</code>。但是，如果你见多了某种结构，那么至少<code>此种结构便于解决的问题</code>，对你来说就不是一个难题了。这就是所谓的<code>会者不难，难者不会</code>吧。</p>
+<p>之前见多了<code>单调栈</code>（感兴趣可以点单调栈标签看看其他题目~），所以开始第一思维就是用单调栈来处理，但是后来实际写代码时候发现（示例1数据为例）：</p>
+<ol>
+<li>
+<p>如果将值更大的数字放在栈顶，那么在面临新增元素为小值时无法处理后续值变小但是窗口滑动时它们确实需要保留的情况。所以需要将后面的值进行保留，以应对窗口滑动的行为<br>
+<img src="https://freephenix.github.io//post-images/1701157097845.png" alt="" loading="lazy"></p>
+</li>
+<li>
+<p>所以改了下，将值更大的数字放在栈底，那么会是这种情况，此时其实我们需要的是从栈底取值，所以这已经不是栈了，应该叫队列了：<br>
+<img src="https://freephenix.github.io//post-images/1701157391238.png" alt="" loading="lazy"></p>
+</li>
+</ol>
+<p>后来看题解，还真的是叫<code>单调队列</code>，那种感觉确实很难言说了，舒爽~哈哈哈</p>
+<p>所以，思路整理如下：</p>
+<ol>
+<li>维护一个队列，按下标从小到大放入元素时，剔除比入队值小的值，没有比入队值小的，则压入队列。因为按下标顺序入队，所以此值肯定比之前的值更晚划出窗口，所以不用担心窗口滑动带来问题。</li>
+<li>初始时将<code>k</code>个元素入队列，队首元素就是目前最大的元素了，加入结果集</li>
+<li>后续开启循环，将一个个后续值入队，均执行<code>步骤1</code>操作，但随着开始入队后续窗口的值，需要检查队首的下标是否还满足<code>在窗口内</code>，不满足则剔除，直到找到满足<code>在窗口内</code>的新的队首元素，加入结果集</li>
+<li>遍历完给定数组，结束循环。</li>
+</ol>
+<p>至此，上代码。</p>
+<h1 id="代码">代码</h1>
+<pre><code class="language-golang">func maxSlidingWindow(nums []int, k int) []int {
+    // point query 下标队列
+    pq := make([]int, 0)
+    add := func(i int) {
+        // 队列尾小于此值的均剔除
+        // 因为下标肯定比此值小，更早划出窗口，所以可以剔除
+        for len(pq) &gt; 0 &amp;&amp; nums[i] &gt;= nums[pq[len(pq)-1]] {
+            pq = pq[:len(pq)-1]
+        }
+        // 此时留下的元素，从队列头到队列尾：值递减，但是下标递增
+        pq = append(pq, i)
+    }
+
+    // 初始窗口中的值入队列
+    for i := 0; i &lt; k; i++ {
+        add(i)
+    }
+
+    n := len(nums)
+    res := make([]int, 0, n-k+1)
+    res = append(res, nums[pq[0]])
+    for i := k; i &lt; n; i++ {
+        add(i)
+        // 对于划出窗口的下标，执行剔除
+        for pq[0] &lt;= i-k {
+            pq = pq[1:]
+        }
+        // 此时队列头就是值最大，下标满足窗口的元素了
+        res = append(res, nums[pq[0]])
+    }
+    return res
+}
+</code></pre>
+
+                                </div>
+                    </article>
+                    <!--  -->
+                    
+                        <div class="next-post">
+                            <div class="next">下一篇</div>
+                            <a href="https://freephenix.github.io/Y1hqsVXVY/">
+                                <h3 class="post-title">
+                                    LeetCode-2. 两数相加
+                                </h3>
+                            </a>
+                        </div>
+                        
+                            <div id="disqus_thread"></div>
+                            <div id="gitalk-container"></div>
+                </div>
+                <!-- middle -->
+                <div class="main-container-middle"></div>
+                <!-- right -->
+                <div id="sidebar" class="main-container-right">
+                    
+                        <!-- toc -->
+                        
+    <div class="toc-card i-card ">
+        <div class="toc-title i-card-title">目录</div>
+        <div class="toc-content">
+            <ul class="markdownIt-TOC">
+<li><a href="#%E9%A2%98%E7%9B%AE">题目</a></li>
+<li><a href="#%E6%80%9D%E8%B7%AF">思路</a></li>
+<li><a href="#%E4%BB%A3%E7%A0%81">代码</a></li>
+</ul>
+
+        </div>
+        <script>
+            function locateCatelogList() {
+                /*获取文章目录集合,可通过:header过滤器*/
+                var alis = $('.post-content :header');
+                /*获取侧边栏目录列表集合**/
+                var sidebar_alis = $('.markdownIt-TOC a');
+                /*获取滚动条到顶部的距离*/
+                var scroll_height = $(window).scrollTop();
+                for (var i = 0; i < alis.length; i++) {
+                    /*获取锚点集合中的元素分别到顶点的距离*/
+                    var a_height = $(alis[i]).offset().top;
+                    if (a_height < scroll_height) {
+                        /*高亮显示*/
+                        sidebar_alis.removeClass('on');
+                        $(sidebar_alis[i]).addClass('on');
+                    }
+                }
+            }
+            $(function() {
+                /*绑定滚动事件 */
+                $(window).bind('scroll', locateCatelogList);
+            });
+        </script>
+    </div>
+    
+                            
+
+                </div>
+
+
+
+
+            </div>
+
+
+            <div class="site-footer">
+  Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a> | 
+  <a class="rss" href="https://freephenix.github.io//atom.xml" target="_blank">RSS</a>
+</div>
+
+<script>
+  hljs.initHighlightingOnLoad()
+</script>
+
+
+    </div>
+    <script>
+        $('#sidebar').stickySidebar({
+            topSpacing: 80,
+            // bottomSpacing: 60
+        });
+    </script>
+    
+        
+            <script>
+    window.onload = function() {
+        var gitalk = new Gitalk({
+            clientID: '008503f8c8bca8787fbe',
+            clientSecret: '5f789f71e3288ff1866d17523348881053068eb4',
+            repo: 'freephenix.github.io',
+            owner: 'freephenix',
+            admin: ['freephenix'],
+            id: (location.pathname).substring(0, 49), // Ensure uniqueness and length less than 50
+            distractionFreeMode: false // Facebook-like distraction free mode
+        })
+
+        gitalk.render('gitalk-container')
+    }
+</script>
+                
+
+                    
+                                
+</body>
+
+</html>

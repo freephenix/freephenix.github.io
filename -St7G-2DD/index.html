@@ -1,0 +1,365 @@
+<html>
+
+<head>
+    <meta charset="utf-8" />
+<meta name="description" content="" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>
+    补充题 - 排序奇升偶降链表 | 半亩房顶
+</title>
+<link rel="shortcut icon" href="https://freephenix.github.io//favicon.ico?v=1713840769430">
+<!-- <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous"> -->
+<link href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+<link rel="stylesheet" href="https://freephenix.github.io//styles/main.css">
+<!-- js -->
+<script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.min.js"></script>
+<script src="https://freephenix.github.io//media/js/jquery.sticky-sidebar.min.js"></script>
+<script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
+<script src="https://cdn.bootcss.com/moment.js/2.23.0/moment.min.js"></script>
+
+
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-147240912-1"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+
+        function gtag() {
+            dataLayer.push(arguments);
+        }
+        gtag('js', new Date());
+
+        gtag('config', 'UA-147240912-1');
+    </script>
+    
+        
+            
+                <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+                <script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+                
+
+                    
+                            
+</head>
+
+<body>
+    <div class="main">
+        <div class="header">
+    <div class="nav">
+        <div class="logo">
+            <a href="https://freephenix.github.io/">
+                <img class="avatar" src="https://freephenix.github.io//images/avatar.png?v=1713840769430" alt="">
+            </a>
+            <div class="site-title">
+                <h1>
+                    半亩房顶
+                </h1>
+            </div>
+        </div>
+        <span class="menu-btn fa fa-align-justify"></span>
+        <div class="menu-container">
+            <ul>
+                
+                    
+                            <li>
+                                <a href="/" class="menu">
+                                    首页
+                                </a>
+                            </li>
+                            
+                                
+                    
+                            <li>
+                                <a href="/archives" class="menu">
+                                    归档
+                                </a>
+                            </li>
+                            
+                                
+                    
+                            <li>
+                                <a href="/tags" class="menu">
+                                    标签
+                                </a>
+                            </li>
+                            
+                                
+                    
+                            <li>
+                                <a href="https://freephenix.github.io//post/guan-yu-ban-mu-fang-ding/" class="menu">
+                                    关于
+                                </a>
+                            </li>
+                            
+                                
+            </ul>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function() {
+        $(".menu-btn").click(function() {
+            $(".menu-container").slideToggle();
+        });
+        $(window).resize(function() {
+
+            if (window.matchMedia('(min-width: 960px)').matches) {
+                $(".menu-container").css('display', 'block')
+            } else {
+                $(".menu-container").css('display', 'none')
+            }
+
+        });
+    });
+</script>
+
+            <div id="main-content" class="post-detail main-container">
+                <!-- left -->
+                <div id="content" class="main-container-left">
+                    <article class="post i-card">
+                        <h2 class="post-title">
+                            补充题 - 排序奇升偶降链表
+                        </h2>
+                        <div class="post-info">
+                            <time class="post-time">2024-02-06</time>
+                            
+                                <a href="https://freephenix.github.io/V1DFbmyKM/" class="post-tag i-tag
+                            i-tag-other_2">
+                            #链表
+                        </a>
+                                
+                                <a href="https://freephenix.github.io/YWFpnf3Gl/" class="post-tag i-tag
+                            i-tag-error">
+                            #刷题
+                        </a>
+                                
+                                <a href="https://freephenix.github.io/70TrDOWqgi/" class="post-tag i-tag
+                            i-tag-info">
+                            #面试
+                        </a>
+                                
+                                <a href="https://freephenix.github.io/go/" class="post-tag i-tag
+                            i-tag-error">
+                            #Go
+                        </a>
+                                
+                                <a href="https://freephenix.github.io/k1NaSbOoC/" class="post-tag i-tag
+                            i-tag-other_4">
+                            #LeetCode
+                        </a>
+                                
+                                <a href="https://freephenix.github.io/WucazjDbn/" class="post-tag i-tag
+                            i-tag-other_2">
+                            #算法
+                        </a>
+                                
+                        </div>
+                        
+                            <div class="post-feature-image" style="background-image: url('https://freephenix.github.io//post-images/-St7G-2DD.jpeg')"></div>
+                            
+                                <div class="post-content">
+                                    <p>刷题使我快乐，满脸开心.jpg</p>
+<ul>
+<li>来源：CodeTop</li>
+<li>链接：https://mp.weixin.qq.com/s/0WVa2wIAeG0nYnVndZiEXQ</li>
+</ul>
+<!-- more -->
+<h1 id="题目">题目</h1>
+<blockquote>
+<p>链表，奇数位置按序增长，偶数位置按序递减，如何能实现链表从小到大？（2020.10 字节跳动-后端）</p>
+</blockquote>
+<blockquote>
+<p>奇偶生序倒序链表的重新排序组合，例如：18365472（2020.08 字节跳动-后端）</p>
+</blockquote>
+<blockquote>
+<p><code>1-&gt;4-&gt;3-&gt;2-&gt;5</code> 给定一个链表奇数部分递增，偶数部分递减，要求在<code>O(n)</code>时间复杂度内将链表变成递增，5分钟左右（2020.07 字节跳动-测试开发）</p>
+</blockquote>
+<blockquote>
+<p>奇数位升序偶数位降序的链表要求时间<code>O(n)</code>空间<code>O(1)</code>的排序？(2020.07 字节跳动-后端)</p>
+</blockquote>
+<p>示例 1：</p>
+<pre><code>输入：1-&gt;8-&gt;3-&gt;6-&gt;5-&gt;4-&gt;7-&gt;2-&gt;NULL
+输出：1-&gt;2-&gt;3-&gt;4-&gt;5-&gt;6-&gt;7-&gt;8-&gt;NULL
+</code></pre>
+<h1 id="思路">思路</h1>
+<p>这道题难度应该是中等没啥问题，其实涉及的思路都比较基础，就是</p>
+<ul>
+<li>拆分链表</li>
+<li>反转偶数链表（转为升序）</li>
+<li>合并链表</li>
+</ul>
+<p>感觉无需说太多，主要是冷静分析，以及必要时一定不要单纯想象，实际画图模拟下~</p>
+<h1 id="代码">代码</h1>
+<pre><code class="language-golang">func do(root *ListNode) *ListNode {
+	if root == nil || root.Next == nil {
+		return root
+	}
+	veryHead1 := &amp;ListNode{}
+	veryHead2 := &amp;ListNode{}
+	head1 := veryHead1
+	head2 := veryHead2
+
+	// 拆分双链
+	i := 1
+	for root != nil {
+		if i%2 == 1 {
+			head1.Next = root
+			head1 = head1.Next
+		} else {
+			head2.Next = root
+			head2 = head2.Next
+		}
+		root = root.Next
+		i++
+	}
+	// 尾部清空，可能会因为指针引用地址没有变，造成混乱
+	head1.Next = nil
+	head2.Next = nil
+
+	// 翻转偶数链
+	// 为了清晰，不复用变量
+    now := veryHead2.Next
+	var pre, next *ListNode
+	for now != nil {
+		next = now.Next
+		now.Next = pre
+		pre = now
+		now = next
+	}
+
+	// 合并链表
+    // 为了清晰，不复用变量
+	veryHead := &amp;ListNode{}
+	head := veryHead
+	head1 = veryHead1.Next
+	head2 = pre
+	for head1 != nil &amp;&amp; head2 != nil {
+		if head1.Val &gt; head2.Val {
+			head.Next = head2
+			head2 = head2.Next
+		} else {
+			head.Next = head1
+			head1 = head1.Next
+		}
+		head = head.Next
+	}
+    // 当有一个链空了，剩下的直接串上就好
+	if head1 == nil {
+		head.Next = head2
+	} else if head2 == nil {
+		head.Next = head1
+	}
+	return veryHead.Next
+}
+
+</code></pre>
+
+                                </div>
+                    </article>
+                    <!--  -->
+                    
+                        <div class="next-post">
+                            <div class="next">下一篇</div>
+                            <a href="https://freephenix.github.io/oEwBiiy2_/">
+                                <h3 class="post-title">
+                                    LeetCode-123. 买卖股票的最佳时机 III
+                                </h3>
+                            </a>
+                        </div>
+                        
+                            <div id="disqus_thread"></div>
+                            <div id="gitalk-container"></div>
+                </div>
+                <!-- middle -->
+                <div class="main-container-middle"></div>
+                <!-- right -->
+                <div id="sidebar" class="main-container-right">
+                    
+                        <!-- toc -->
+                        
+    <div class="toc-card i-card ">
+        <div class="toc-title i-card-title">目录</div>
+        <div class="toc-content">
+            <ul class="markdownIt-TOC">
+<li><a href="#%E9%A2%98%E7%9B%AE">题目</a></li>
+<li><a href="#%E6%80%9D%E8%B7%AF">思路</a></li>
+<li><a href="#%E4%BB%A3%E7%A0%81">代码</a></li>
+</ul>
+
+        </div>
+        <script>
+            function locateCatelogList() {
+                /*获取文章目录集合,可通过:header过滤器*/
+                var alis = $('.post-content :header');
+                /*获取侧边栏目录列表集合**/
+                var sidebar_alis = $('.markdownIt-TOC a');
+                /*获取滚动条到顶部的距离*/
+                var scroll_height = $(window).scrollTop();
+                for (var i = 0; i < alis.length; i++) {
+                    /*获取锚点集合中的元素分别到顶点的距离*/
+                    var a_height = $(alis[i]).offset().top;
+                    if (a_height < scroll_height) {
+                        /*高亮显示*/
+                        sidebar_alis.removeClass('on');
+                        $(sidebar_alis[i]).addClass('on');
+                    }
+                }
+            }
+            $(function() {
+                /*绑定滚动事件 */
+                $(window).bind('scroll', locateCatelogList);
+            });
+        </script>
+    </div>
+    
+                            
+
+                </div>
+
+
+
+
+            </div>
+
+
+            <div class="site-footer">
+  Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a> | 
+  <a class="rss" href="https://freephenix.github.io//atom.xml" target="_blank">RSS</a>
+</div>
+
+<script>
+  hljs.initHighlightingOnLoad()
+</script>
+
+
+    </div>
+    <script>
+        $('#sidebar').stickySidebar({
+            topSpacing: 80,
+            // bottomSpacing: 60
+        });
+    </script>
+    
+        
+            <script>
+    window.onload = function() {
+        var gitalk = new Gitalk({
+            clientID: '008503f8c8bca8787fbe',
+            clientSecret: '5f789f71e3288ff1866d17523348881053068eb4',
+            repo: 'freephenix.github.io',
+            owner: 'freephenix',
+            admin: ['freephenix'],
+            id: (location.pathname).substring(0, 49), // Ensure uniqueness and length less than 50
+            distractionFreeMode: false // Facebook-like distraction free mode
+        })
+
+        gitalk.render('gitalk-container')
+    }
+</script>
+                
+
+                    
+                                
+</body>
+
+</html>

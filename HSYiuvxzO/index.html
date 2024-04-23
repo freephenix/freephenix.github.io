@@ -1,0 +1,522 @@
+<html>
+
+<head>
+    <meta charset="utf-8" />
+<meta name="description" content="" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>
+    分治 | 半亩房顶
+</title>
+<link rel="shortcut icon" href="https://freephenix.github.io//favicon.ico?v=1713840769430">
+<!-- <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous"> -->
+<link href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+<link rel="stylesheet" href="https://freephenix.github.io//styles/main.css">
+<!-- js -->
+<script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.min.js"></script>
+<script src="https://freephenix.github.io//media/js/jquery.sticky-sidebar.min.js"></script>
+<script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
+<script src="https://cdn.bootcss.com/moment.js/2.23.0/moment.min.js"></script>
+
+
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-147240912-1"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+
+        function gtag() {
+            dataLayer.push(arguments);
+        }
+        gtag('js', new Date());
+
+        gtag('config', 'UA-147240912-1');
+    </script>
+    
+</head>
+
+<body>
+    <div class="main">
+        <div class="header">
+    <div class="nav">
+        <div class="logo">
+            <a href="https://freephenix.github.io/">
+                <img class="avatar" src="https://freephenix.github.io//images/avatar.png?v=1713840769430" alt="">
+            </a>
+            <div class="site-title">
+                <h1>
+                    半亩房顶
+                </h1>
+            </div>
+        </div>
+        <span class="menu-btn fa fa-align-justify"></span>
+        <div class="menu-container">
+            <ul>
+                
+                    
+                            <li>
+                                <a href="/" class="menu">
+                                    首页
+                                </a>
+                            </li>
+                            
+                                
+                    
+                            <li>
+                                <a href="/archives" class="menu">
+                                    归档
+                                </a>
+                            </li>
+                            
+                                
+                    
+                            <li>
+                                <a href="/tags" class="menu">
+                                    标签
+                                </a>
+                            </li>
+                            
+                                
+                    
+                            <li>
+                                <a href="https://freephenix.github.io//post/guan-yu-ban-mu-fang-ding/" class="menu">
+                                    关于
+                                </a>
+                            </li>
+                            
+                                
+            </ul>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function() {
+        $(".menu-btn").click(function() {
+            $(".menu-container").slideToggle();
+        });
+        $(window).resize(function() {
+
+            if (window.matchMedia('(min-width: 960px)').matches) {
+                $(".menu-container").css('display', 'block')
+            } else {
+                $(".menu-container").css('display', 'none')
+            }
+
+        });
+    });
+</script>
+
+            <div id="main-content" class="post-container main-container">
+                <div id="content" class="main-container-left">
+                    
+    <div class="i-card">
+        <b>标签：#
+        分治</b>
+    </div>
+    
+        
+            <article class="post i-card">
+                <h2 class="post-title">
+                    <a href="https://freephenix.github.io/bgwkGVl_5/">
+                        LeetCode-162. 寻找峰值
+                    </a>
+                </h2>
+                <div class="post-info">
+                    <time class="post-time">2023-12-21</time>
+                    
+                        <a href="https://freephenix.github.io/wyRQgsI7m/" class="post-tag i-tag
+                            i-tag-success">
+            #搜索
+        </a>
+                        
+                        <a href="https://freephenix.github.io/FRqn1m2hg/" class="post-tag i-tag
+                            i-tag-warning">
+            #数组
+        </a>
+                        
+                        <a href="https://freephenix.github.io/HSYiuvxzO/" class="post-tag i-tag
+                            i-tag-error">
+            #分治
+        </a>
+                        
+                        <a href="https://freephenix.github.io/YWFpnf3Gl/" class="post-tag i-tag
+                            i-tag-other_1">
+            #刷题
+        </a>
+                        
+                        <a href="https://freephenix.github.io/70TrDOWqgi/" class="post-tag i-tag
+                            i-tag-warning">
+            #面试
+        </a>
+                        
+                        <a href="https://freephenix.github.io/go/" class="post-tag i-tag
+                            i-tag-other_2">
+            #Go
+        </a>
+                        
+                        <a href="https://freephenix.github.io/k1NaSbOoC/" class="post-tag i-tag
+                            i-tag-error">
+            #LeetCode
+        </a>
+                        
+                        <a href="https://freephenix.github.io/WucazjDbn/" class="post-tag i-tag
+                            i-tag-error">
+            #算法
+        </a>
+                        
+                </div>
+                <div class="post-article">
+                    
+                        <a href="https://freephenix.github.io/bgwkGVl_5/" class="post-feature-image" style="background-image:url(https://freephenix.github.io//post-images/bgwkGVl_5.jpeg) ">
+                        </a>
+                        
+                            <div class="post-content">
+                                
+                                    <div class="post-content-abstract">
+                                        <p>刷题使我快乐，满脸开心.jpg</p>
+<ul>
+<li>来源：力扣（LeetCode）</li>
+<li>链接：https://leetcode.cn/problems/find-peak-element/</li>
+<li>著作权归领扣网络所有。商业转载请联系官方授权，非商业转载请注明出处。</li>
+</ul>
+
+                                    </div>
+                                    
+                                            <a class="btn btn-text" href="https://freephenix.github.io/bgwkGVl_5/">Read More ~</a>
+                            </div>
+                </div>
+            </article>
+            
+            <article class="post i-card">
+                <h2 class="post-title">
+                    <a href="https://freephenix.github.io/edJ7Dk1K9/">
+                        LeetCode-34. 在排序数组中查找元素的第一个和最后一个位置
+                    </a>
+                </h2>
+                <div class="post-info">
+                    <time class="post-time">2023-12-18</time>
+                    
+                        <a href="https://freephenix.github.io/FRqn1m2hg/" class="post-tag i-tag
+                            i-tag-primary">
+            #数组
+        </a>
+                        
+                        <a href="https://freephenix.github.io/HSYiuvxzO/" class="post-tag i-tag
+                            i-tag-banana">
+            #分治
+        </a>
+                        
+                        <a href="https://freephenix.github.io/YWFpnf3Gl/" class="post-tag i-tag
+                            i-tag-info">
+            #刷题
+        </a>
+                        
+                        <a href="https://freephenix.github.io/70TrDOWqgi/" class="post-tag i-tag
+                            i-tag-warning">
+            #面试
+        </a>
+                        
+                        <a href="https://freephenix.github.io/go/" class="post-tag i-tag
+                            i-tag-success">
+            #Go
+        </a>
+                        
+                        <a href="https://freephenix.github.io/k1NaSbOoC/" class="post-tag i-tag
+                            i-tag-">
+            #LeetCode
+        </a>
+                        
+                        <a href="https://freephenix.github.io/WucazjDbn/" class="post-tag i-tag
+                            i-tag-banana">
+            #算法
+        </a>
+                        
+                </div>
+                <div class="post-article">
+                    
+                        <a href="https://freephenix.github.io/edJ7Dk1K9/" class="post-feature-image" style="background-image:url(https://freephenix.github.io//post-images/edJ7Dk1K9.jpeg) ">
+                        </a>
+                        
+                            <div class="post-content">
+                                
+                                    <div class="post-content-abstract">
+                                        <p>刷题使我快乐，满脸开心.jpg</p>
+<ul>
+<li>来源：力扣（LeetCode）</li>
+<li>链接：https://leetcode.cn/problems/find-first-and-last-position-of-element-in-sorted-array/</li>
+<li>著作权归领扣网络所有。商业转载请联系官方授权，非商业转载请注明出处。</li>
+</ul>
+
+                                    </div>
+                                    
+                                            <a class="btn btn-text" href="https://freephenix.github.io/edJ7Dk1K9/">Read More ~</a>
+                            </div>
+                </div>
+            </article>
+            
+            <article class="post i-card">
+                <h2 class="post-title">
+                    <a href="https://freephenix.github.io/rYENdDFOz/">
+                        LeetCode-4. 寻找两个正序数组的中位数
+                    </a>
+                </h2>
+                <div class="post-info">
+                    <time class="post-time">2023-11-20</time>
+                    
+                        <a href="https://freephenix.github.io/FRqn1m2hg/" class="post-tag i-tag
+                            i-tag-error">
+            #数组
+        </a>
+                        
+                        <a href="https://freephenix.github.io/HSYiuvxzO/" class="post-tag i-tag
+                            i-tag-error">
+            #分治
+        </a>
+                        
+                        <a href="https://freephenix.github.io/YWFpnf3Gl/" class="post-tag i-tag
+                            i-tag-">
+            #刷题
+        </a>
+                        
+                        <a href="https://freephenix.github.io/70TrDOWqgi/" class="post-tag i-tag
+                            i-tag-info">
+            #面试
+        </a>
+                        
+                        <a href="https://freephenix.github.io/go/" class="post-tag i-tag
+                            i-tag-other_4">
+            #Go
+        </a>
+                        
+                        <a href="https://freephenix.github.io/k1NaSbOoC/" class="post-tag i-tag
+                            i-tag-other_1">
+            #LeetCode
+        </a>
+                        
+                        <a href="https://freephenix.github.io/WucazjDbn/" class="post-tag i-tag
+                            i-tag-success">
+            #算法
+        </a>
+                        
+                </div>
+                <div class="post-article">
+                    
+                        <a href="https://freephenix.github.io/rYENdDFOz/" class="post-feature-image" style="background-image:url(https://freephenix.github.io//post-images/rYENdDFOz.jpeg) ">
+                        </a>
+                        
+                            <div class="post-content">
+                                
+                                    <div class="post-content-abstract">
+                                        <p>刷题使我快乐，满脸开心.jpg</p>
+<ul>
+<li>来源：力扣（LeetCode）</li>
+<li>链接：https://leetcode.cn/problems/median-of-two-sorted-arrays/</li>
+<li>著作权归领扣网络所有。商业转载请联系官方授权，非商业转载请注明出处。</li>
+</ul>
+
+                                    </div>
+                                    
+                                            <a class="btn btn-text" href="https://freephenix.github.io/rYENdDFOz/">Read More ~</a>
+                            </div>
+                </div>
+            </article>
+            
+            <article class="post i-card">
+                <h2 class="post-title">
+                    <a href="https://freephenix.github.io/bC4W6F6-p/">
+                        LeetCode-33. 搜索旋转排序数组
+                    </a>
+                </h2>
+                <div class="post-info">
+                    <time class="post-time">2023-10-26</time>
+                    
+                        <a href="https://freephenix.github.io/HSYiuvxzO/" class="post-tag i-tag
+                            i-tag-warning">
+            #分治
+        </a>
+                        
+                        <a href="https://freephenix.github.io/YWFpnf3Gl/" class="post-tag i-tag
+                            i-tag-other_4">
+            #刷题
+        </a>
+                        
+                        <a href="https://freephenix.github.io/70TrDOWqgi/" class="post-tag i-tag
+                            i-tag-primary">
+            #面试
+        </a>
+                        
+                        <a href="https://freephenix.github.io/go/" class="post-tag i-tag
+                            i-tag-error">
+            #Go
+        </a>
+                        
+                        <a href="https://freephenix.github.io/k1NaSbOoC/" class="post-tag i-tag
+                            i-tag-banana">
+            #LeetCode
+        </a>
+                        
+                        <a href="https://freephenix.github.io/WucazjDbn/" class="post-tag i-tag
+                            i-tag-">
+            #算法
+        </a>
+                        
+                </div>
+                <div class="post-article">
+                    
+                        <a href="https://freephenix.github.io/bC4W6F6-p/" class="post-feature-image" style="background-image:url(https://freephenix.github.io//post-images/bC4W6F6-p.jpeg) ">
+                        </a>
+                        
+                            <div class="post-content">
+                                
+                                    <div class="post-content-abstract">
+                                        <p>刷题使我快乐，满脸开心.jpg</p>
+<ul>
+<li>来源：力扣（LeetCode）</li>
+<li>链接：https://leetcode.cn/problems/search-in-rotated-sorted-array/</li>
+<li>著作权归领扣网络所有。商业转载请联系官方授权，非商业转载请注明出处。</li>
+</ul>
+
+                                    </div>
+                                    
+                                            <a class="btn btn-text" href="https://freephenix.github.io/bC4W6F6-p/">Read More ~</a>
+                            </div>
+                </div>
+            </article>
+            
+            <article class="post i-card">
+                <h2 class="post-title">
+                    <a href="https://freephenix.github.io/EZfUiSTlC/">
+                        LeetCode-321. 拼接最大数
+                    </a>
+                </h2>
+                <div class="post-info">
+                    <time class="post-time">2023-09-28</time>
+                    
+                        <a href="https://freephenix.github.io/HSYiuvxzO/" class="post-tag i-tag
+                            i-tag-other_1">
+            #分治
+        </a>
+                        
+                        <a href="https://freephenix.github.io/XoUX7Oq3f/" class="post-tag i-tag
+                            i-tag-other_2">
+            #单调栈
+        </a>
+                        
+                        <a href="https://freephenix.github.io/YWFpnf3Gl/" class="post-tag i-tag
+                            i-tag-">
+            #刷题
+        </a>
+                        
+                        <a href="https://freephenix.github.io/70TrDOWqgi/" class="post-tag i-tag
+                            i-tag-other_3">
+            #面试
+        </a>
+                        
+                        <a href="https://freephenix.github.io/go/" class="post-tag i-tag
+                            i-tag-other_2">
+            #Go
+        </a>
+                        
+                        <a href="https://freephenix.github.io/k1NaSbOoC/" class="post-tag i-tag
+                            i-tag-other_4">
+            #LeetCode
+        </a>
+                        
+                        <a href="https://freephenix.github.io/WucazjDbn/" class="post-tag i-tag
+                            i-tag-">
+            #算法
+        </a>
+                        
+                </div>
+                <div class="post-article">
+                    
+                        <a href="https://freephenix.github.io/EZfUiSTlC/" class="post-feature-image" style="background-image:url(https://freephenix.github.io//post-images/EZfUiSTlC.jpeg) ">
+                        </a>
+                        
+                            <div class="post-content">
+                                
+                                    <div class="post-content-abstract">
+                                        <p>刷题使我快乐，满脸开心.jpg</p>
+<ul>
+<li>来源：力扣（LeetCode）</li>
+<li>链接：https://leetcode.cn/problems/create-maximum-number/</li>
+<li>著作权归领扣网络所有。商业转载请联系官方授权，非商业转载请注明出处。</li>
+</ul>
+
+                                    </div>
+                                    
+                                            <a class="btn btn-text" href="https://freephenix.github.io/EZfUiSTlC/">Read More ~</a>
+                            </div>
+                </div>
+            </article>
+            
+                <!-- 翻页 -->
+                
+                </div>
+                <!--  -->
+                <div class="main-container-middle"></div>
+                <!--  -->
+                <div id="sidebar" class="main-container-right">
+
+                    <!-- 个人信息 -->
+                    
+    <div class="id_card i-card">
+        <div class="id_card-avatar" style="background-image: url(https://freephenix.github.io//images/avatar.png?v=1713840769430)">
+        </div>
+        <h1 class="id_card-title">
+            半亩房顶
+        </h1>
+        <h2 class="id_card-description">
+            假如我手中有一块小石头
+        </h2>
+        <!--  -->
+        <div class="id_card-sns">
+            <!-- github -->
+            
+                <a href="https://github.com/freephenix" target="_blank" rel="noopener noreferrer"><i
+                class="fa fa-github"></i></a>
+                
+                    <!-- twitter -->
+                    
+                            <!-- weibo -->
+                            
+                                    <!-- facebook -->
+                                    
+
+        </div>
+    </div>
+    
+
+                        <!-- 公告栏 -->
+                        
+    <div class="notice-card i-card ">
+        <div class="notice-title i-card-title">公告</div>
+        <div class="notice-content">
+            何不以文为酒，来小酌一杯？
+        </div>
+    </div>
+    
+
+                </div>
+            </div>
+
+
+
+            <div class="site-footer">
+  Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a> | 
+  <a class="rss" href="https://freephenix.github.io//atom.xml" target="_blank">RSS</a>
+</div>
+
+<script>
+  hljs.initHighlightingOnLoad()
+</script>
+
+    </div>
+    <script>
+        $('#sidebar').stickySidebar({
+            topSpacing: 80,
+            // bottomSpacing: 60
+        });
+    </script>
+</body>
+
+</html>

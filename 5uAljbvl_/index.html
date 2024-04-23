@@ -1,0 +1,377 @@
+<html>
+
+<head>
+    <meta charset="utf-8" />
+<meta name="description" content="" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>
+    LeetCode-82. 删除排序链表中的重复元素 II | 半亩房顶
+</title>
+<link rel="shortcut icon" href="https://freephenix.github.io//favicon.ico?v=1713840769430">
+<!-- <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous"> -->
+<link href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+<link rel="stylesheet" href="https://freephenix.github.io//styles/main.css">
+<!-- js -->
+<script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.min.js"></script>
+<script src="https://freephenix.github.io//media/js/jquery.sticky-sidebar.min.js"></script>
+<script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
+<script src="https://cdn.bootcss.com/moment.js/2.23.0/moment.min.js"></script>
+
+
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-147240912-1"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+
+        function gtag() {
+            dataLayer.push(arguments);
+        }
+        gtag('js', new Date());
+
+        gtag('config', 'UA-147240912-1');
+    </script>
+    
+        
+            
+                <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+                <script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+                
+
+                    
+                            
+</head>
+
+<body>
+    <div class="main">
+        <div class="header">
+    <div class="nav">
+        <div class="logo">
+            <a href="https://freephenix.github.io/">
+                <img class="avatar" src="https://freephenix.github.io//images/avatar.png?v=1713840769430" alt="">
+            </a>
+            <div class="site-title">
+                <h1>
+                    半亩房顶
+                </h1>
+            </div>
+        </div>
+        <span class="menu-btn fa fa-align-justify"></span>
+        <div class="menu-container">
+            <ul>
+                
+                    
+                            <li>
+                                <a href="/" class="menu">
+                                    首页
+                                </a>
+                            </li>
+                            
+                                
+                    
+                            <li>
+                                <a href="/archives" class="menu">
+                                    归档
+                                </a>
+                            </li>
+                            
+                                
+                    
+                            <li>
+                                <a href="/tags" class="menu">
+                                    标签
+                                </a>
+                            </li>
+                            
+                                
+                    
+                            <li>
+                                <a href="https://freephenix.github.io//post/guan-yu-ban-mu-fang-ding/" class="menu">
+                                    关于
+                                </a>
+                            </li>
+                            
+                                
+            </ul>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function() {
+        $(".menu-btn").click(function() {
+            $(".menu-container").slideToggle();
+        });
+        $(window).resize(function() {
+
+            if (window.matchMedia('(min-width: 960px)').matches) {
+                $(".menu-container").css('display', 'block')
+            } else {
+                $(".menu-container").css('display', 'none')
+            }
+
+        });
+    });
+</script>
+
+            <div id="main-content" class="post-detail main-container">
+                <!-- left -->
+                <div id="content" class="main-container-left">
+                    <article class="post i-card">
+                        <h2 class="post-title">
+                            LeetCode-82. 删除排序链表中的重复元素 II
+                        </h2>
+                        <div class="post-info">
+                            <time class="post-time">2023-11-20</time>
+                            
+                                <a href="https://freephenix.github.io/V1DFbmyKM/" class="post-tag i-tag
+                            i-tag-other_1">
+                            #链表
+                        </a>
+                                
+                                <a href="https://freephenix.github.io/YWFpnf3Gl/" class="post-tag i-tag
+                            i-tag-other_3">
+                            #刷题
+                        </a>
+                                
+                                <a href="https://freephenix.github.io/70TrDOWqgi/" class="post-tag i-tag
+                            i-tag-other_1">
+                            #面试
+                        </a>
+                                
+                                <a href="https://freephenix.github.io/go/" class="post-tag i-tag
+                            i-tag-other_2">
+                            #Go
+                        </a>
+                                
+                                <a href="https://freephenix.github.io/k1NaSbOoC/" class="post-tag i-tag
+                            i-tag-primary">
+                            #LeetCode
+                        </a>
+                                
+                                <a href="https://freephenix.github.io/WucazjDbn/" class="post-tag i-tag
+                            i-tag-success">
+                            #算法
+                        </a>
+                                
+                        </div>
+                        
+                            <div class="post-feature-image" style="background-image: url('https://freephenix.github.io//post-images/5uAljbvl_.jpeg')"></div>
+                            
+                                <div class="post-content">
+                                    <p>刷题使我快乐，满脸开心.jpg</p>
+<ul>
+<li>来源：力扣（LeetCode）</li>
+<li>链接：https://leetcode.cn/problems/remove-duplicates-from-sorted-list-ii/</li>
+<li>著作权归领扣网络所有。商业转载请联系官方授权，非商业转载请注明出处。</li>
+</ul>
+<!-- more -->
+<h1 id="题目">题目</h1>
+<p>给定一个已排序的链表的头 <code>head</code> ， 删除原始链表中所有重复数字的节点，只留下不同的数字 。返回 已排序的链表 。</p>
+<p>示例 1：<br>
+<img src="https://freephenix.github.io//post-images/1700449875402.jpeg" alt="" loading="lazy"></p>
+<pre><code>输入：head = [1,2,3,3,4,4,5]
+输出：[1,2,5]
+</code></pre>
+<p>示例 2：<br>
+<img src="https://freephenix.github.io//post-images/1700449880460.jpeg" alt="" loading="lazy"></p>
+<pre><code>输入：head = [1,1,1,2,3]
+输出：[2,3]
+</code></pre>
+<p>提示：</p>
+<ul>
+<li>链表中节点数目在范围 <code>[0, 300]</code> 内</li>
+<li><code>-100 &lt;= Node.val &lt;= 100</code></li>
+<li>题目数据保证链表已经按升序 <code>排列</code></li>
+</ul>
+<h1 id="思路">思路</h1>
+<p>这道题最难的地方感觉在于状态梳理<br>
+可以分别来看下</p>
+<h3 id="1-状态1now-和-nownext-不相等">1、【状态1】now 和 now.Next 不相等</h3>
+<p>这时now 和 tail 均步进即可（tail 拼接 now 也是一样的效果）<br>
+<img src="https://freephenix.github.io//post-images/1700450382053.png" alt="" loading="lazy"></p>
+<h3 id="2-状态2now-和-nownext-相等">2、【状态2】now 和 now.Next 相等</h3>
+<p>此时不能直接拼接了，而是需要持续步进now，直到找到不相等的节点<br>
+<img src="https://freephenix.github.io//post-images/1700450448931.png" alt="" loading="lazy"></p>
+<h3 id="3-状态3跳过重复节点时now-和-nownext-不相等">3、【状态3】跳过重复节点时，now 和 now.Next 不相等</h3>
+<p>此时虽然发现了不相等的节点，但是now所处节点是有重复的节点，还是只能步进，不能拼接。<br>
+不过此时会是一个跳出当前<strong>跳过重复节点操作</strong>的结束状态<br>
+<img src="https://freephenix.github.io//post-images/1700450500765.png" alt="" loading="lazy"></p>
+<h3 id="4-状态2跳过重复节点后now-和-nownext-相等">4、【状态2】跳过重复节点后，now 和 now.Next 相等</h3>
+<p>此时其实等同于<code>状态2</code>，又发现了新的重复节点<br>
+<img src="https://freephenix.github.io//post-images/1700450620144.png" alt="" loading="lazy"></p>
+<h3 id="5-状态1跳过重复节点后now-和-nownext-不相等">5、【状态1】跳过重复节点后，now 和 now.Next 不相等</h3>
+<p>此时其实等同于<code>状态1</code>，都是<strong>跳过重复节点操作</strong>之外发现了一个不相等节点<br>
+<img src="https://freephenix.github.io//post-images/1700450637637.png" alt="" loading="lazy"></p>
+<h3 id="6-状态4跳过重复节点后nownext-为-nil">6、【状态4】跳过重复节点后，now.Next 为 nil</h3>
+<p>如果不相等节点后发现链接到了终点那么其实不用做任何操作，前面都已经拼接完毕，直接返回就好<br>
+<img src="https://freephenix.github.io//post-images/1700451078143.png" alt="" loading="lazy"></p>
+<h3 id="7-状态5跳过重复节点时nownext-为-nil">7、【状态5】跳过重复节点时，now.Next 为 nil</h3>
+<p>但是走到终点会有个特殊状态，那就是在跳过重复节点时发现到了终点，而此时的状态，tail还在指向后续的重复节点，所以需要把tail的后续直接链接到nil<br>
+<img src="https://freephenix.github.io//post-images/1700450665302.png" alt="" loading="lazy"></p>
+<blockquote>
+<p>或者可以把这一步当做特殊操作，在状态流转之外处理，代码中表现就是记录一个状态，循环之外再处理</p>
+</blockquote>
+<p>至此，上代码</p>
+<h1 id="代码">代码</h1>
+<pre><code class="language-golang">/**
+ * Definition for singly-linked list.
+ * type ListNode struct {
+ *     Val int
+ *     Next *ListNode
+ * }
+ */
+func deleteDuplicates(head *ListNode) *ListNode {
+    if head == nil || head.Next == nil {
+        return head
+    }
+    // 辅助记录头结点
+    veryHead := &amp;ListNode{Next: head}
+    // 辅助记录当前新链表尾部节点
+    tail := veryHead
+    // 辅助搜索非重复节点
+    now := head
+    for now != nil {
+        if now.Next != nil &amp;&amp; now.Next.Val == now.Val {
+            x := now.Val
+            // 清理重复项，
+            for now.Next != nil &amp;&amp; now.Next.Val == x {
+                now = now.Next
+            }
+            // 此时now位置是最后一个重复项，所以再进一步到下个非重复点再行判断
+            now = now.Next
+            // 清理重复直接到了末尾则额外处理下拼接
+            // 或者记录个状态在退出循环后再处理也可
+            if now == nil {
+                tail.Next = now
+            }
+        } else {
+            // 非重复节点，拼上
+            tail.Next = now
+            tail = now
+            now = now.Next
+        }
+    }
+    return veryHead.Next
+}
+</code></pre>
+
+                                </div>
+                    </article>
+                    <!--  -->
+                    
+                        <div class="next-post">
+                            <div class="next">下一篇</div>
+                            <a href="https://freephenix.github.io/hGXmOFUxY/">
+                                <h3 class="post-title">
+                                    LeetCode-199. 二叉树的右视图
+                                </h3>
+                            </a>
+                        </div>
+                        
+                            <div id="disqus_thread"></div>
+                            <div id="gitalk-container"></div>
+                </div>
+                <!-- middle -->
+                <div class="main-container-middle"></div>
+                <!-- right -->
+                <div id="sidebar" class="main-container-right">
+                    
+                        <!-- toc -->
+                        
+    <div class="toc-card i-card ">
+        <div class="toc-title i-card-title">目录</div>
+        <div class="toc-content">
+            <ul class="markdownIt-TOC">
+<li><a href="#%E9%A2%98%E7%9B%AE">题目</a></li>
+<li><a href="#%E6%80%9D%E8%B7%AF">思路</a><br>
+*
+<ul>
+<li><a href="#1-%E7%8A%B6%E6%80%811now-%E5%92%8C-nownext-%E4%B8%8D%E7%9B%B8%E7%AD%89">1、【状态1】now 和 now.Next 不相等</a></li>
+<li><a href="#2-%E7%8A%B6%E6%80%812now-%E5%92%8C-nownext-%E7%9B%B8%E7%AD%89">2、【状态2】now 和 now.Next 相等</a></li>
+<li><a href="#3-%E7%8A%B6%E6%80%813%E8%B7%B3%E8%BF%87%E9%87%8D%E5%A4%8D%E8%8A%82%E7%82%B9%E6%97%B6now-%E5%92%8C-nownext-%E4%B8%8D%E7%9B%B8%E7%AD%89">3、【状态3】跳过重复节点时，now 和 now.Next 不相等</a></li>
+<li><a href="#4-%E7%8A%B6%E6%80%812%E8%B7%B3%E8%BF%87%E9%87%8D%E5%A4%8D%E8%8A%82%E7%82%B9%E5%90%8Enow-%E5%92%8C-nownext-%E7%9B%B8%E7%AD%89">4、【状态2】跳过重复节点后，now 和 now.Next 相等</a></li>
+<li><a href="#5-%E7%8A%B6%E6%80%811%E8%B7%B3%E8%BF%87%E9%87%8D%E5%A4%8D%E8%8A%82%E7%82%B9%E5%90%8Enow-%E5%92%8C-nownext-%E4%B8%8D%E7%9B%B8%E7%AD%89">5、【状态1】跳过重复节点后，now 和 now.Next 不相等</a></li>
+<li><a href="#6-%E7%8A%B6%E6%80%814%E8%B7%B3%E8%BF%87%E9%87%8D%E5%A4%8D%E8%8A%82%E7%82%B9%E5%90%8Enownext-%E4%B8%BA-nil">6、【状态4】跳过重复节点后，now.Next 为 nil</a></li>
+<li><a href="#7-%E7%8A%B6%E6%80%815%E8%B7%B3%E8%BF%87%E9%87%8D%E5%A4%8D%E8%8A%82%E7%82%B9%E6%97%B6nownext-%E4%B8%BA-nil">7、【状态5】跳过重复节点时，now.Next 为 nil</a></li>
+</ul>
+</li>
+<li><a href="#%E4%BB%A3%E7%A0%81">代码</a></li>
+</ul>
+
+        </div>
+        <script>
+            function locateCatelogList() {
+                /*获取文章目录集合,可通过:header过滤器*/
+                var alis = $('.post-content :header');
+                /*获取侧边栏目录列表集合**/
+                var sidebar_alis = $('.markdownIt-TOC a');
+                /*获取滚动条到顶部的距离*/
+                var scroll_height = $(window).scrollTop();
+                for (var i = 0; i < alis.length; i++) {
+                    /*获取锚点集合中的元素分别到顶点的距离*/
+                    var a_height = $(alis[i]).offset().top;
+                    if (a_height < scroll_height) {
+                        /*高亮显示*/
+                        sidebar_alis.removeClass('on');
+                        $(sidebar_alis[i]).addClass('on');
+                    }
+                }
+            }
+            $(function() {
+                /*绑定滚动事件 */
+                $(window).bind('scroll', locateCatelogList);
+            });
+        </script>
+    </div>
+    
+                            
+
+                </div>
+
+
+
+
+            </div>
+
+
+            <div class="site-footer">
+  Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a> | 
+  <a class="rss" href="https://freephenix.github.io//atom.xml" target="_blank">RSS</a>
+</div>
+
+<script>
+  hljs.initHighlightingOnLoad()
+</script>
+
+
+    </div>
+    <script>
+        $('#sidebar').stickySidebar({
+            topSpacing: 80,
+            // bottomSpacing: 60
+        });
+    </script>
+    
+        
+            <script>
+    window.onload = function() {
+        var gitalk = new Gitalk({
+            clientID: '008503f8c8bca8787fbe',
+            clientSecret: '5f789f71e3288ff1866d17523348881053068eb4',
+            repo: 'freephenix.github.io',
+            owner: 'freephenix',
+            admin: ['freephenix'],
+            id: (location.pathname).substring(0, 49), // Ensure uniqueness and length less than 50
+            distractionFreeMode: false // Facebook-like distraction free mode
+        })
+
+        gitalk.render('gitalk-container')
+    }
+</script>
+                
+
+                    
+                                
+</body>
+
+</html>

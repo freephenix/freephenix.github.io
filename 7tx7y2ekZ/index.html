@@ -1,0 +1,401 @@
+<html>
+
+<head>
+    <meta charset="utf-8" />
+<meta name="description" content="" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>
+    LeetCode-LCR 159. 库存管理 III | 半亩房顶
+</title>
+<link rel="shortcut icon" href="https://freephenix.github.io//favicon.ico?v=1713840769430">
+<!-- <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous"> -->
+<link href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+<link rel="stylesheet" href="https://freephenix.github.io//styles/main.css">
+<!-- js -->
+<script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.min.js"></script>
+<script src="https://freephenix.github.io//media/js/jquery.sticky-sidebar.min.js"></script>
+<script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
+<script src="https://cdn.bootcss.com/moment.js/2.23.0/moment.min.js"></script>
+
+
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-147240912-1"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+
+        function gtag() {
+            dataLayer.push(arguments);
+        }
+        gtag('js', new Date());
+
+        gtag('config', 'UA-147240912-1');
+    </script>
+    
+        
+            
+                <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+                <script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+                
+
+                    
+                            
+</head>
+
+<body>
+    <div class="main">
+        <div class="header">
+    <div class="nav">
+        <div class="logo">
+            <a href="https://freephenix.github.io/">
+                <img class="avatar" src="https://freephenix.github.io//images/avatar.png?v=1713840769430" alt="">
+            </a>
+            <div class="site-title">
+                <h1>
+                    半亩房顶
+                </h1>
+            </div>
+        </div>
+        <span class="menu-btn fa fa-align-justify"></span>
+        <div class="menu-container">
+            <ul>
+                
+                    
+                            <li>
+                                <a href="/" class="menu">
+                                    首页
+                                </a>
+                            </li>
+                            
+                                
+                    
+                            <li>
+                                <a href="/archives" class="menu">
+                                    归档
+                                </a>
+                            </li>
+                            
+                                
+                    
+                            <li>
+                                <a href="/tags" class="menu">
+                                    标签
+                                </a>
+                            </li>
+                            
+                                
+                    
+                            <li>
+                                <a href="https://freephenix.github.io//post/guan-yu-ban-mu-fang-ding/" class="menu">
+                                    关于
+                                </a>
+                            </li>
+                            
+                                
+            </ul>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function() {
+        $(".menu-btn").click(function() {
+            $(".menu-container").slideToggle();
+        });
+        $(window).resize(function() {
+
+            if (window.matchMedia('(min-width: 960px)').matches) {
+                $(".menu-container").css('display', 'block')
+            } else {
+                $(".menu-container").css('display', 'none')
+            }
+
+        });
+    });
+</script>
+
+            <div id="main-content" class="post-detail main-container">
+                <!-- left -->
+                <div id="content" class="main-container-left">
+                    <article class="post i-card">
+                        <h2 class="post-title">
+                            LeetCode-LCR 159. 库存管理 III
+                        </h2>
+                        <div class="post-info">
+                            <time class="post-time">2024-03-06</time>
+                            
+                                <a href="https://freephenix.github.io/rGlV8RhRY/" class="post-tag i-tag
+                            i-tag-other_3">
+                            #排序
+                        </a>
+                                
+                                <a href="https://freephenix.github.io/FRqn1m2hg/" class="post-tag i-tag
+                            i-tag-other_4">
+                            #数组
+                        </a>
+                                
+                                <a href="https://freephenix.github.io/3geHisPDT/" class="post-tag i-tag
+                            i-tag-other_4">
+                            #快速排序
+                        </a>
+                                
+                                <a href="https://freephenix.github.io/YWFpnf3Gl/" class="post-tag i-tag
+                            i-tag-other_4">
+                            #刷题
+                        </a>
+                                
+                                <a href="https://freephenix.github.io/70TrDOWqgi/" class="post-tag i-tag
+                            i-tag-">
+                            #面试
+                        </a>
+                                
+                                <a href="https://freephenix.github.io/go/" class="post-tag i-tag
+                            i-tag-banana">
+                            #Go
+                        </a>
+                                
+                                <a href="https://freephenix.github.io/k1NaSbOoC/" class="post-tag i-tag
+                            i-tag-other_3">
+                            #LeetCode
+                        </a>
+                                
+                                <a href="https://freephenix.github.io/WucazjDbn/" class="post-tag i-tag
+                            i-tag-other_4">
+                            #算法
+                        </a>
+                                
+                        </div>
+                        
+                            <div class="post-feature-image" style="background-image: url('https://freephenix.github.io//post-images/7tx7y2ekZ.jpeg')"></div>
+                            
+                                <div class="post-content">
+                                    <p>刷题使我快乐，满脸开心.jpg</p>
+<ul>
+<li>来源：力扣（LeetCode）</li>
+<li>链接：https://leetcode.cn/problems/zui-xiao-de-kge-shu-lcof/</li>
+<li>著作权归领扣网络所有。商业转载请联系官方授权，非商业转载请注明出处。</li>
+</ul>
+<!-- more -->
+<h1 id="题目">题目</h1>
+<p>仓库管理员以数组 <code>stock</code> 形式记录商品库存表，其中 <code>stock[i]</code> 表示对应商品库存余量。请返回库存余量最少的 <code>cnt</code> 个商品余量，返回 <code>顺序不限</code>。</p>
+<p>示例 1：</p>
+<pre><code>输入：stock = [2,5,7,4], cnt = 1
+输出：[2]
+</code></pre>
+<p>示例 2：</p>
+<pre><code>输入：stock = [0,2,3,6], cnt = 2
+输出：[0,2] 或 [2,0]
+</code></pre>
+<p>提示：</p>
+<ul>
+<li><code>0 &lt;= cnt &lt;= stock.length &lt;= 10000</code></li>
+<li><code>0 &lt;= stock[i] &lt;= 10000</code></li>
+</ul>
+<h1 id="思路">思路</h1>
+<p>首先声明下，这道是个简单题，开始做主要是单纯想手撕一把快排，但是看了题解才发现果然是<code>学无止境，切莫固步自封</code>。</p>
+<p>这道题简单就简单在思路很清晰明了，一眼排序，无论是其他排序弄完直接截取返回，还是堆排只找出前几个，思路都很直接，没有弯弯绕。</p>
+<h3 id="但优化还是有的">但，优化还是有的</h3>
+<p>先贴优化思路链接：<a href="https://leetcode.cn/problems/zui-xiao-de-kge-shu-lcof/solutions/594591/jian-zhi-offer-40-zui-xiao-de-k-ge-shu-j-9yze/">来自K神的题解</a></p>
+<p>简单描述下就是</p>
+<blockquote>
+<p>既然快排是在用一个基准划分为<code>比基准大</code>和<code>比基准小</code>两段数组<br>
+那么以升序数组为例，当基准位置恰好处于<code>cnt</code>时，前<code>cnt</code>个数组就是题解<br>
+基于此，可以让快排进入下一层排序时，从深入排序<code>左右两段</code>变为了<code>选择性排序其中一段甚至无需再排</code></p>
+</blockquote>
+<p>详细内容可以点击链接去<code>LeetCode</code>看下～</p>
+<p>没其他要说的了，直接上代码，细节在注释~</p>
+<h1 id="代码">代码</h1>
+<h3 id="快排">快排</h3>
+<pre><code class="language-golang">func inventoryManagement(stock []int, cnt int) []int {
+    // 所有内容都是需要返回的，无需排序了
+    if cnt &gt;= len(stock) {
+        return stock
+    }
+    var quickSort func(l, r int)
+    quickSort = func(l, r int) {
+        // 快排退出条件
+        if l &gt;= r {
+            return
+        }
+        i, j := l, r
+        for i &lt; j {
+            // 以 stock[l] 为基准
+            // 想要升序排序，需要先从后往前找
+            // 反例就是基准数是最小值时
+            // 不太理解可以自己推导试下，或者私信交流
+            for i &lt; j &amp;&amp; stock[j] &gt;= stock[l] {
+                j--
+            }
+            // 再从前往后找
+            for i &lt; j &amp;&amp; stock[i] &lt;= stock[l] {
+                i++
+            }
+            // 交换不符合升序的两个数
+            stock[i], stock[j] = stock[j], stock[i]
+        }
+        // 这一轮找完了，把基准摆到它应该在的位置，继续深入快排
+        stock[i], stock[l] = stock[l], stock[i]
+        quickSort(l, i-1)
+        quickSort(i+1, r)
+    }
+    quickSort(0, len(stock)-1)
+    return stock[:cnt]
+}
+</code></pre>
+<h3 id="优化快排">优化快排</h3>
+<pre><code class="language-golang">func inventoryManagement(stock []int, cnt int) []int {
+    // 所有内容都是需要返回的，无需排序了
+    if cnt &gt;= len(stock) {
+        return stock
+    }
+    var quickSort func(l, r int)
+    quickSort = func(l, r int) {
+        // 前半部分正常进行快排的操作
+        i, j := l, r
+        for i &lt; j {
+            for i &lt; j &amp;&amp; stock[j] &gt;= stock[l] {
+                j--
+            }
+            for i &lt; j &amp;&amp; stock[i] &lt;= stock[l] {
+                i++
+            }
+            stock[i], stock[j] = stock[j], stock[i]
+        }
+        stock[i], stock[l] = stock[l], stock[i]
+        
+        // 退出条件修改，以升序快排为例，当前面的元素少于所需个数，往后半部分继续找
+        if cnt &gt; i {
+            quickSort(i+1, r)
+            return
+        } else if cnt &lt; i {
+            // 当前面的元素大于所需个数，往前半部分继续找
+            quickSort(l, i-1)
+            return
+        }
+        // 恰好相等于所需个数，直接返回就好
+        return
+    }
+    quickSort(0, len(stock)-1)
+    return stock[:cnt]
+}
+</code></pre>
+
+                                </div>
+                    </article>
+                    <!--  -->
+                    
+                        <div class="next-post">
+                            <div class="next">下一篇</div>
+                            <a href="https://freephenix.github.io/onmirvJJE/">
+                                <h3 class="post-title">
+                                    LeetCode-59. 螺旋矩阵 II
+                                </h3>
+                            </a>
+                        </div>
+                        
+                            <div id="disqus_thread"></div>
+                            <div id="gitalk-container"></div>
+                </div>
+                <!-- middle -->
+                <div class="main-container-middle"></div>
+                <!-- right -->
+                <div id="sidebar" class="main-container-right">
+                    
+                        <!-- toc -->
+                        
+    <div class="toc-card i-card ">
+        <div class="toc-title i-card-title">目录</div>
+        <div class="toc-content">
+            <ul class="markdownIt-TOC">
+<li><a href="#%E9%A2%98%E7%9B%AE">题目</a></li>
+<li><a href="#%E6%80%9D%E8%B7%AF">思路</a><br>
+*
+<ul>
+<li><a href="#%E4%BD%86%E4%BC%98%E5%8C%96%E8%BF%98%E6%98%AF%E6%9C%89%E7%9A%84">但，优化还是有的</a></li>
+</ul>
+</li>
+<li><a href="#%E4%BB%A3%E7%A0%81">代码</a><br>
+*
+<ul>
+<li><a href="#%E5%BF%AB%E6%8E%92">快排</a></li>
+<li><a href="#%E4%BC%98%E5%8C%96%E5%BF%AB%E6%8E%92">优化快排</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+        <script>
+            function locateCatelogList() {
+                /*获取文章目录集合,可通过:header过滤器*/
+                var alis = $('.post-content :header');
+                /*获取侧边栏目录列表集合**/
+                var sidebar_alis = $('.markdownIt-TOC a');
+                /*获取滚动条到顶部的距离*/
+                var scroll_height = $(window).scrollTop();
+                for (var i = 0; i < alis.length; i++) {
+                    /*获取锚点集合中的元素分别到顶点的距离*/
+                    var a_height = $(alis[i]).offset().top;
+                    if (a_height < scroll_height) {
+                        /*高亮显示*/
+                        sidebar_alis.removeClass('on');
+                        $(sidebar_alis[i]).addClass('on');
+                    }
+                }
+            }
+            $(function() {
+                /*绑定滚动事件 */
+                $(window).bind('scroll', locateCatelogList);
+            });
+        </script>
+    </div>
+    
+                            
+
+                </div>
+
+
+
+
+            </div>
+
+
+            <div class="site-footer">
+  Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a> | 
+  <a class="rss" href="https://freephenix.github.io//atom.xml" target="_blank">RSS</a>
+</div>
+
+<script>
+  hljs.initHighlightingOnLoad()
+</script>
+
+
+    </div>
+    <script>
+        $('#sidebar').stickySidebar({
+            topSpacing: 80,
+            // bottomSpacing: 60
+        });
+    </script>
+    
+        
+            <script>
+    window.onload = function() {
+        var gitalk = new Gitalk({
+            clientID: '008503f8c8bca8787fbe',
+            clientSecret: '5f789f71e3288ff1866d17523348881053068eb4',
+            repo: 'freephenix.github.io',
+            owner: 'freephenix',
+            admin: ['freephenix'],
+            id: (location.pathname).substring(0, 49), // Ensure uniqueness and length less than 50
+            distractionFreeMode: false // Facebook-like distraction free mode
+        })
+
+        gitalk.render('gitalk-container')
+    }
+</script>
+                
+
+                    
+                                
+</body>
+
+</html>

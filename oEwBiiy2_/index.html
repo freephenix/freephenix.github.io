@@ -1,0 +1,397 @@
+<html>
+
+<head>
+    <meta charset="utf-8" />
+<meta name="description" content="" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>
+    LeetCode-123. 买卖股票的最佳时机 III | 半亩房顶
+</title>
+<link rel="shortcut icon" href="https://freephenix.github.io//favicon.ico?v=1713840769430">
+<!-- <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous"> -->
+<link href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+<link rel="stylesheet" href="https://freephenix.github.io//styles/main.css">
+<!-- js -->
+<script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.min.js"></script>
+<script src="https://freephenix.github.io//media/js/jquery.sticky-sidebar.min.js"></script>
+<script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
+<script src="https://cdn.bootcss.com/moment.js/2.23.0/moment.min.js"></script>
+
+
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-147240912-1"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+
+        function gtag() {
+            dataLayer.push(arguments);
+        }
+        gtag('js', new Date());
+
+        gtag('config', 'UA-147240912-1');
+    </script>
+    
+        
+            
+                <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+                <script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+                
+
+                    
+                            
+</head>
+
+<body>
+    <div class="main">
+        <div class="header">
+    <div class="nav">
+        <div class="logo">
+            <a href="https://freephenix.github.io/">
+                <img class="avatar" src="https://freephenix.github.io//images/avatar.png?v=1713840769430" alt="">
+            </a>
+            <div class="site-title">
+                <h1>
+                    半亩房顶
+                </h1>
+            </div>
+        </div>
+        <span class="menu-btn fa fa-align-justify"></span>
+        <div class="menu-container">
+            <ul>
+                
+                    
+                            <li>
+                                <a href="/" class="menu">
+                                    首页
+                                </a>
+                            </li>
+                            
+                                
+                    
+                            <li>
+                                <a href="/archives" class="menu">
+                                    归档
+                                </a>
+                            </li>
+                            
+                                
+                    
+                            <li>
+                                <a href="/tags" class="menu">
+                                    标签
+                                </a>
+                            </li>
+                            
+                                
+                    
+                            <li>
+                                <a href="https://freephenix.github.io//post/guan-yu-ban-mu-fang-ding/" class="menu">
+                                    关于
+                                </a>
+                            </li>
+                            
+                                
+            </ul>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function() {
+        $(".menu-btn").click(function() {
+            $(".menu-container").slideToggle();
+        });
+        $(window).resize(function() {
+
+            if (window.matchMedia('(min-width: 960px)').matches) {
+                $(".menu-container").css('display', 'block')
+            } else {
+                $(".menu-container").css('display', 'none')
+            }
+
+        });
+    });
+</script>
+
+            <div id="main-content" class="post-detail main-container">
+                <!-- left -->
+                <div id="content" class="main-container-left">
+                    <article class="post i-card">
+                        <h2 class="post-title">
+                            LeetCode-123. 买卖股票的最佳时机 III
+                        </h2>
+                        <div class="post-info">
+                            <time class="post-time">2024-02-02</time>
+                            
+                                <a href="https://freephenix.github.io/p-y6wjDn2/" class="post-tag i-tag
+                            i-tag-success">
+                            #滚动数组
+                        </a>
+                                
+                                <a href="https://freephenix.github.io/bURmaxGfQ/" class="post-tag i-tag
+                            i-tag-error">
+                            #动态规划
+                        </a>
+                                
+                                <a href="https://freephenix.github.io/YWFpnf3Gl/" class="post-tag i-tag
+                            i-tag-error">
+                            #刷题
+                        </a>
+                                
+                                <a href="https://freephenix.github.io/70TrDOWqgi/" class="post-tag i-tag
+                            i-tag-other_3">
+                            #面试
+                        </a>
+                                
+                                <a href="https://freephenix.github.io/go/" class="post-tag i-tag
+                            i-tag-info">
+                            #Go
+                        </a>
+                                
+                                <a href="https://freephenix.github.io/k1NaSbOoC/" class="post-tag i-tag
+                            i-tag-warning">
+                            #LeetCode
+                        </a>
+                                
+                                <a href="https://freephenix.github.io/WucazjDbn/" class="post-tag i-tag
+                            i-tag-success">
+                            #算法
+                        </a>
+                                
+                        </div>
+                        
+                            <div class="post-feature-image" style="background-image: url('https://freephenix.github.io//post-images/oEwBiiy2_.jpeg')"></div>
+                            
+                                <div class="post-content">
+                                    <p>刷题使我快乐，满脸开心.jpg</p>
+<ul>
+<li>来源：力扣（LeetCode）</li>
+<li>链接：https://leetcode.cn/problems/best-time-to-buy-and-sell-stock-iii/</li>
+<li>著作权归领扣网络所有。商业转载请联系官方授权，非商业转载请注明出处。</li>
+</ul>
+<!-- more -->
+<h1 id="题目">题目</h1>
+<p>给定一个数组，它的第 <code>i</code> 个元素是一支给定的股票在第 <code>i</code> 天的价格。</p>
+<p>设计一个算法来计算你所能获取的最大利润。你<strong>最多</strong>可以完成 <code>两笔</code> 交易。</p>
+<p>注意：你不能同时参与多笔交易（你<strong>必须在再次购买前出售掉之前的股票</strong>）。</p>
+<p>示例 1:</p>
+<pre><code>输入：prices = [3,3,5,0,0,3,1,4]
+输出：6
+解释：在第 4 天（股票价格 = 0）的时候买入，在第 6 天（股票价格 = 3）的时候卖出，这笔交易所能获得利润 = 3-0 = 3 。
+     随后，在第 7 天（股票价格 = 1）的时候买入，在第 8 天 （股票价格 = 4）的时候卖出，这笔交易所能获得利润 = 4-1 = 3 。
+</code></pre>
+<p>示例 2：</p>
+<pre><code>输入：prices = [1,2,3,4,5]
+输出：4
+解释：在第 1 天（股票价格 = 1）的时候买入，在第 5 天 （股票价格 = 5）的时候卖出, 这笔交易所能获得利润 = 5-1 = 4 。   
+     注意你不能在第 1 天和第 2 天接连购买股票，之后再将它们卖出。   
+     因为这样属于同时参与了多笔交易，你必须在再次购买前出售掉之前的股票。
+</code></pre>
+<p>示例 3：</p>
+<pre><code>输入：prices = [7,6,4,3,1] 
+输出：0 
+解释：在这个情况下, 没有交易完成, 所以最大利润为 0。
+</code></pre>
+<p>示例 4：</p>
+<pre><code>输入：prices = [1]
+输出：0
+</code></pre>
+<p>提示：</p>
+<ul>
+<li><code>1 &lt;= prices.length &lt;= 105</code></li>
+<li><code>0 &lt;= prices[i] &lt;= 105</code></li>
+</ul>
+<h1 id="思路">思路</h1>
+<p>这道题确实有些难度，不过如果做过<a href="https://freephenix.github.io/tOyfdp_bn/">买卖股票的最佳时机 II</a>，应该会有所启发，同样使用动态规划来解决问题</p>
+<h3 id="动态规划">动态规划</h3>
+<p>使用动态规划的话，那其实就是需要看怎么全拆解问题</p>
+<h6 id="dp定义">dp定义</h6>
+<p>这次的交易变为了两次，那么我们的定义就不能再是买入和卖出两个情况了，而是四种：</p>
+<ul>
+<li>买一次</li>
+<li>买一次、卖一次</li>
+<li>买两次、卖一次</li>
+<li>买两次、卖两次</li>
+</ul>
+<p>所以我们的dp数组定义应该如下：</p>
+<blockquote>
+<p><code>buy1sell0[i]</code> 为第<code>i</code>天时，<code>买一次</code>的最大收益<br>
+<code>buy1sell1[i]</code> 为第<code>i</code>天时，<code>买一次、卖一次</code>的最大收益<br>
+<code>buy2sell1[i]</code> 为第<code>i</code>天时，<code>买两次、卖一次</code>的最大收益<br>
+<code>buy2sell2[i]</code> 为第<code>i</code>天时，<code>买两次、卖两次</code>的最大收益</p>
+</blockquote>
+<h6 id="状态方程">状态方程</h6>
+<ul>
+<li><code>买一次</code>的状态下，要么最大值是保持不操作的昨天的金额，要么是今天买一次后的价格的负数，也就是 <code>-price[i]</code></li>
+</ul>
+<blockquote>
+<p>选用负数来操作，是因为我们的<code>dp</code>数组的定义是面向收益的最大值，而<code>买入价格对于收益的影响是负的</code>，所以要是用负数来表示</p>
+<p><code>buy1sell0[i] = max(buy1sell0[i-1], -price[i])</code></p>
+</blockquote>
+<ul>
+<li><code>买一次、卖一次</code>状态下，要么是昨天的金额，要么是在<code>买一次</code>的最大值基础上，按今天价格出售，因为<code>允许当日同时买入又卖出</code>，所以不用前一天的<code>买一次</code>数据，即<code>buy1sell0[i]+price[i]</code></li>
+</ul>
+<blockquote>
+<p><code>buy1sell1[i] = max(buy1sell1[i-1], buy1sell0[i]+price[i])</code></p>
+</blockquote>
+<ul>
+<li><code>买两次、卖一次</code>状态下，有点类似<code>买一次</code>的状态，只是我们是在<code>买一次、卖一次</code>最大值的基础上操作</li>
+</ul>
+<blockquote>
+<p><code>buy2sell1[i] = max(buy2sell1[i-1], buy1sell1[i]-price[i])</code></p>
+</blockquote>
+<ul>
+<li><code>买两次、卖两次</code>状态下，有点类似<code>买一次、卖一次</code>的状态，只是我们是在<code>买两次、卖一次</code>最大值的基础上操作</li>
+</ul>
+<blockquote>
+<p><code>buy2sell2[i] = max(buy2sell2[i-1], buy2sell1[i]+price[i])</code></p>
+</blockquote>
+<blockquote>
+<p>此时，我们依然能够发现，其实所有的状态都只跟之前一天的数据有关系，所以<code>只保留之前一天</code>的数据即可</p>
+</blockquote>
+<ul>
+<li>初始化<br>
+<code>买一次</code>、和<code>买两次、卖一次</code> 两个状态会有些特殊，因为他们是买入操作，此时很有可能会是一个负数，所以不能保持初始化为0，所以需要初始化为第一天价格的负数</li>
+</ul>
+<p>基本上思路就是如此了，直接上代码，</p>
+<h1 id="代码">代码</h1>
+<pre><code class="language-golang">func maxProfit(prices []int) int {
+	// 动态规划 初始化
+	buy1sell0, buy1sell1, buy2sell1, buy2sell2 := -prices[0], 0, -prices[0], 0
+	for _, price := range prices {
+        // 四个状态转移方程
+    	// 可以简化为只是用一个变量保存，且不需要使用临时变量中转
+    	// 	买一次 buy1sell0[i] = max(buy1sell0[i-1], -price[i])
+		buy1sell0 = max(buy1sell0, -price)
+	    //	出一次 buy1sell1[i] = max(buy1sell1[i-1], buy1sell0[i]+price[i])
+		buy1sell1 = max(buy1sell1, buy1sell0+price)
+	    //	买两次 buy2sell1[i] = max(buy2sell1[i-1], buy1sell1[i]-price[i])
+		buy2sell1 = max(buy2sell1, buy1sell1-price)
+	    //	出两次 buy2sell2[i] = max(buy2sell2[i-1], buy2sell1[i]+price[i])
+		buy2sell2 = max(buy2sell2, buy2sell1+price)
+	}
+    // 原本应该是 max(max(buy1sell0, buy1sell1), max(buy2sell1, buy2sell2))
+    // 但是其实 buy1sell0、buy2sell1 肯定是小的，所以排除掉
+    // 并且其实 buy1sell1 肯定是不大于buy2sell2的，所以也可以排除掉
+	return buy2sell2
+}
+</code></pre>
+
+                                </div>
+                    </article>
+                    <!--  -->
+                    
+                        <div class="next-post">
+                            <div class="next">下一篇</div>
+                            <a href="https://freephenix.github.io/_M2DO-xk8/">
+                                <h3 class="post-title">
+                                    LeetCode-958. 二叉树的完全性检验
+                                </h3>
+                            </a>
+                        </div>
+                        
+                            <div id="disqus_thread"></div>
+                            <div id="gitalk-container"></div>
+                </div>
+                <!-- middle -->
+                <div class="main-container-middle"></div>
+                <!-- right -->
+                <div id="sidebar" class="main-container-right">
+                    
+                        <!-- toc -->
+                        
+    <div class="toc-card i-card ">
+        <div class="toc-title i-card-title">目录</div>
+        <div class="toc-content">
+            <ul class="markdownIt-TOC">
+<li><a href="#%E9%A2%98%E7%9B%AE">题目</a></li>
+<li><a href="#%E6%80%9D%E8%B7%AF">思路</a><br>
+*
+<ul>
+<li><a href="#%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92">动态规划</a><br>
+*<br>
+*<br>
+* <a href="#dp%E5%AE%9A%E4%B9%89">dp定义</a><br>
+* <a href="#%E7%8A%B6%E6%80%81%E6%96%B9%E7%A8%8B">状态方程</a></li>
+</ul>
+</li>
+<li><a href="#%E4%BB%A3%E7%A0%81">代码</a></li>
+</ul>
+
+        </div>
+        <script>
+            function locateCatelogList() {
+                /*获取文章目录集合,可通过:header过滤器*/
+                var alis = $('.post-content :header');
+                /*获取侧边栏目录列表集合**/
+                var sidebar_alis = $('.markdownIt-TOC a');
+                /*获取滚动条到顶部的距离*/
+                var scroll_height = $(window).scrollTop();
+                for (var i = 0; i < alis.length; i++) {
+                    /*获取锚点集合中的元素分别到顶点的距离*/
+                    var a_height = $(alis[i]).offset().top;
+                    if (a_height < scroll_height) {
+                        /*高亮显示*/
+                        sidebar_alis.removeClass('on');
+                        $(sidebar_alis[i]).addClass('on');
+                    }
+                }
+            }
+            $(function() {
+                /*绑定滚动事件 */
+                $(window).bind('scroll', locateCatelogList);
+            });
+        </script>
+    </div>
+    
+                            
+
+                </div>
+
+
+
+
+            </div>
+
+
+            <div class="site-footer">
+  Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a> | 
+  <a class="rss" href="https://freephenix.github.io//atom.xml" target="_blank">RSS</a>
+</div>
+
+<script>
+  hljs.initHighlightingOnLoad()
+</script>
+
+
+    </div>
+    <script>
+        $('#sidebar').stickySidebar({
+            topSpacing: 80,
+            // bottomSpacing: 60
+        });
+    </script>
+    
+        
+            <script>
+    window.onload = function() {
+        var gitalk = new Gitalk({
+            clientID: '008503f8c8bca8787fbe',
+            clientSecret: '5f789f71e3288ff1866d17523348881053068eb4',
+            repo: 'freephenix.github.io',
+            owner: 'freephenix',
+            admin: ['freephenix'],
+            id: (location.pathname).substring(0, 49), // Ensure uniqueness and length less than 50
+            distractionFreeMode: false // Facebook-like distraction free mode
+        })
+
+        gitalk.render('gitalk-container')
+    }
+</script>
+                
+
+                    
+                                
+</body>
+
+</html>

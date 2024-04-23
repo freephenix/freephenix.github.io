@@ -1,0 +1,400 @@
+<html>
+
+<head>
+    <meta charset="utf-8" />
+<meta name="description" content="" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>
+    DFS | 半亩房顶
+</title>
+<link rel="shortcut icon" href="https://freephenix.github.io//favicon.ico?v=1713840769430">
+<!-- <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous"> -->
+<link href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+<link rel="stylesheet" href="https://freephenix.github.io//styles/main.css">
+<!-- js -->
+<script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.min.js"></script>
+<script src="https://freephenix.github.io//media/js/jquery.sticky-sidebar.min.js"></script>
+<script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
+<script src="https://cdn.bootcss.com/moment.js/2.23.0/moment.min.js"></script>
+
+
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-147240912-1"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+
+        function gtag() {
+            dataLayer.push(arguments);
+        }
+        gtag('js', new Date());
+
+        gtag('config', 'UA-147240912-1');
+    </script>
+    
+</head>
+
+<body>
+    <div class="main">
+        <div class="header">
+    <div class="nav">
+        <div class="logo">
+            <a href="https://freephenix.github.io/">
+                <img class="avatar" src="https://freephenix.github.io//images/avatar.png?v=1713840769430" alt="">
+            </a>
+            <div class="site-title">
+                <h1>
+                    半亩房顶
+                </h1>
+            </div>
+        </div>
+        <span class="menu-btn fa fa-align-justify"></span>
+        <div class="menu-container">
+            <ul>
+                
+                    
+                            <li>
+                                <a href="/" class="menu">
+                                    首页
+                                </a>
+                            </li>
+                            
+                                
+                    
+                            <li>
+                                <a href="/archives" class="menu">
+                                    归档
+                                </a>
+                            </li>
+                            
+                                
+                    
+                            <li>
+                                <a href="/tags" class="menu">
+                                    标签
+                                </a>
+                            </li>
+                            
+                                
+                    
+                            <li>
+                                <a href="https://freephenix.github.io//post/guan-yu-ban-mu-fang-ding/" class="menu">
+                                    关于
+                                </a>
+                            </li>
+                            
+                                
+            </ul>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function() {
+        $(".menu-btn").click(function() {
+            $(".menu-container").slideToggle();
+        });
+        $(window).resize(function() {
+
+            if (window.matchMedia('(min-width: 960px)').matches) {
+                $(".menu-container").css('display', 'block')
+            } else {
+                $(".menu-container").css('display', 'none')
+            }
+
+        });
+    });
+</script>
+
+            <div id="main-content" class="post-container main-container">
+                <div id="content" class="main-container-left">
+                    
+    <div class="i-card">
+        <b>标签：#
+        DFS</b>
+    </div>
+    
+        
+            <article class="post i-card">
+                <h2 class="post-title">
+                    <a href="https://freephenix.github.io/kKKK9iYUy/">
+                        LeetCode-200. 岛屿数量
+                    </a>
+                </h2>
+                <div class="post-info">
+                    <time class="post-time">2023-10-27</time>
+                    
+                        <a href="https://freephenix.github.io/MmUDRZ-4m/" class="post-tag i-tag
+                            i-tag-error">
+            #DFS
+        </a>
+                        
+                        <a href="https://freephenix.github.io/YWFpnf3Gl/" class="post-tag i-tag
+                            i-tag-other_1">
+            #刷题
+        </a>
+                        
+                        <a href="https://freephenix.github.io/70TrDOWqgi/" class="post-tag i-tag
+                            i-tag-other_4">
+            #面试
+        </a>
+                        
+                        <a href="https://freephenix.github.io/go/" class="post-tag i-tag
+                            i-tag-banana">
+            #Go
+        </a>
+                        
+                        <a href="https://freephenix.github.io/k1NaSbOoC/" class="post-tag i-tag
+                            i-tag-other_2">
+            #LeetCode
+        </a>
+                        
+                        <a href="https://freephenix.github.io/WucazjDbn/" class="post-tag i-tag
+                            i-tag-other_2">
+            #算法
+        </a>
+                        
+                </div>
+                <div class="post-article">
+                    
+                        <a href="https://freephenix.github.io/kKKK9iYUy/" class="post-feature-image" style="background-image:url(https://freephenix.github.io//post-images/kKKK9iYUy.jpeg) ">
+                        </a>
+                        
+                            <div class="post-content">
+                                
+                                    <div class="post-content-abstract">
+                                        <p>刷题使我快乐，满脸开心.jpg</p>
+<ul>
+<li>来源：力扣（LeetCode）</li>
+<li>链接：https://leetcode.cn/problems/number-of-islands/</li>
+<li>著作权归领扣网络所有。商业转载请联系官方授权，非商业转载请注明出处。</li>
+</ul>
+
+                                    </div>
+                                    
+                                            <a class="btn btn-text" href="https://freephenix.github.io/kKKK9iYUy/">Read More ~</a>
+                            </div>
+                </div>
+            </article>
+            
+            <article class="post i-card">
+                <h2 class="post-title">
+                    <a href="https://freephenix.github.io/iViHy98oh/">
+                        LeetCode-572. 另一棵树的子树
+                    </a>
+                </h2>
+                <div class="post-info">
+                    <time class="post-time">2023-10-11</time>
+                    
+                        <a href="https://freephenix.github.io/8spMJBknC/" class="post-tag i-tag
+                            i-tag-primary">
+            #递归
+        </a>
+                        
+                        <a href="https://freephenix.github.io/MmUDRZ-4m/" class="post-tag i-tag
+                            i-tag-warning">
+            #DFS
+        </a>
+                        
+                        <a href="https://freephenix.github.io/QFVGe5Wby/" class="post-tag i-tag
+                            i-tag-primary">
+            #二叉树
+        </a>
+                        
+                        <a href="https://freephenix.github.io/YWFpnf3Gl/" class="post-tag i-tag
+                            i-tag-">
+            #刷题
+        </a>
+                        
+                        <a href="https://freephenix.github.io/70TrDOWqgi/" class="post-tag i-tag
+                            i-tag-other_4">
+            #面试
+        </a>
+                        
+                        <a href="https://freephenix.github.io/go/" class="post-tag i-tag
+                            i-tag-success">
+            #Go
+        </a>
+                        
+                        <a href="https://freephenix.github.io/k1NaSbOoC/" class="post-tag i-tag
+                            i-tag-other_2">
+            #LeetCode
+        </a>
+                        
+                        <a href="https://freephenix.github.io/WucazjDbn/" class="post-tag i-tag
+                            i-tag-other_1">
+            #算法
+        </a>
+                        
+                </div>
+                <div class="post-article">
+                    
+                        <a href="https://freephenix.github.io/iViHy98oh/" class="post-feature-image" style="background-image:url(https://freephenix.github.io//post-images/iViHy98oh.jpeg) ">
+                        </a>
+                        
+                            <div class="post-content">
+                                
+                                    <div class="post-content-abstract">
+                                        <p>刷题使我快乐，满脸开心.jpg</p>
+<ul>
+<li>来源：力扣（LeetCode）</li>
+<li>链接：https://leetcode.cn/problems/subtree-of-another-tree/</li>
+<li>著作权归领扣网络所有。商业转载请联系官方授权，非商业转载请注明出处。</li>
+</ul>
+
+                                    </div>
+                                    
+                                            <a class="btn btn-text" href="https://freephenix.github.io/iViHy98oh/">Read More ~</a>
+                            </div>
+                </div>
+            </article>
+            
+            <article class="post i-card">
+                <h2 class="post-title">
+                    <a href="https://freephenix.github.io/BNRrc0Wdd/">
+                        LeetCode-100. 相同的树
+                    </a>
+                </h2>
+                <div class="post-info">
+                    <time class="post-time">2023-10-11</time>
+                    
+                        <a href="https://freephenix.github.io/MmUDRZ-4m/" class="post-tag i-tag
+                            i-tag-other_1">
+            #DFS
+        </a>
+                        
+                        <a href="https://freephenix.github.io/QFVGe5Wby/" class="post-tag i-tag
+                            i-tag-other_2">
+            #二叉树
+        </a>
+                        
+                        <a href="https://freephenix.github.io/V7NQ7-8mSs/" class="post-tag i-tag
+                            i-tag-warning">
+            #BFS
+        </a>
+                        
+                        <a href="https://freephenix.github.io/YWFpnf3Gl/" class="post-tag i-tag
+                            i-tag-banana">
+            #刷题
+        </a>
+                        
+                        <a href="https://freephenix.github.io/70TrDOWqgi/" class="post-tag i-tag
+                            i-tag-other_1">
+            #面试
+        </a>
+                        
+                        <a href="https://freephenix.github.io/go/" class="post-tag i-tag
+                            i-tag-other_2">
+            #Go
+        </a>
+                        
+                        <a href="https://freephenix.github.io/k1NaSbOoC/" class="post-tag i-tag
+                            i-tag-info">
+            #LeetCode
+        </a>
+                        
+                        <a href="https://freephenix.github.io/WucazjDbn/" class="post-tag i-tag
+                            i-tag-other_2">
+            #算法
+        </a>
+                        
+                </div>
+                <div class="post-article">
+                    
+                        <a href="https://freephenix.github.io/BNRrc0Wdd/" class="post-feature-image" style="background-image:url(https://freephenix.github.io//post-images/BNRrc0Wdd.jpeg) ">
+                        </a>
+                        
+                            <div class="post-content">
+                                
+                                    <div class="post-content-abstract">
+                                        <p>刷题使我快乐，满脸开心.jpg</p>
+<ul>
+<li>来源：力扣（LeetCode）</li>
+<li>链接：https://leetcode.cn/problems/same-tree/</li>
+<li>著作权归领扣网络所有。商业转载请联系官方授权，非商业转载请注明出处。</li>
+</ul>
+
+                                    </div>
+                                    
+                                            <a class="btn btn-text" href="https://freephenix.github.io/BNRrc0Wdd/">Read More ~</a>
+                            </div>
+                </div>
+            </article>
+            
+                <!-- 翻页 -->
+                
+    <div class="pagination-container">
+        
+            <a href="https://freephenix.github.io/MmUDRZ-4m" class="page-btn btn">上一页</a>
+            
+                
+    </div>
+    
+                </div>
+                <!--  -->
+                <div class="main-container-middle"></div>
+                <!--  -->
+                <div id="sidebar" class="main-container-right">
+
+                    <!-- 个人信息 -->
+                    
+    <div class="id_card i-card">
+        <div class="id_card-avatar" style="background-image: url(https://freephenix.github.io//images/avatar.png?v=1713840769430)">
+        </div>
+        <h1 class="id_card-title">
+            半亩房顶
+        </h1>
+        <h2 class="id_card-description">
+            假如我手中有一块小石头
+        </h2>
+        <!--  -->
+        <div class="id_card-sns">
+            <!-- github -->
+            
+                <a href="https://github.com/freephenix" target="_blank" rel="noopener noreferrer"><i
+                class="fa fa-github"></i></a>
+                
+                    <!-- twitter -->
+                    
+                            <!-- weibo -->
+                            
+                                    <!-- facebook -->
+                                    
+
+        </div>
+    </div>
+    
+
+                        <!-- 公告栏 -->
+                        
+    <div class="notice-card i-card ">
+        <div class="notice-title i-card-title">公告</div>
+        <div class="notice-content">
+            何不以文为酒，来小酌一杯？
+        </div>
+    </div>
+    
+
+                </div>
+            </div>
+
+
+
+            <div class="site-footer">
+  Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a> | 
+  <a class="rss" href="https://freephenix.github.io//atom.xml" target="_blank">RSS</a>
+</div>
+
+<script>
+  hljs.initHighlightingOnLoad()
+</script>
+
+    </div>
+    <script>
+        $('#sidebar').stickySidebar({
+            topSpacing: 80,
+            // bottomSpacing: 60
+        });
+    </script>
+</body>
+
+</html>
